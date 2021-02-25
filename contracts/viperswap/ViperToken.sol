@@ -6,14 +6,13 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Authorizable.sol";
 
-// BAOToken with Governance.
-contract BaoToken is ERC20("BaoToken", "BAO"), Ownable, Authorizable {
-    uint256 private _cap = 1000000000000e18;
+// ViperToken with Governance.
+contract ViperToken is ERC20("ViperToken", "VIPER"), Ownable, Authorizable {
+    uint256 private _cap = 1000000000e18; // New value: 1,000,000,000 - 1 billion  / Original value: 1,000,000,000,000 - 1 trillion 
     uint256 private _totalLock;
-
     uint256 public lockFromBlock;
     uint256 public lockToBlock;
-    uint256 public manualMintLimit = 1000000e18;
+    uint256 public manualMintLimit = 1000e18; // New value: 1,000 / Original value: 1,000,000
     uint256 public manualMinted = 0;
 
     mapping(address => uint256) private _locks;
@@ -110,7 +109,7 @@ contract BaoToken is ERC20("BaoToken", "BAO"), Ownable, Authorizable {
         _moveDelegates(_delegates[sender], _delegates[recipient], amount);
     }
 
-    /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
+    /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterHerpetologist).
     function mint(address _to, uint256 _amount) public onlyOwner {
         _mint(_to, _amount);
         _moveDelegates(address(0), _delegates[_to], _amount);
@@ -302,13 +301,13 @@ contract BaoToken is ERC20("BaoToken", "BAO"), Ownable, Authorizable {
         address signatory = ecrecover(digest, v, r, s);
         require(
             signatory != address(0),
-            "BAO::delegateBySig: invalid signature"
+            "VIPER::delegateBySig: invalid signature"
         );
         require(
             nonce == nonces[signatory]++,
-            "BAO::delegateBySig: invalid nonce"
+            "VIPER::delegateBySig: invalid nonce"
         );
-        require(now <= expiry, "BAO::delegateBySig: signature expired");
+        require(now <= expiry, "VIPER::delegateBySig: signature expired");
         return _delegate(signatory, delegatee);
     }
 
@@ -337,7 +336,7 @@ contract BaoToken is ERC20("BaoToken", "BAO"), Ownable, Authorizable {
     {
         require(
             blockNumber < block.number,
-            "BAO::getPriorVotes: not yet determined"
+            "VIPER::getPriorVotes: not yet determined"
         );
 
         uint32 nCheckpoints = numCheckpoints[account];
@@ -420,7 +419,7 @@ contract BaoToken is ERC20("BaoToken", "BAO"), Ownable, Authorizable {
         uint32 blockNumber =
             safe32(
                 block.number,
-                "BAO::_writeCheckpoint: block number exceeds 32 bits"
+                "VIPER::_writeCheckpoint: block number exceeds 32 bits"
             );
 
         if (
