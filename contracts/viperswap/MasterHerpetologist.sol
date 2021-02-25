@@ -7,29 +7,16 @@ import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./BaoToken.sol";
+import "./ViperToken.sol";
 import "./Authorizable.sol";
 
-interface IMigratorToBaoSwap {
-    // Perform LP token migration from legacy UniswapV2 to BaoSwap.
-    // Take the current LP token address and return the new LP token address.
-    // Migrator should have full access to the caller's LP token.
-    // Return the new LP token address.
-    //
-    // XXX Migrator must have allowance access to UniswapV2 LP tokens.
-    // BaoSwap must mint EXACTLY the same amount of BaoSwap LP tokens or
-    // else something bad will happen. Traditional UniswapV2 does not
-    // do that so be careful!
-    function migrate(IERC20 token) external returns (IERC20);
-}
-
-// BaoMasterFarmer is the master of Bao. He can make Bao and he is a fair guy.
+// MasterHerpetologist is the master of Viper. He can make Viper and he is a fair guy.
 //
 // Note that it's ownable and the owner wields tremendous power. The ownership
-// will be transferred to a governance smart contract once Bao is sufficiently
+// will be transferred to a governance smart contract once Viper is sufficiently
 // distributed and the community can show to govern itself.
 //
-contract BaoMasterFarmer is Ownable, Authorizable {
+contract MasterHerpetologist is Ownable, Authorizable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -43,13 +30,13 @@ contract BaoMasterFarmer is Ownable, Authorizable {
         uint256 blockdelta; //time passed since withdrawals
         uint256 lastDepositBlock;
         //
-        // We do some fancy math here. Basically, any point in time, the amount of Baos
+        // We do some fancy math here. Basically, any point in time, the amount of Vipers
         // entitled to a user but is pending to be distributed is:
         //
-        //   pending reward = (user.amount * pool.accBaoPerShare) - user.rewardDebt
+        //   pending reward = (user.amount * pool.accViperPerShare) - user.rewardDebt
         //
         // Whenever a user deposits or withdraws LP tokens to a pool. Here's what happens:
-        //   1. The pool's `accBaoPerShare` (and `lastRewardBlock`) gets updated.
+        //   1. The pool's `accViperPerShare` (and `lastRewardBlock`) gets updated.
         //   2. User receives the pending reward sent to his/her address.
         //   3. User's `amount` gets updated.
         //   4. User's `rewardDebt` gets updated.
@@ -65,26 +52,26 @@ contract BaoMasterFarmer is Ownable, Authorizable {
     // Info of each pool.
     struct PoolInfo {
         IERC20 lpToken; // Address of LP token contract.
-        uint256 allocPoint; // How many allocation points assigned to this pool. Baos to distribute per block.
-        uint256 lastRewardBlock; // Last block number that Baos distribution occurs.
-        uint256 accBaoPerShare; // Accumulated Baos per share, times 1e12. See below.
+        uint256 allocPoint; // How many allocation points assigned to this pool. Vipers to distribute per block.
+        uint256 lastRewardBlock; // Last block number that Vipers distribution occurs.
+        uint256 accViperPerShare; // Accumulated Vipers per share, times 1e12. See below.
     }
 
-    // The Bao TOKEN!
-    BaoToken public Bao;
+    // The Viper TOKEN!
+    ViperToken public Viper;
     //An ETH/USDC Oracle (Chainlink)
     address public usdOracle;
     // Dev address.
-    address public devaddr;
+    address public devAddr;
     // LP address
-    address public liquidityaddr;
+    address public liquidityAddr;
     // Community Fund Address
-    address public comfundaddr;
+    address public communityFundAddr;
     // Founder Reward
-    address public founderaddr;
-    // Bao tokens created per block.
+    address public founderAddr;
+    // Viper tokens created per block.
     uint256 public REWARD_PER_BLOCK;
-    // Bonus muliplier for early Bao makers.
+    // Bonus muliplier for early Viper makers - each array element represents a week.
     uint256[] public REWARD_MULTIPLIER = [
         4096,
         2048,
@@ -198,17 +185,14 @@ contract BaoMasterFarmer is Ownable, Authorizable {
     uint256 public userDepFee;
     uint256 public devDepFee;
 
-    // The block number when Bao mining starts.
+    // The block number when Viper mining starts.
     uint256 public START_BLOCK;
 
     uint256 public PERCENT_LOCK_BONUS_REWARD; // lock xx% of bounus reward in 3 year
     uint256 public PERCENT_FOR_DEV; // dev bounties + partnerships
     uint256 public PERCENT_FOR_LP; // LP fund
-    uint256 public PERCENT_FOR_COM; // community fund
+    uint256 public PERCENT_FOR_COMMUNITY; // community fund
     uint256 public PERCENT_FOR_FOUNDERS; // founders fund
-
-    // The migrator contract. It has a lot of power. Can only be set through governance (owner).
-    IMigratorToBaoSwap public migrator;
 
     // Info of each pool.
     PoolInfo[] public poolInfo;
@@ -226,7 +210,7 @@ contract BaoMasterFarmer is Ownable, Authorizable {
         uint256 indexed pid,
         uint256 amount
     );
-    event SendBaoReward(
+    event SendViperReward(
         address indexed user,
         uint256 indexed pid,
         uint256 amount,
@@ -234,11 +218,11 @@ contract BaoMasterFarmer is Ownable, Authorizable {
     );
 
     constructor(
-        BaoToken _Bao,
-        address _devaddr,
-        address _liquidityaddr,
-        address _comfundaddr,
-        address _founderaddr,
+        ViperToken _Viper,
+        address _devAddr,
+        address _liquidityAddr,
+        address _communityFundAddr,
+        address _founderAddr,
         uint256 _rewardPerBlock,
         uint256 _startBlock,
         uint256 _halvingAfterBlock,
@@ -249,11 +233,11 @@ contract BaoMasterFarmer is Ownable, Authorizable {
         uint256[] memory _userFeeStage,
         uint256[] memory _devFeeStage
     ) public {
-        Bao = _Bao;
-        devaddr = _devaddr;
-        liquidityaddr = _liquidityaddr;
-        comfundaddr = _comfundaddr;
-        founderaddr = _founderaddr;
+        Viper = _Viper;
+        devAddr = _devAddr;
+        liquidityAddr = _liquidityAddr;
+        communityFundAddr = _communityFundAddr;
+        founderAddr = _founderAddr;
         REWARD_PER_BLOCK = _rewardPerBlock;
         START_BLOCK = _startBlock;
         userDepFee = _userDepFee;
@@ -285,7 +269,7 @@ contract BaoMasterFarmer is Ownable, Authorizable {
     ) public onlyOwner {
         require(
             poolId1[address(_lpToken)] == 0,
-            "BaoMasterFarmer::add: lp is already in pool"
+            "MasterHerpetologist::add: lp is already in pool"
         );
         if (_withUpdate) {
             massUpdatePools();
@@ -299,12 +283,12 @@ contract BaoMasterFarmer is Ownable, Authorizable {
                 lpToken: _lpToken,
                 allocPoint: _allocPoint,
                 lastRewardBlock: lastRewardBlock,
-                accBaoPerShare: 0
+                accViperPerShare: 0
             })
         );
     }
 
-    // Update the given pool's Bao allocation point. Can only be called by the owner.
+    // Update the given pool's Viper allocation point. Can only be called by the owner.
     function set(
         uint256 _pid,
         uint256 _allocPoint,
@@ -317,23 +301,6 @@ contract BaoMasterFarmer is Ownable, Authorizable {
             _allocPoint
         );
         poolInfo[_pid].allocPoint = _allocPoint;
-    }
-
-    // Set the migrator contract. Can only be called by the owner.
-    function setMigrator(IMigratorToBaoSwap _migrator) public onlyOwner {
-        migrator = _migrator;
-    }
-
-    // Migrate lp token to another lp contract. Can be called by anyone. We trust that migrator contract is good.
-    function migrate(uint256 _pid) public {
-        require(address(migrator) != address(0), "migrate: no migrator");
-        PoolInfo storage pool = poolInfo[_pid];
-        IERC20 lpToken = pool.lpToken;
-        uint256 bal = lpToken.balanceOf(address(this));
-        lpToken.safeApprove(address(migrator), bal);
-        IERC20 newLpToken = migrator.migrate(lpToken);
-        require(bal == newLpToken.balanceOf(address(this)), "migrate: bad");
-        pool.lpToken = newLpToken;
     }
 
     // Update reward variables for all pools. Be careful of gas spending!
@@ -355,49 +322,55 @@ contract BaoMasterFarmer is Ownable, Authorizable {
             pool.lastRewardBlock = block.number;
             return;
         }
-        uint256 BaoForDev;
-        uint256 BaoForFarmer;
-        uint256 BaoForLP;
-        uint256 BaoForCom;
-        uint256 BaoForFounders;
+        uint256 ViperForDev;
+        uint256 ViperForFarmer;
+        uint256 ViperForLP;
+        uint256 ViperForCom;
+        uint256 ViperForFounders;
         (
-            BaoForDev,
-            BaoForFarmer,
-            BaoForLP,
-            BaoForCom,
-            BaoForFounders
+            ViperForDev,
+            ViperForFarmer,
+            ViperForLP,
+            ViperForCom,
+            ViperForFounders
         ) = getPoolReward(pool.lastRewardBlock, block.number, pool.allocPoint);
-        Bao.mint(address(this), BaoForFarmer);
-        pool.accBaoPerShare = pool.accBaoPerShare.add(
-            BaoForFarmer.mul(1e12).div(lpSupply)
+        Viper.mint(address(this), ViperForFarmer);
+        pool.accViperPerShare = pool.accViperPerShare.add(
+            ViperForFarmer.mul(1e12).div(lpSupply)
         );
         pool.lastRewardBlock = block.number;
-        if (BaoForDev > 0) {
-            Bao.mint(address(devaddr), BaoForDev);
+        if (ViperForDev > 0) {
+            Viper.mint(address(devAddr), ViperForDev);
             //Dev fund has xx% locked during the starting bonus period. After which locked funds drip out linearly each block over 3 years.
             if (block.number <= FINISH_BONUS_AT_BLOCK) {
-                Bao.lock(address(devaddr), BaoForDev.mul(75).div(100));
+                Viper.lock(address(devAddr), ViperForDev.mul(75).div(100));
             }
         }
-        if (BaoForLP > 0) {
-            Bao.mint(liquidityaddr, BaoForLP);
+        if (ViperForLP > 0) {
+            Viper.mint(liquidityAddr, ViperForLP);
             //LP + Partnership fund has only xx% locked over time as most of it is needed early on for incentives and listings. The locked amount will drip out linearly each block after the bonus period.
             if (block.number <= FINISH_BONUS_AT_BLOCK) {
-                Bao.lock(address(liquidityaddr), BaoForLP.mul(45).div(100));
+                Viper.lock(address(liquidityAddr), ViperForLP.mul(45).div(100));
             }
         }
-        if (BaoForCom > 0) {
-            Bao.mint(comfundaddr, BaoForCom);
+        if (ViperForCom > 0) {
+            Viper.mint(communityFundAddr, ViperForCom);
             //Community Fund has xx% locked during bonus period and then drips out linearly over 3 years.
             if (block.number <= FINISH_BONUS_AT_BLOCK) {
-                Bao.lock(address(comfundaddr), BaoForCom.mul(85).div(100));
+                Viper.lock(
+                    address(communityFundAddr),
+                    ViperForCom.mul(85).div(100)
+                );
             }
         }
-        if (BaoForFounders > 0) {
-            Bao.mint(founderaddr, BaoForFounders);
+        if (ViperForFounders > 0) {
+            Viper.mint(founderAddr, ViperForFounders);
             //The Founders reward has xx% of their funds locked during the bonus period which then drip out linearly per block over 3 years.
             if (block.number <= FINISH_BONUS_AT_BLOCK) {
-                Bao.lock(address(founderaddr), BaoForFounders.mul(95).div(100));
+                Viper.lock(
+                    address(founderAddr),
+                    ViperForFounders.mul(95).div(100)
+                );
             }
         }
     }
@@ -451,11 +424,11 @@ contract BaoMasterFarmer is Ownable, Authorizable {
             multiplier.mul(REWARD_PER_BLOCK).mul(_allocPoint).div(
                 totalAllocPoint
             );
-        uint256 BaoCanMint = Bao.cap().sub(Bao.totalSupply());
+        uint256 ViperCanMint = Viper.cap().sub(Viper.totalSupply());
 
-        if (BaoCanMint < amount) {
+        if (ViperCanMint < amount) {
             forDev = 0;
-            forFarmer = BaoCanMint;
+            forFarmer = ViperCanMint;
             forLP = 0;
             forCom = 0;
             forFounders = 0;
@@ -463,12 +436,12 @@ contract BaoMasterFarmer is Ownable, Authorizable {
             forDev = amount.mul(PERCENT_FOR_DEV).div(100);
             forFarmer = amount;
             forLP = amount.mul(PERCENT_FOR_LP).div(100);
-            forCom = amount.mul(PERCENT_FOR_COM).div(100);
+            forCom = amount.mul(PERCENT_FOR_COMMUNITY).div(100);
             forFounders = amount.mul(PERCENT_FOR_FOUNDERS).div(100);
         }
     }
 
-    // View function to see pending Baos on frontend.
+    // View function to see pending Vipers on frontend.
     function pendingReward(uint256 _pid, address _user)
         external
         view
@@ -476,20 +449,20 @@ contract BaoMasterFarmer is Ownable, Authorizable {
     {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][_user];
-        uint256 accBaoPerShare = pool.accBaoPerShare;
+        uint256 accViperPerShare = pool.accViperPerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
         if (block.number > pool.lastRewardBlock && lpSupply > 0) {
-            uint256 BaoForFarmer;
-            (, BaoForFarmer, , , ) = getPoolReward(
+            uint256 ViperForFarmer;
+            (, ViperForFarmer, , , ) = getPoolReward(
                 pool.lastRewardBlock,
                 block.number,
                 pool.allocPoint
             );
-            accBaoPerShare = accBaoPerShare.add(
-                BaoForFarmer.mul(1e12).div(lpSupply)
+            accViperPerShare = accViperPerShare.add(
+                ViperForFarmer.mul(1e12).div(lpSupply)
             );
         }
-        return user.amount.mul(accBaoPerShare).div(1e12).sub(user.rewardDebt);
+        return user.amount.mul(accViperPerShare).div(1e12).sub(user.rewardDebt);
     }
 
     function claimReward(uint256 _pid) public {
@@ -504,31 +477,31 @@ contract BaoMasterFarmer is Ownable, Authorizable {
 
         if (user.amount > 0) {
             uint256 pending =
-                user.amount.mul(pool.accBaoPerShare).div(1e12).sub(
+                user.amount.mul(pool.accViperPerShare).div(1e12).sub(
                     user.rewardDebt
                 );
-            uint256 masterBal = Bao.balanceOf(address(this));
+            uint256 masterBal = Viper.balanceOf(address(this));
 
             if (pending > masterBal) {
                 pending = masterBal;
             }
 
             if (pending > 0) {
-                Bao.transfer(msg.sender, pending);
+                Viper.transfer(msg.sender, pending);
                 uint256 lockAmount = 0;
                 if (user.rewardDebtAtBlock <= FINISH_BONUS_AT_BLOCK) {
                     lockAmount = pending.mul(PERCENT_LOCK_BONUS_REWARD).div(
                         100
                     );
-                    Bao.lock(msg.sender, lockAmount);
+                    Viper.lock(msg.sender, lockAmount);
                 }
 
                 user.rewardDebtAtBlock = block.number;
 
-                emit SendBaoReward(msg.sender, _pid, pending, lockAmount);
+                emit SendViperReward(msg.sender, _pid, pending, lockAmount);
             }
 
-            user.rewardDebt = user.amount.mul(pool.accBaoPerShare).div(1e12);
+            user.rewardDebt = user.amount.mul(pool.accViperPerShare).div(1e12);
         }
     }
 
@@ -557,7 +530,7 @@ contract BaoMasterFarmer is Ownable, Authorizable {
         return a;
     }
 
-    // Deposit LP tokens to BaoMasterFarmer for $BAO allocation.
+    // Deposit LP tokens to MasterHerpetologist for $VIPER allocation.
     function deposit(
         uint256 _pid,
         uint256 _amount,
@@ -565,12 +538,12 @@ contract BaoMasterFarmer is Ownable, Authorizable {
     ) public {
         require(
             _amount > 0,
-            "BaoMasterFarmer::deposit: amount must be greater than 0"
+            "MasterHerpetologist::deposit: amount must be greater than 0"
         );
 
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
-        UserInfo storage devr = userInfo[_pid][devaddr];
+        UserInfo storage devr = userInfo[_pid][devAddr];
         UserGlobalInfo storage refer = userGlobalInfo[_ref];
         UserGlobalInfo storage current = userGlobalInfo[msg.sender];
 
@@ -600,11 +573,11 @@ contract BaoMasterFarmer is Ownable, Authorizable {
         user.amount = user.amount.add(
             _amount.sub(_amount.mul(userDepFee).div(10000))
         );
-        user.rewardDebt = user.amount.mul(pool.accBaoPerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(pool.accViperPerShare).div(1e12);
         devr.amount = devr.amount.add(
             _amount.sub(_amount.mul(devDepFee).div(10000))
         );
-        devr.rewardDebt = devr.amount.mul(pool.accBaoPerShare).div(1e12);
+        devr.rewardDebt = devr.amount.mul(pool.accViperPerShare).div(1e12);
         emit Deposit(msg.sender, _pid, _amount);
         if (user.firstDepositBlock > 0) {} else {
             user.firstDepositBlock = block.number;
@@ -612,7 +585,7 @@ contract BaoMasterFarmer is Ownable, Authorizable {
         user.lastDepositBlock = block.number;
     }
 
-    // Withdraw LP tokens from BaoMasterFarmer.
+    // Withdraw LP tokens from MasterHerpetologist.
     function withdraw(
         uint256 _pid,
         uint256 _amount,
@@ -622,7 +595,10 @@ contract BaoMasterFarmer is Ownable, Authorizable {
         UserInfo storage user = userInfo[_pid][msg.sender];
         UserGlobalInfo storage refer = userGlobalInfo[_ref];
         UserGlobalInfo storage current = userGlobalInfo[msg.sender];
-        require(user.amount >= _amount, "BaoMasterFarmer::withdraw: not good");
+        require(
+            user.amount >= _amount,
+            "MasterHerpetologist::withdraw: not good"
+        );
         if (_ref != address(0)) {
             refer.referrals[msg.sender] = refer.referrals[msg.sender] - _amount;
             refer.globalRefAmount = refer.globalRefAmount - _amount;
@@ -649,7 +625,7 @@ contract BaoMasterFarmer is Ownable, Authorizable {
                     _amount.mul(userFeeStage[0]).div(100)
                 );
                 pool.lpToken.safeTransfer(
-                    address(devaddr),
+                    address(devAddr),
                     _amount.mul(devFeeStage[0]).div(100)
                 );
             } else if (
@@ -662,7 +638,7 @@ contract BaoMasterFarmer is Ownable, Authorizable {
                     _amount.mul(userFeeStage[1]).div(100)
                 );
                 pool.lpToken.safeTransfer(
-                    address(devaddr),
+                    address(devAddr),
                     _amount.mul(devFeeStage[1]).div(100)
                 );
             } else if (
@@ -675,7 +651,7 @@ contract BaoMasterFarmer is Ownable, Authorizable {
                     _amount.mul(userFeeStage[2]).div(100)
                 );
                 pool.lpToken.safeTransfer(
-                    address(devaddr),
+                    address(devAddr),
                     _amount.mul(devFeeStage[2]).div(100)
                 );
             } else if (
@@ -688,7 +664,7 @@ contract BaoMasterFarmer is Ownable, Authorizable {
                     _amount.mul(userFeeStage[3]).div(100)
                 );
                 pool.lpToken.safeTransfer(
-                    address(devaddr),
+                    address(devAddr),
                     _amount.mul(devFeeStage[3]).div(100)
                 );
             } else if (
@@ -701,7 +677,7 @@ contract BaoMasterFarmer is Ownable, Authorizable {
                     _amount.mul(userFeeStage[4]).div(100)
                 );
                 pool.lpToken.safeTransfer(
-                    address(devaddr),
+                    address(devAddr),
                     _amount.mul(devFeeStage[4]).div(100)
                 );
             } else if (
@@ -714,7 +690,7 @@ contract BaoMasterFarmer is Ownable, Authorizable {
                     _amount.mul(userFeeStage[5]).div(1000)
                 );
                 pool.lpToken.safeTransfer(
-                    address(devaddr),
+                    address(devAddr),
                     _amount.mul(devFeeStage[5]).div(1000)
                 );
             } else if (
@@ -727,7 +703,7 @@ contract BaoMasterFarmer is Ownable, Authorizable {
                     _amount.mul(userFeeStage[6]).div(10000)
                 );
                 pool.lpToken.safeTransfer(
-                    address(devaddr),
+                    address(devAddr),
                     _amount.mul(devFeeStage[6]).div(10000)
                 );
             } else if (user.blockdelta > blockDeltaStartStage[7]) {
@@ -737,11 +713,11 @@ contract BaoMasterFarmer is Ownable, Authorizable {
                     _amount.mul(userFeeStage[7]).div(10000)
                 );
                 pool.lpToken.safeTransfer(
-                    address(devaddr),
+                    address(devAddr),
                     _amount.mul(devFeeStage[7]).div(10000)
                 );
             }
-            user.rewardDebt = user.amount.mul(pool.accBaoPerShare).div(1e12);
+            user.rewardDebt = user.amount.mul(pool.accViperPerShare).div(1e12);
             emit Withdraw(msg.sender, _pid, _amount);
             user.lastWithdrawBlock = block.number;
         }
@@ -757,23 +733,23 @@ contract BaoMasterFarmer is Ownable, Authorizable {
         user.amount = 0;
         user.rewardDebt = 0;
         pool.lpToken.safeTransfer(address(msg.sender), amountToSend);
-        pool.lpToken.safeTransfer(address(devaddr), devToSend);
+        pool.lpToken.safeTransfer(address(devAddr), devToSend);
         emit EmergencyWithdraw(msg.sender, _pid, amountToSend);
     }
 
-    // Safe Bao transfer function, just in case if rounding error causes pool to not have enough Baos.
-    function safeBaoTransfer(address _to, uint256 _amount) internal {
-        uint256 BaoBal = Bao.balanceOf(address(this));
-        if (_amount > BaoBal) {
-            Bao.transfer(_to, BaoBal);
+    // Safe Viper transfer function, just in case if rounding error causes pool to not have enough Vipers.
+    function safeViperTransfer(address _to, uint256 _amount) internal {
+        uint256 ViperBal = Viper.balanceOf(address(this));
+        if (_amount > ViperBal) {
+            Viper.transfer(_to, ViperBal);
         } else {
-            Bao.transfer(_to, _amount);
+            Viper.transfer(_to, _amount);
         }
     }
 
     // Update dev address by the previous dev.
-    function dev(address _devaddr) public onlyAuthorized {
-        devaddr = _devaddr;
+    function dev(address _devAddr) public onlyAuthorized {
+        devAddr = _devAddr;
     }
 
     // Update Finish Bonus Block
@@ -788,17 +764,17 @@ contract BaoMasterFarmer is Ownable, Authorizable {
 
     // Update Liquidityaddr
     function lpUpdate(address _newLP) public onlyAuthorized {
-        liquidityaddr = _newLP;
+        liquidityAddr = _newLP;
     }
 
-    // Update comfundaddr
+    // Update communityFundAddr
     function comUpdate(address _newCom) public onlyAuthorized {
-        comfundaddr = _newCom;
+        communityFundAddr = _newCom;
     }
 
-    // Update founderaddr
+    // Update founderAddr
     function founderUpdate(address _newFounder) public onlyAuthorized {
-        founderaddr = _newFounder;
+        founderAddr = _newFounder;
     }
 
     // Update Reward Per Block
@@ -815,33 +791,33 @@ contract BaoMasterFarmer is Ownable, Authorizable {
     }
 
     // Update % lock for general users
-    function lockUpdate(uint256 _newlock) public onlyAuthorized {
-        PERCENT_LOCK_BONUS_REWARD = _newlock;
+    function lockUpdate(uint256 _newGeneralLock) public onlyAuthorized {
+        PERCENT_LOCK_BONUS_REWARD = _newGeneralLock;
     }
 
     // Update % lock for dev
-    function lockdevUpdate(uint256 _newdevlock) public onlyAuthorized {
-        PERCENT_FOR_DEV = _newdevlock;
+    function lockDevUpdate(uint256 _newDevLock) public onlyAuthorized {
+        PERCENT_FOR_DEV = _newDevLock;
     }
 
     // Update % lock for LP
-    function locklpUpdate(uint256 _newlplock) public onlyAuthorized {
-        PERCENT_FOR_LP = _newlplock;
+    function lockLpUpdate(uint256 _newLpLock) public onlyAuthorized {
+        PERCENT_FOR_LP = _newLpLock;
     }
 
     // Update % lock for COM
-    function lockcomUpdate(uint256 _newcomlock) public onlyAuthorized {
-        PERCENT_FOR_COM = _newcomlock;
+    function lockCommunityUpdate(uint256 _newCommunityLock) public onlyAuthorized {
+        PERCENT_FOR_COMMUNITY = _newCommunityLock;
     }
 
     // Update % lock for Founders
-    function lockfounderUpdate(uint256 _newfounderlock) public onlyAuthorized {
-        PERCENT_FOR_FOUNDERS = _newfounderlock;
+    function lockFounderUpdate(uint256 _newFounderLock) public onlyAuthorized {
+        PERCENT_FOR_FOUNDERS = _newFounderLock;
     }
 
     // Update START_BLOCK
-    function starblockUpdate(uint256 _newstarblock) public onlyAuthorized {
-        START_BLOCK = _newstarblock;
+    function startBlockUpdate(uint256 _newStartBlock) public onlyAuthorized {
+        START_BLOCK = _newStartBlock;
     }
 
     function getNewRewardPerBlock(uint256 pid1) public view returns (uint256) {
