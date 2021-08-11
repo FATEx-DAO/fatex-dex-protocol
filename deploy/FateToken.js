@@ -3,13 +3,15 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
 
   const { deployer } = await getNamedAccounts()
 
-  await deploy('UniswapV2Factory', {
+  const { address } = await deploy("FateToken", {
     from: deployer,
-    args: [deployer],
     log: true,
     deterministicDeployment: false,
     gasLimit: 5198000,
   })
+
+  console.log(`FATE token deployed at ${address}`)
 }
 
-module.exports.tags = ["UniswapV2Factory"]
+module.exports.tags = ["FateToken"]
+module.exports.dependencies = ["UniswapV2Factory"]

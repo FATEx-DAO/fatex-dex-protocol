@@ -24,12 +24,12 @@ contract UniswapV2Factory is IUniswapV2Factory {
         feeToSetter = _feeToSetter;
     }
 
-    function allPairsLength() external view override returns (uint256) {
-        return allPairs.length;
+    function getPairInitCode() external override pure returns (bytes memory) {
+        return type(UniswapV2Pair).creationCode;
     }
 
-    function pairCodeHash() external pure returns (bytes32) {
-        return keccak256(type(UniswapV2Pair).creationCode);
+    function allPairsLength() external view override returns (uint256) {
+        return allPairs.length;
     }
 
     function createPair(address tokenA, address tokenB)

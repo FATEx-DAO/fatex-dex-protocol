@@ -830,28 +830,6 @@
     "@types/bn.js" "*"
     "@types/underscore" "*"
 
-"@uniswap/v2-core@git://github.com/uniswap/uniswap-v2-core.git#27f6354bae6685612c182c3bc7577e61bc8717e3":
-  version "1.0.0-beta.0"
-  resolved "git://github.com/uniswap/uniswap-v2-core.git#27f6354bae6685612c182c3bc7577e61bc8717e3"
-
-"@viperswap/core@1.0.2", "@viperswap/core@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@viperswap/core/-/core-1.0.2.tgz#5c64ef2f64309e4e64673a089568b5f0536ebb81"
-  integrity sha512-AVQcusMorIAz5W0H8gfEuUE0INa630Sa/Y6ydE+alsb2iE04JPBXE77Ps2qmhQLaCPjrBzTDtzJSzUHiKdAbTw==
-
-"@viperswap/lib@1.0.1", "@viperswap/lib@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@viperswap/lib/-/lib-1.0.1.tgz#11df9aaf999eff114e2913f08bd3120c222078d5"
-  integrity sha512-mdhF4+WTfoCyzMpW0aEhkkiRwFszAifaLAi/8/VoB5mjPCCXX+75OR0e5n2Kyil4OGrqUkMN5rzTUX387Z3dvQ==
-
-"@viperswap/periphery@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@viperswap/periphery/-/periphery-1.0.1.tgz#8c0c076ed581d6407391e0bafa3646c7f3c9dee6"
-  integrity sha512-HYgupcUCqqGdOzStjicVfCFECVG6XfvVwpe8M3uXxA+kmchd8tv6L4f960PQGfretMt26noXjAFws3PLL+YhxA==
-  dependencies:
-    "@viperswap/core" "1.0.2"
-    "@viperswap/lib" "1.0.1"
-
 "@yarnpkg/lockfile@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"

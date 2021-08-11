@@ -2,12 +2,13 @@
 
 // P1 - P3: OK
 pragma solidity 0.6.12;
+
 import "./libraries/SafeMath.sol";
 import "./libraries/SafeERC20.sol";
 
-import "./uniswapv2/interfaces/IUniswapV2ERC20.sol";
-import "./uniswapv2/interfaces/IUniswapV2Pair.sol";
-import "./uniswapv2/interfaces/IUniswapV2Factory.sol";
+import "./uniswap-v2/interfaces/IUniswapV2ERC20.sol";
+import "./uniswap-v2/interfaces/IUniswapV2Pair.sol";
+import "./uniswap-v2/interfaces/IUniswapV2Factory.sol";
 
 import "./Ownable.sol";
 

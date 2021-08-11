@@ -3,15 +3,15 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
 
   const { deployer } = await getNamedAccounts()
 
-  const { address } = await deploy("SushiToken", {
+  const { address } = await deploy("EmissionSchedule", {
     from: deployer,
     log: true,
     deterministicDeployment: false,
     gasLimit: 5198000,
   })
 
-  console.log(`SUSHI token deployed at ${address}`)
+  console.log(`FATE token deployed at ${address}`)
 }
 
-module.exports.tags = ["SushiToken"]
+module.exports.tags = ["EmissionSchedule"]
 module.exports.dependencies = ["UniswapV2Factory"]
