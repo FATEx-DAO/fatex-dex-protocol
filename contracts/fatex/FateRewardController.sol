@@ -188,6 +188,15 @@ contract FateRewardController is Ownable {
         }
     }
 
+    function getNewRewardPerBlock(uint pid1) public view returns (uint) {
+        uint256 fatePerBlock = emissionSchedule.getFatePerBlock(startBlock, block.number - 1, block.number);
+        if (pid1 == 0) {
+            return fatePerBlock;
+        } else {
+            return fatePerBlock.mul(poolInfo[pid1 - 1].allocPoint).div(totalAllocPoint);
+        }
+    }
+
     // Update reward variables of the given pool to be up-to-date.
     function updatePool(uint256 _pid) public {
         PoolInfo storage pool = poolInfo[_pid];
