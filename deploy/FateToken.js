@@ -14,4 +14,3 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
 }
 
 module.exports.tags = ["FateToken"]
-module.exports.dependencies = ["UniswapV2Factory"]

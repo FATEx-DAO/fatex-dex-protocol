@@ -15,10 +15,13 @@ require("solidity-coverage")
 
 const { removeConsoleLog } = require("hardhat-preprocessor")
 
-const accounts = {
-  mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test junk",
+// const accounts = {
+//   mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test junk",
+//   privateKey: process.env.PRIVATE_KEY,
   // accountsBalance: "990000000000000000000",
-}
+// }
+
+const accounts = [process.env.PRIVATE_KEY]
 
 module.exports = {
   abiExporter: {
@@ -132,6 +135,22 @@ module.exports = {
       url: "https://kovan3.arbitrum.io/rpc",
       accounts,
       chainId: 79377087078960,
+      live: true,
+      saveDeployments: true,
+      tags: ["staging"],
+    },
+    harmony: {
+      url: "https://api.harmony.one",
+      accounts,
+      chainId: 1666600000,
+      live: true,
+      saveDeployments: true,
+      tags: ["staging"],
+    },
+    harmony_testnet: {
+      url: "https://api.s0.b.hmny.io",
+      accounts,
+      chainId: 1666700000,
       live: true,
       saveDeployments: true,
       tags: ["staging"],

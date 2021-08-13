@@ -40,13 +40,17 @@ contract Vault is Ownable {
     )
     public
     onlyOwner {
-        // reset the allowance on the old controller
-        IERC20(fate).safeApprove(controller, 0);
+        if (controller != address(0)) {
+            // reset the allowance on the old controller
+            IERC20(fate).safeApprove(controller, 0);
+        }
 
         controller = _controller;
 
-        // set the allowance on the new controller
-        IERC20(fate).safeApprove(controller, uint(- 1));
+        if (controller != address(0)) {
+            // set the allowance on the new controller
+            IERC20(fate).safeApprove(controller, uint(- 1));
+        }
     }
 
 }

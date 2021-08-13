@@ -18,7 +18,8 @@ module.exports = async function (
   console.log("Migrate", config.networks[hre.network.name].accounts)
 
   // Dev
-  const privateKey = Wallet.fromMnemonic(config.networks[hre.network.name].accounts.mnemonic, "m/44'/60'/0'/0/4").privateKey
+  // const privateKey = Wallet.fromMnemonic(config.networks[hre.network.name].accounts.mnemonic, "m/44'/60'/0'/0/4").privateKey
+  const privateKey = config.networks[hre.network.name].accounts.privateKey
 
   const erc20Contract = await ethers.getContractFactory("UniswapV2ERC20")
 
@@ -44,8 +45,8 @@ module.exports = async function (
   )
 
   const { v, r, s } = ecsign(
-    Buffer.from(digest.slice(2), "hex"),
-    Buffer.from(privateKey.slice(2), "hex")
+    Buffer.from(digest.replace('0x', ''), "hex"),
+    Buffer.from(privateKey.replace('0x', ''), "hex")
   )
 
   console.log({ v, r: hexlify(r), s: hexlify(s) })
