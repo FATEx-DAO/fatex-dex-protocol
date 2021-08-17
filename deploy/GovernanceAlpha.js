@@ -1,18 +1,24 @@
-module.exports = async function ({ getNamedAccounts, deployments }) {
+module.exports = async function ({ getNamedAccounts, deployments, ethers }) {
   const { deploy } = deployments
 
   const { deployer } = await getNamedAccounts()
 
-  const timelockAddress = (await deployments.get("Timelock")).address
+  const timelock = await deployments.get("Timelock")
   const fateAddress = (await deployments.get("FateToken")).address
 
-  await deploy("GovernorAlpha", {
+  const { address } = await deploy("GovernorAlpha", {
     from: deployer,
-    args: [timelockAddress, fateAddress],
+    args: [timelock.address, fateAddress],
     log: true,
     deterministicDeployment: false,
     gasLimit: 5198000,
   })
+
+  await (await timelock.setPendingAdmin(address)).wait();
+
+  const governorAlpha = await ethers.getContract("GovernorAlpha")
+
+  await (await governorAlpha.acceptAdmin()).wait()
 }
 
 module.exports.tags = ["GovernorAlpha"]

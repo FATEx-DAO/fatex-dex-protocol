@@ -146,7 +146,7 @@ contract Timelock {
         );
 
         bytes32 txHash =
-            keccak256(abi.encode(target, value, signature, data, eta));
+        keccak256(abi.encode(target, value, signature, data, eta));
         queuedTransactions[txHash] = true;
 
         emit QueueTransaction(txHash, target, value, signature, data, eta);
@@ -166,7 +166,7 @@ contract Timelock {
         );
 
         bytes32 txHash =
-            keccak256(abi.encode(target, value, signature, data, eta));
+        keccak256(abi.encode(target, value, signature, data, eta));
         queuedTransactions[txHash] = false;
 
         emit CancelTransaction(txHash, target, value, signature, data, eta);
@@ -185,7 +185,7 @@ contract Timelock {
         );
 
         bytes32 txHash =
-            keccak256(abi.encode(target, value, signature, data, eta));
+        keccak256(abi.encode(target, value, signature, data, eta));
         require(
             queuedTransactions[txHash],
             "Timelock::executeTransaction: Transaction hasn't been queued."
@@ -213,16 +213,21 @@ contract Timelock {
         }
 
         // solium-disable-next-line security/no-call-value
-        (bool success, bytes memory returnData) =
-            target.call{value: value}(callData);
-        require(
-            success,
-            "Timelock::executeTransaction: Transaction execution reverted."
-        );
+        (bool success, bytes memory result) = target.call{value : value}(callData);
+        if (!success) {
+            if (result.length < 68) {
+                revert("Timelock::executeTransaction: Transaction execution reverted.");
+            } else {
+                assembly {
+                    result := add(result, 0x04)
+                }
+                revert(string(abi.encodePacked("Timelock::executeTransaction: ", abi.decode(result, (string)))));
+            }
+        }
 
         emit ExecuteTransaction(txHash, target, value, signature, data, eta);
 
-        return returnData;
+        return result;
     }
 
     function getBlockTimestamp() internal view returns (uint256) {

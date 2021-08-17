@@ -19,7 +19,7 @@ contract GovernorAlpha {
     /// @notice The delay before voting on a proposal may take place, once proposed
     function votingDelay() public pure returns (uint) {return 1;} // 1 block
 
-    /// @notice The duration of voting on a proposal, in blocks
+    /// @notice The duration of voting on a proposal, in seconds
     function votingPeriod() public pure returns (uint) {return 259_200;} // 3 days in seconds
 
     /// @notice The address of the FATEx Protocol Timelock
@@ -33,6 +33,9 @@ contract GovernorAlpha {
 
     /// @notice The total number of proposals
     uint public proposalCount;
+
+    /// @notice For setting the admin initially on the timelock to this address. Used when the system is being initialized
+    bool public admin_initialized;
 
     /// @notice A proposal that is submitted by anyone that has enough ballots
     struct Proposal {
@@ -310,6 +313,15 @@ contract GovernorAlpha {
         return _castVote(msg.sender, proposalId, support);
     }
 
+    function acceptAdmin() public {
+        require(
+            !admin_initialized,
+            "GovernorAlpha::acceptAdmin: ALREADY_INITIALIZED"
+        );
+        TimelockInterface(timelock).acceptAdmin();
+        admin_initialized = true;
+    }
+
     function castVoteBySig(uint proposalId, bool support, uint8 v, bytes32 r, bytes32 s) public {
         bytes32 domainSeparator = keccak256(abi.encode(DOMAIN_TYPEHASH, keccak256(bytes(name)), getChainId(), address(this)));
         bytes32 structHash = keccak256(abi.encode(BALLOT_TYPEHASH, proposalId, support));
@@ -386,5 +398,6 @@ interface TimelockInterface {
 
 interface IFate {
     function getPriorVotes(address account, uint blockNumber) external view returns (uint96);
+
     function delegates(address delegator) external view returns (address);
 }

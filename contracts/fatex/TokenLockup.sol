@@ -15,6 +15,7 @@ contract TokenLockup is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
+    event BeneficiarySet(address beneficary);
     event Released(uint256 amount);
     event Revoked();
 
@@ -57,6 +58,22 @@ contract TokenLockup is Ownable {
         duration = _durationInSeconds;
         cliff = _startTimestamp.add(_cliffDurationInSeconds);
         start = _startTimestamp;
+
+        emit BeneficiarySet(_beneficiary);
+    }
+
+    function setBeneficiary(address _beneficiary) public {
+        require(
+            msg.sender == beneficiary,
+            "TokenLockup:: UNAUTHORIZED"
+        );
+        require(
+            _beneficiary != address(0),
+            "TokenLockup:: INVALID_BENEFICIARY"
+        );
+
+        beneficiary = _beneficiary;
+        emit BeneficiarySet(_beneficiary);
     }
 
     /**
@@ -64,17 +81,17 @@ contract TokenLockup is Ownable {
      * @param _token ERC20 token which is being vested
      */
     function release(IERC20 _token) public {
-        if (duration == 0) {
-            // If the duration is set to 0, it's in here for optics and only key addresses can release it.
-            require(
-                msg.sender == owner() || msg.sender == beneficiary,
-                "TokenLockup: UNAUTHORIZED"
-            );
-        }
+        require(
+            msg.sender == owner() || msg.sender == beneficiary,
+            "TokenLockup: UNAUTHORIZED"
+        );
 
         uint256 unreleased = releasableAmount(_token);
 
-        require(unreleased > 0);
+        require(
+            unreleased > 0,
+            "TokenLockup: NOTHING_TO_RELEASE"
+        );
 
         released[address(_token)] = released[address(_token)].add(unreleased);
 
@@ -89,8 +106,14 @@ contract TokenLockup is Ownable {
      * @param _token ERC20 token which is being vested
      */
     function revoke(IERC20 _token) public onlyOwner {
-        require(revocable);
-        require(!revoked[address(_token)]);
+        require(
+            revocable,
+            "TokenLockup: NOT_REVOCABLE"
+        );
+        require(
+            !revoked[address(_token)],
+            "TokenLockup: NOT_REVOCABLE"
+        );
 
         uint256 balance = _token.balanceOf(address(this));
 
