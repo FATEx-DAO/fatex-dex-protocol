@@ -15,13 +15,11 @@ require("solidity-coverage")
 
 const { removeConsoleLog } = require("hardhat-preprocessor")
 
-// const accounts = {
-//   mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test junk",
-//   privateKey: process.env.PRIVATE_KEY,
-  // accountsBalance: "990000000000000000000",
-// }
-
-const accounts = [process.env.PRIVATE_KEY]
+const accounts = {
+  mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test junk",
+  accountsBalance: "990000000000000000000",
+  path: "m/44'/60'/0'/4",
+}
 
 module.exports = {
   abiExporter: {

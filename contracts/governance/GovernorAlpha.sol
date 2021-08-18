@@ -3,7 +3,11 @@
 pragma solidity =0.6.12;
 pragma experimental ABIEncoderV2;
 
+import "@openzeppelin/contracts/math/SafeMath.sol";
+
 contract GovernorAlpha {
+    using SafeMath for *;
+
     /// @notice The name of this contract
     string public constant name = "FATEx Governor Alpha";
 
@@ -141,8 +145,13 @@ contract GovernorAlpha {
     function getPriorVotes(
         address account,
         uint blockNumber
-    ) external view returns (uint96) {
-        return fate.getPriorVotes(account, blockNumber) + xFate.getPriorVotes(account, blockNumber);
+    ) public view returns (uint96) {
+        // technically, this is an imperfect solution for getting xFate votes because this isn't necessarily the
+        // exchange rate at `blockNumber` point in time. However, it gets the job done without exposing a vulnerability
+        // since the only way to artificially increase this exchange rate is by sending FATE to the xFATE contract,
+        // which would effectively donate the FATE to all xFATE holders.
+        uint xFateVotes = xFate.getPriorVotes(account, blockNumber).mul(fate.balanceOf(address(xFate))).div(xFate.totalSupply());
+        return uint96(fate.getPriorVotes(account, blockNumber) + xFateVotes);
     }
 
     function propose(
@@ -153,7 +162,7 @@ contract GovernorAlpha {
         string memory description
     ) public returns (uint) {
         require(
-            fate.getPriorVotes(msg.sender, sub256(block.number, 1)) > proposalThreshold(),
+            getPriorVotes(msg.sender, sub256(block.number, 1)) > proposalThreshold(),
             "GovernorAlpha::propose: proposer votes below proposal threshold"
         );
         require(
@@ -262,7 +271,7 @@ contract GovernorAlpha {
 
         Proposal storage proposal = proposals[proposalId];
         require(
-            fate.getPriorVotes(proposal.proposer, sub256(block.number, 1)) < proposalThreshold(),
+            getPriorVotes(proposal.proposer, sub256(block.number, 1)) < proposalThreshold(),
             "GovernorAlpha::cancel: proposer above threshold"
         );
 
@@ -347,7 +356,7 @@ contract GovernorAlpha {
             "GovernorAlpha::_castVote: voter already voted"
         );
 
-        uint96 votes = fate.getPriorVotes(voter, proposal.startBlock);
+        uint96 votes = getPriorVotes(voter, proposal.startBlock);
 
         if (support) {
             proposal.forVotes = add256(proposal.forVotes, votes);
@@ -400,4 +409,8 @@ interface IFate {
     function getPriorVotes(address account, uint blockNumber) external view returns (uint96);
 
     function delegates(address delegator) external view returns (address);
+
+    function totalSupply() external view returns (uint);
+
+    function balanceOf(address who) external view returns (uint);
 }

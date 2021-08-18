@@ -57,7 +57,8 @@ describe("EmissionSchedule", () => {
     expect(await getFatePerBlock(startBlock, startBlock + 100, startBlock + (BLOCKS_PER_WEEK * 3) - 50)).to.equal('7302005622622788159')
   })
 
-  it("should work for basic query when _toBlock is after highest index", async () => {
+  it("should work for basic query when _toBlock is after the last block", async () => {
+    // There are 72 weeks in total.
     // 509.5 FATE per WEEK in total @ 80% lockup --> 101.9
     // 72 FATE per week at last week --> 173.9
     // 173.9 * BLOCKS_PER_WEEK --> 52,587,360
@@ -70,6 +71,10 @@ describe("EmissionSchedule", () => {
   })
 
   it("should return 0 when _fromBlock equals _toBlock", async () => {
+    expect(await getFatePerBlock(startBlock, startBlock + (BLOCKS_PER_WEEK * 75), startBlock + (BLOCKS_PER_WEEK * 76))).to.equal('0')
+  })
+
+  it("should return 0 when _fromBlock is after the last block _toBlock", async () => {
     expect(await getFatePerBlock(startBlock, startBlock + 100, startBlock + 100)).to.equal('0')
   })
 
