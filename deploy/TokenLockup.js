@@ -1,6 +1,8 @@
-const MULTI_SIG_ADDRESSES = new Map()
-MULTI_SIG_ADDRESSES.set("1666600000", "0x4853365bc81f8270d902076892e13f27c27e7266")
-MULTI_SIG_ADDRESSES.set("1666700000", "0x4853365bc81f8270d902076892e13f27c27e7266")
+const { MULTI_SIG_ADDRESSES } = require("../src/constants");
+
+function getStartTimestamp() {
+  return Math.floor(new Date().getTime() / 1000)
+}
 
 module.exports = async function ({ getNamedAccounts, ethers, deployments, getChainId }) {
   const { deploy } = deployments
@@ -13,7 +15,7 @@ module.exports = async function ({ getNamedAccounts, ethers, deployments, getCha
   const benificiary1 = "0xCaCDaDe3AAa92582C3161ae5A9Fa3bB7e788FDF8"
   const benificiary2 = "0x4F5Fbb56314cB48fA4848bf1e0433F0DD8A12C49"
   const cliffDuration = (60 * 60 * 24 * 182).toString() // 6 months in seconds
-  const startTimestamp = Math.floor(new Date().getTime() / 1000).toString()
+  const startTimestamp = getStartTimestamp()
   const totalDuration = (60 * 60 * 24 * 365).toString() // 1 year in seconds
   const revocable = true
 
@@ -33,50 +35,50 @@ module.exports = async function ({ getNamedAccounts, ethers, deployments, getCha
   })
   const { address: fgcdAddress } = await deploy("TokenLockup", {
     from: deployer,
-    args: [multiSig, "0", "0", "0", revocable],
+    args: [multiSig, startTimestamp, "0", "0", revocable],
     log: true,
     deterministicDeployment: false,
     gasLimit: 5198000,
   })
   const { address: legalAddress } = await deploy("TokenLockup", {
     from: deployer,
-    args: [multiSig, "0", "0", "0", revocable],
+    args: [multiSig, startTimestamp + 1, "0", "0", revocable],
     log: true,
     deterministicDeployment: false,
     gasLimit: 5198000,
   })
   const { address: growthAddress } = await deploy("TokenLockup", {
     from: deployer,
-    args: [multiSig, "0", "0", "0", revocable],
+    args: [multiSig, startTimestamp + 2, "0", "0", revocable],
     log: true,
     deterministicDeployment: false,
     gasLimit: 5198000,
   })
   const { address: presaleAddress } = await deploy("TokenLockup", {
     from: deployer,
-    args: [multiSig, "0", "0", "0", revocable],
+    args: [multiSig, startTimestamp + 3, "0", "0", revocable],
     log: true,
     deterministicDeployment: false,
     gasLimit: 5198000,
   })
 
   const lockup1 = await ethers.getContractAt("TokenLockup", lockupAddress1)
-  await lockup1.transferOwnership(multiSig)
+  await (await lockup1.transferOwnership(multiSig)).wait()
 
   const lockup2 = await ethers.getContractAt("TokenLockup", lockupAddress2)
-  await lockup2.transferOwnership(multiSig)
+  await (await lockup2.transferOwnership(multiSig)).wait()
 
   const fgcd = await ethers.getContractAt("TokenLockup", fgcdAddress)
-  await fgcd.transferOwnership(multiSig)
+  await (await fgcd.transferOwnership(multiSig)).wait()
 
   const legal = await ethers.getContractAt("TokenLockup", legalAddress)
-  await legal.transferOwnership(multiSig)
+  await (await legal.transferOwnership(multiSig)).wait()
 
   const growth = await ethers.getContractAt("TokenLockup", growthAddress)
-  await growth.transferOwnership(multiSig)
+  await (await growth.transferOwnership(multiSig)).wait()
 
   const presale = await ethers.getContractAt("TokenLockup", presaleAddress)
-  await presale.transferOwnership(multiSig)
+  await (await presale.transferOwnership(multiSig)).wait()
 
   const fate = await ethers.getContract("FateToken")
   const vault = await ethers.getContract("Vault")

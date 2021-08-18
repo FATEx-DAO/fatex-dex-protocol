@@ -13,13 +13,15 @@ module.exports = async function ({ getNamedAccounts, getChainId, deployments }) 
 
   const fateRouterAddress = (await deployments.get("UniswapV2Router02")).address
 
-  await deploy("LiquidityMigrator", {
-    from: deployer,
-    args: [uniswapRouterAddress, fateRouterAddress],
-    log: true,
-    deterministicDeployment: false,
-    gasLimit: 5198000,
-  })
+  if (uniswapRouterAddress) {
+    await deploy("LiquidityMigrator", {
+      from: deployer,
+      args: [uniswapRouterAddress, fateRouterAddress],
+      log: true,
+      deterministicDeployment: false,
+      gasLimit: 5198000,
+    })
+  }
 }
 
 module.exports.tags = ["LiquidityMigrator"]

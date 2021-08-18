@@ -1,8 +1,6 @@
-const MULTI_SIG_ADDRESSES = new Map()
-MULTI_SIG_ADDRESSES.set("1666600000", "0x4853365bc81f8270d902076892e13f27c27e7266")
-MULTI_SIG_ADDRESSES.set("1666700000", "0x4853365bc81f8270d902076892e13f27c27e7266")
-
-module.exports = async function ({ getChainId, ethers }) {
+const { MULTI_SIG_ADDRESSES } = require("../src/constants");
+module.exports = async function ({ getChainId, ethers, getNamedAccounts }) {
+  const { deployer } = await getNamedAccounts()
   const chainId = await getChainId()
 
   const vault = await ethers.getContract("Vault")

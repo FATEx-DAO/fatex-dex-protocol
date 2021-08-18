@@ -67,6 +67,9 @@ module.exports = {
       // dev address mainnet
       // 1: "",
     },
+    token_deployer: {
+      default: 5
+    }
   },
   networks: {
     mainnet: {

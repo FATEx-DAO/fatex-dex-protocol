@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./FateToken.sol";
-import "./EmissionSchedule.sol";
+import "./RewardSchedule.sol";
 
 interface IMigratorChef {
     // Perform LP token migration from legacy UniswapV2 to FATEx DEX.
@@ -63,7 +63,7 @@ contract FateRewardController is Ownable {
     address public vault;
 
     // The emission scheduler that calculates fate per block over a given period
-    EmissionSchedule public emissionSchedule;
+    RewardSchedule public emissionSchedule;
 
     // Bonus multiplier for early fate LP deposits.
     uint256 public constant BONUS_MULTIPLIER = 10;
@@ -95,7 +95,7 @@ contract FateRewardController is Ownable {
 
     constructor(
         FateToken _fate,
-        EmissionSchedule _emissionSchedule,
+        RewardSchedule _emissionSchedule,
         address _vault
     ) public {
         fate = _fate;
@@ -271,7 +271,7 @@ contract FateRewardController is Ownable {
     }
 
     function setEmissionSchedule(
-        EmissionSchedule _emissionSchedule
+        RewardSchedule _emissionSchedule
     )
     public
     onlyOwner {

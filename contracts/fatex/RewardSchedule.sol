@@ -4,7 +4,7 @@ pragma solidity 0.6.12;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
-contract EmissionSchedule {
+contract RewardSchedule {
     using SafeMath for uint;
 
     // This is the emission schedule for each block for a given week
@@ -31,7 +31,11 @@ contract EmissionSchedule {
     constructor() public {
     }
 
-    function getFateAtBlock(uint index) public view returns (uint) {
+    function rewardsNumberOfWeeks() external view returns (uint) {
+        return FATE_PER_BLOCK.length;
+    }
+
+    function getFateAtIndex(uint index) public view returns (uint) {
         if (index < 13) {
             // vesting occurs at an 80/20 rate for the first 13 weeks
             return FATE_PER_BLOCK[index] * 2 / 10;
@@ -41,7 +45,7 @@ contract EmissionSchedule {
     }
 
     /// @notice returns the average amount of FATE earned per block over any block period. If spanned over multiple
-    /// weeks, a weighted average is calculated
+    /// weeks, a weighted average is calculated. Both _fromBlock and _toBlock are inclusive
     function getFatePerBlock(
         uint _startBlock,
         uint _fromBlock,
@@ -50,7 +54,7 @@ contract EmissionSchedule {
     external
     view
     returns (uint) {
-        if (_startBlock > _toBlock) {
+        if (_startBlock > _toBlock || _fromBlock == _toBlock) {
             return 0;
         }
         if (_fromBlock < _startBlock) {
@@ -62,31 +66,35 @@ contract EmissionSchedule {
             "EmissionSchedule::getFatePerBlock: INVALID_RANGE"
         );
 
-        uint startIndex = (_fromBlock - _startBlock) / BLOCKS_PER_WEEK;
-        uint endIndex = (_toBlock - _startBlock) / BLOCKS_PER_WEEK;
-        if (startIndex >= FATE_PER_BLOCK.length) {
-            startIndex = FATE_PER_BLOCK.length - 1;
-        }
-        if (endIndex >= FATE_PER_BLOCK.length) {
-            endIndex = FATE_PER_BLOCK.length - 1;
+        uint endBlockExclusive = _startBlock + (FATE_PER_BLOCK.length * BLOCKS_PER_WEEK);
+
+        if (_fromBlock >= endBlockExclusive) {
+            return 0;
         }
 
-        if (startIndex < endIndex) {
+        if (_toBlock >= endBlockExclusive) {
+            _toBlock = endBlockExclusive - 1;
+        }
+
+        uint fromIndex = (_fromBlock - _startBlock) / BLOCKS_PER_WEEK;
+        uint toIndex = (_toBlock - _startBlock) / BLOCKS_PER_WEEK;
+
+        if (fromIndex < toIndex) {
             uint points = BLOCKS_PER_WEEK - ((_fromBlock - _startBlock) % BLOCKS_PER_WEEK);
-            uint fatePerBlock = points * getFateAtBlock(startIndex);
+            uint fatePerBlock = points * getFateAtIndex(fromIndex);
 
-            for (uint i = startIndex + 1; i < endIndex; i++) {
-                fatePerBlock = BLOCKS_PER_WEEK * getFateAtBlock(i);
+            for (uint i = fromIndex + 1; i < toIndex; i++) {
+                fatePerBlock = fatePerBlock + (BLOCKS_PER_WEEK * getFateAtIndex(i));
             }
 
             points = (_toBlock - _startBlock) % BLOCKS_PER_WEEK;
-            fatePerBlock = fatePerBlock + (points * getFateAtBlock(endIndex));
+            fatePerBlock = fatePerBlock + (points * getFateAtIndex(toIndex));
 
             return fatePerBlock / (_toBlock - _fromBlock);
         } else {
             // indices are the same
-            assert(startIndex == endIndex);
-            return getFateAtBlock(startIndex) * (_toBlock - _fromBlock);
+            assert(fromIndex == toIndex);
+            return getFateAtIndex(fromIndex) * (_toBlock - _fromBlock);
         }
     }
 

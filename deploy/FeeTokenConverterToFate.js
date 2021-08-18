@@ -1,3 +1,4 @@
+const { MULTI_SIG_ADDRESSES } = require("../src/constants");
 const WETH = {
   "1": '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   "3": "0xc778417E063141139Fce010982780140Aa0cD5Ab",
@@ -10,10 +11,6 @@ const WETH = {
   "1666700000": "0x7466d7d0c21fa05f32f5a0fa27e12bdc06348ce2", // harmony testnet shard 0 wONE
 }
 
-const MULTI_SIG_ADDRESSES = new Map()
-MULTI_SIG_ADDRESSES.set("1666600000", "0x4853365bc81f8270d902076892e13f27c27e7266")
-MULTI_SIG_ADDRESSES.set("1666700000", "0x4853365bc81f8270d902076892e13f27c27e7266")
-
 module.exports = async function ({ ethers, getNamedAccounts, deployments, getChainId }) {
   const { deploy } = deployments
 
@@ -25,7 +22,8 @@ module.exports = async function ({ ethers, getNamedAccounts, deployments, getCha
   const xFate = await ethers.getContract("XFateToken")
   const fate = await ethers.getContract("FateToken")
   const wethAddress = chainId in WETH ? WETH[chainId] : (await deployments.get("WETH9Mock")).address
-  const developer = MULTI_SIG_ADDRESSES.get(chainId)
+
+  let multiSig = MULTI_SIG_ADDRESSES.get(chainId)
 
   const { address, newlyDeployed } = await deploy("FeeTokenConverterToFate", {
     from: deployer,
@@ -39,7 +37,7 @@ module.exports = async function ({ ethers, getNamedAccounts, deployments, getCha
     // Transfer ownership of FeeTokenConverterToFate to dev
     const feeConverter = await ethers.getContract("FeeTokenConverterToFate")
     console.log("Setting feeConverter owner")
-    await (await feeConverter.transferOwnership(developer, { gasLimit: 5198000 })).wait()
+    await (await feeConverter.transferOwnership(multiSig, { gasLimit: 5198000 })).wait()
 
     // Set FeeTo to feeConverter
     console.log("Setting factory feeTo to feeConverter address")
