@@ -51,10 +51,10 @@ contract XFateToken is FateToken {
 
     // Unlocks the staked + gained FATE and burns xFATE
     function leave(uint256 _share) public {
-        _burn(msg.sender, safe96(_share, "XFateToken::leave: invalid share amount"));
-
         // Gets the amount of xFATE in existence
         uint256 totalShares = totalSupply;
+
+        _burn(msg.sender, safe96(_share, "XFateToken::leave: invalid share amount"));
 
         // Calculates the amount of FATE the xFATE is worth
         uint256 what = _share.mul(fate.balanceOf(address(this))).div(totalShares);
