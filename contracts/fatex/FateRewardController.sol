@@ -87,6 +87,8 @@ contract FateRewardController is Ownable {
 
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
 
+    event ClaimRewards(address indexed user, uint256 indexed pid, uint256 amount);
+
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
 
     event EmissionScheduleSet(address indexed emissionSchedule);
@@ -225,6 +227,7 @@ contract FateRewardController is Ownable {
         if (user.amount > 0) {
             uint256 pending = user.amount.mul(pool.accumulatedFatePerShare).div(1e12).sub(user.rewardDebt);
             safeFateTransfer(msg.sender, pending);
+            emit ClaimRewards(msg.sender, _pid, pending);
         }
         pool.lpToken.safeTransferFrom(
             address(msg.sender),
@@ -242,12 +245,28 @@ contract FateRewardController is Ownable {
         UserInfo storage user = userInfo[_pid][msg.sender];
         require(user.amount >= _amount, "withdraw: not good");
         updatePool(_pid);
+
         uint256 pending = user.amount.mul(pool.accumulatedFatePerShare).div(1e12).sub(user.rewardDebt);
         safeFateTransfer(msg.sender, pending);
+        emit ClaimRewards(msg.sender, _pid, pending);
+
         user.amount = user.amount.sub(_amount);
         user.rewardDebt = user.amount.mul(pool.accumulatedFatePerShare).div(1e12);
         pool.lpToken.safeTransfer(address(msg.sender), _amount);
         emit Withdraw(msg.sender, _pid, _amount);
+    }
+
+    // claim any pending rewards from this pool, from msg.sender
+    function claimRewards(uint256 _pid) public {
+        PoolInfo storage pool = poolInfo[_pid];
+        UserInfo storage user = userInfo[_pid][msg.sender];
+        updatePool(_pid);
+
+        uint256 pending = user.amount.mul(pool.accumulatedFatePerShare).div(1e12).sub(user.rewardDebt);
+        safeFateTransfer(msg.sender, pending);
+        emit ClaimRewards(msg.sender, _pid, pending);
+
+        user.rewardDebt = user.amount.mul(pool.accumulatedFatePerShare).div(1e12);
     }
 
     // Withdraw without caring about rewards. EMERGENCY ONLY.
