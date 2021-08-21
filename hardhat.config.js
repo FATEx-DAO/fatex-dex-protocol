@@ -18,7 +18,7 @@ const { removeConsoleLog } = require("hardhat-preprocessor")
 const accounts = {
   mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test junk",
   accountsBalance: "990000000000000000000",
-  path: "m/44'/60'/0'/7",
+  path: "m/44'/60'/0'/8",
 }
 
 module.exports = {

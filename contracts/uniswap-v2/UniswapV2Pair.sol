@@ -273,8 +273,7 @@ contract UniswapV2Pair is UniswapV2ERC20 {
             uint256 balance0Adjusted = balance0.mul(1000).sub(amount0In.mul(3));
             uint256 balance1Adjusted = balance1.mul(1000).sub(amount1In.mul(3));
             require(
-                balance0Adjusted.mul(balance1Adjusted) >=
-                    uint256(_reserve0).mul(_reserve1).mul(1000**2),
+                balance0Adjusted.mul(balance1Adjusted) >= uint256(_reserve0).mul(_reserve1).mul(1000**2),
                 "FATExDAO: K"
             );
         }

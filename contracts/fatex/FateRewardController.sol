@@ -257,7 +257,7 @@ contract FateRewardController is Ownable {
     }
 
     // claim any pending rewards from this pool, from msg.sender
-    function claimRewards(uint256 _pid) public {
+    function claimReward(uint256 _pid) public {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         updatePool(_pid);
@@ -267,6 +267,13 @@ contract FateRewardController is Ownable {
         emit ClaimRewards(msg.sender, _pid, pending);
 
         user.rewardDebt = user.amount.mul(pool.accumulatedFatePerShare).div(1e12);
+    }
+
+    // claim any pending rewards from this pool, from msg.sender
+    function claimRewards(uint256[] calldata _pids) external {
+        for (uint i = 0; i < _pids.length; i++) {
+            claimReward(_pids[i]);
+        }
     }
 
     // Withdraw without caring about rewards. EMERGENCY ONLY.
