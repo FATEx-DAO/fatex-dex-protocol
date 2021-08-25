@@ -14,12 +14,14 @@ import "../uniswap-v2/libraries/UniswapV2Library.sol";
 contract LiquidityMigrator {
     using SafeERC20 for IERC20;
 
-    IUniswapV2Router01 public oldRouter;
-    IUniswapV2Router01 public router;
+    IUniswapV2Router01 public immutable oldRouter;
+    IUniswapV2Router01 public immutable router;
+    bytes32 public immutable initCodeHash;
 
-    constructor(IUniswapV2Router01 _oldRouter, IUniswapV2Router01 _router) public {
+    constructor(IUniswapV2Router01 _oldRouter, IUniswapV2Router01 _router, bytes32 _initCodeHash) public {
         oldRouter = _oldRouter;
         router = _router;
+        initCodeHash = _initCodeHash;
     }
 
     function migrateWithPermit(
@@ -98,7 +100,7 @@ contract LiquidityMigrator {
                 hex'ff',
                 oldRouter.factory(),
                 keccak256(abi.encodePacked(token0, token1)),
-                hex'96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f' // init code hash
+                initCodeHash
             ))));
     }
 

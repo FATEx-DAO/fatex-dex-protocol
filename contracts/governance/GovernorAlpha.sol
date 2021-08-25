@@ -11,11 +11,14 @@ contract GovernorAlpha {
     /// @notice The name of this contract
     string public constant name = "FATEx Governor Alpha";
 
+    // Note the quorumVotes and proposalThreshold are meant to deal with the circulating supply being lower in the
+    // first phase of the project. Later, this contract should be upgraded to raise these two variables appropriately.
+
     /// @notice The number of votes in support of a proposal required in order for a quorum to be reached and for a vote to succeed
-    function quorumVotes() public pure returns (uint) {return 35_555_555.52e18;} // 4% of FATE
+    function quorumVotes() public pure returns (uint) {return 3_200_000e18;} // 0.36% of FATE
 
     /// @notice The number of votes required in order for a voter to become a proposer
-    function proposalThreshold() public pure returns (uint) {return 8_888_888e18;} // 1% of FATE
+    function proposalThreshold() public pure returns (uint) {return 1_600_000e18;} // 0.18% of FATE
 
     /// @notice The maximum number of actions that can be included in a proposal
     function proposalMaxOperations() public pure returns (uint) {return 10;} // 10 actions

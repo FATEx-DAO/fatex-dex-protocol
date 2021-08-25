@@ -19,19 +19,15 @@ contract FeeTokenConverterToFate is Ownable {
     using SafeERC20 for IERC20;
 
     // V1 - V5: OK
-    //0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac
     IUniswapV2Factory public immutable factory;
 
     // V1 - V5: OK
-    //0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272
     address public immutable xFATE;
 
     // V1 - V5: OK
-    //0x6B3595068778DD592e39A122f4f5a5cF09C90fE2
     address private immutable fate;
 
     // V1 - V5: OK
-    //0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2
     address private immutable weth;
 
     // V1 - V5: OK
