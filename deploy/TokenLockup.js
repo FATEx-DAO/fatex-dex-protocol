@@ -121,11 +121,11 @@ module.exports = async function ({ getNamedAccounts, ethers, deployments, getCha
   await (await fate.transfer('0x3882381DD67B50D595572A8abB7f1d60327845cC', '3055600000000000000000', { gasLimit: 5198000 })).wait()
   await (await fate.transfer(founderAddress, '88888888000000000000000000', { gasLimit: 5198000 })).wait()
   await (await fate.transfer(teamAddress, '12043636103160000000000000', { gasLimit: 5198000 })).wait()
-  // 16727272365500000000000000
+  // 16727272365500000000000000 total
   await (await fate.transfer('0xE3AC7a0780344E41A90FE8b750bFAC521B0c1fFb', '4683636262340000000000000', { gasLimit: 5198000 })).wait() // team address EOA
   await (await fate.transfer(vault.address, '138344267634500000000000000', { gasLimit: 5198000 })).wait()
 
-  console.log('deployer FATE balance (should bre 0): ', (await fate.balanceOf(deployer)).toString())
+  console.log('deployer FATE balance (should be 0): ', (await fate.balanceOf(deployer)).toString())
 }
 
 module.exports.tags = ["Timelock"]

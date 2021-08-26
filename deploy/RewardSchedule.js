@@ -9,8 +9,6 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     deterministicDeployment: false,
     gasLimit: 5198000,
   })
-
-  console.log(`FATE token deployed at ${address}`)
 }
 
 module.exports.tags = ["RewardSchedule"]
