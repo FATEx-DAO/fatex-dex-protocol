@@ -9,7 +9,7 @@ contract GovernorAlpha {
     using SafeMath for *;
 
     /// @notice The name of this contract
-    string public constant name = "FATEx Governor Alpha";
+    string public constant name = "FATExDAO Governor Alpha";
 
     // Note the quorumVotes and proposalThreshold are meant to deal with the circulating supply being lower in the
     // first phase of the project. Later, this contract should be upgraded to raise these two variables appropriately.
@@ -140,9 +140,10 @@ contract GovernorAlpha {
     /// @notice An event emitted when a proposal has been executed in the Timelock
     event ProposalExecuted(uint id);
 
-    constructor(address timelock_, address fate_) public {
+    constructor(address timelock_, address fate_, address xFate_) public {
         timelock = TimelockInterface(timelock_);
         fate = IFate(fate_);
+        xFate = IFate(xFate_);
     }
 
     function getPriorVotes(
@@ -153,7 +154,10 @@ contract GovernorAlpha {
         // exchange rate at `blockNumber` point in time. However, it gets the job done without exposing a vulnerability
         // since the only way to artificially increase this exchange rate is by sending FATE to the xFATE contract,
         // which would effectively donate the FATE to all xFATE holders.
-        uint xFateVotes = xFate.getPriorVotes(account, blockNumber).mul(fate.balanceOf(address(xFate))).div(xFate.totalSupply());
+        uint totalSupply = xFate.totalSupply();
+        uint xFateVotes = totalSupply > 0
+        ? xFate.getPriorVotes(account, blockNumber).mul(fate.balanceOf(address(xFate))).div(xFate.totalSupply())
+        : 0;
         return uint96(fate.getPriorVotes(account, blockNumber) + xFateVotes);
     }
 

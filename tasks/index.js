@@ -7,16 +7,16 @@ task("bytecode", "Prints bytecode").setAction(async function({ address }, { ethe
 })
 
 task("bigbang", "Big bang").setAction(async function(taskArguments, hre) {
-  
+
 })
 
 task("erc20:approve", "MasterChef deposit")
 .setAction(async function ({ token, spender }, { ethers: { getNamedSigner, constants: { MaxUint256 } } }, runSuper) {
   const erc20 = await ethers.getContractFactory("UniswapV2ERC20")
-  
-  const slp = erc20.attach(token)   
-  
-  await (await slp.connect(await getNamedSigner("dev")).approve(spender, MaxUint256)).wait()    
+
+  const slp = erc20.attach(token)
+
+  await (await slp.connect(await getNamedSigner("dev")).approve(spender, MaxUint256)).wait()
 });
 
 task("migrate", "Migrates liquidity from Uniswap to SushiSwap")
@@ -65,7 +65,7 @@ task("bar:enter", "SushiBar enter")
   const bar = await ethers.getContract("SushiBar")
 
   await run("erc20:approve", { token: sushi.address, spender: bar.address })
-  
+
   await (await bar.connect(await getNamedSigner("dev")).enter(amount)).wait()
 });
 
@@ -77,8 +77,15 @@ task("bar:leave", "SushiBar leave")
   const bar = await ethers.getContract("SushiBar")
 
   await run("erc20:approve", { token: sushi.address, spender: bar.address })
-  
+
   await (await bar.connect(await getNamedSigner("dev")).leave(amount)).wait()
+});
+
+task("uniswap-v2-factory:setFeeToSetter", "Change Fee Setter on UniswapV2Factory")
+.addParam("feeToSetter", "The new address that can change feeTo on UniswapV2Factory")
+.setAction(async function ({ feeToSetter }, { ethers: { getNamedSigner } }, runSuper) {
+  const factory = await ethers.getContract("UniswapV2Factory")
+  await (await factory.setFeeToSetter(feeToSetter)).wait()
 });
 
 task("maker:serve", "SushiBar serve")

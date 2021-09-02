@@ -3,7 +3,7 @@ const { ONE_MAP, USDC_MAP } = require("../src/constants");
 module.exports = async function ({ getNamedAccounts, deployments, ethers, getChainId }) {
   const { deploy } = deployments
 
-  const { deployer, token_deployer } = await getNamedAccounts()
+  const { deployer } = await getNamedAccounts()
 
   const chainId = await getChainId()
 

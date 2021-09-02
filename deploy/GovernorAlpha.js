@@ -5,14 +5,17 @@ module.exports = async function ({ getNamedAccounts, deployments, ethers }) {
 
   const timelock = await ethers.getContract("Timelock")
   const fateAddress = (await deployments.get("FateToken")).address
+  const xFateAddress = (await deployments.get("XFateToken")).address
 
   const { address } = await deploy("GovernorAlpha", {
     from: deployer,
-    args: [timelock.address, fateAddress],
+    args: [timelock.address, fateAddress, xFateAddress],
     log: true,
     deterministicDeployment: false,
     gasLimit: 5198000,
   })
+  // FOR PROPOSAL
+  // 0x000000000000000000000000CaCDaDe3AAa92582C3161ae5A9Fa3bB7e788FDF80000000000000000000000000000000000000000000000000de0b6b3a7640000
 
   await (await timelock.setPendingAdmin(address, { from: deployer })).wait();
 
