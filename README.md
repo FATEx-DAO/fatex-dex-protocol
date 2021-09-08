@@ -11,8 +11,8 @@ https://fatexdao.io
 | FateToken                 | 0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC    | https://explorer.harmony.one/address/0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC   |
 | xFateToken                | 0x6f4078cb47438157c914409d10358a0Cf4b06AB7    | https://explorer.harmony.one/address/0x6f4078cb47438157c914409d10358a0Cf4b06AB7   |
 | FeeTokenConverterToFate   | 0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1    | https://explorer.harmony.one/address/0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1   |
-| GovernorAlpha             | 0x5C445091402923739f6681FCe86212e63cDA9553    | https://explorer.harmony.one/address/0x5C445091402923739f6681FCe86212e63cDA9553   |
-| GovernorTimelock          | 0x6B7A6163714d3D3244A74be798E0194df6650D6A    | https://explorer.harmony.one/address/0x6B7A6163714d3D3244A74be798E0194df6650D6A   |
+| GovernorAlpha             | 0xF6e6e7Bd8a051cA0466c7B06Bcb789A789E1f1bc    | https://explorer.harmony.one/address/0xF6e6e7Bd8a051cA0466c7B06Bcb789A789E1f1bc   |
+| GovernorTimelock          | 0xd0a439bbe1a18d634e87c77d18c3e93953e44d22    | https://explorer.harmony.one/address/0xd0a439bbe1a18d634e87c77d18c3e93953e44d22   |
 | SushiSwap Migrator        | 0x4FA5f948785510035B8316Dab2FA67e31ce278F7    | https://explorer.harmony.one/address/0x4FA5f948785510035B8316Dab2FA67e31ce278F7   |
 | ViperSwap Migrator        | 0xd50D8901aB7F455494cE50eb7665DFB263B0a962    | https://explorer.harmony.one/address/0xd50D8901aB7F455494cE50eb7665DFB263B0a962   |
 | RewardScheduleV1          | 0x243FB0a5bD826Ddb0d6D7d4f84137D77F8e4f78a    | https://explorer.harmony.one/address/0x243FB0a5bD826Ddb0d6D7d4f84137D77F8e4f78a   |
