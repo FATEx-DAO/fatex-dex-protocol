@@ -72,7 +72,7 @@ contract VotingPowerToken {
             }
         }
 
-        return fate.totalSupply().add(xFate.totalSupply()).add(lpTotalSupply);
+        return fate.totalSupply().add(_xFateToFate(xFate.totalSupply())).add(lpTotalSupply);
     }
 
     function balanceOf(address user) public returns (uint) {
@@ -86,7 +86,16 @@ contract VotingPowerToken {
             }
         }
 
-        return fate.balanceOf(user).add(xFate.balanceOf(user)).add(lpBalance);
+        return fate.balanceOf(user).add(_xFateToFate(xFate.balanceOf(user))).add(lpBalance);
+    }
+
+    function _xFateToFate(uint amount) private view returns (uint) {
+        uint totalSupply = xFate.totalSupply();
+        if (totalSupply == 0) {
+            return 0;
+        } else {
+            return amount.mul(fate.balanceOf(address(xFate))).div(totalSupply);
+        }
     }
 
     function _getUserFateBalance(address lpToken, address _fate, address user) private view returns (uint) {
