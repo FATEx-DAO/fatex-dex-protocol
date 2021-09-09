@@ -81,7 +81,7 @@ contract VotingPowerToken {
         uint lpBalance = 0;
         for (uint i = 0; i < lpTokens.length; i++) {
             if (lpTokens[i] != address(0)) {
-                uint userBalance = _getUserFateBalance(lpTokens[i], _fate, user);
+                uint userBalance = _getUserFateBalance(lpTokens[i], i, _fate, user);
                 lpBalance = lpBalance.add(userBalance);
             }
         }
@@ -90,19 +90,26 @@ contract VotingPowerToken {
     }
 
     function _xFateToFate(uint amount) private view returns (uint) {
-        uint totalSupply = xFate.totalSupply();
-        if (totalSupply == 0) {
+        uint _totalSupply = xFate.totalSupply();
+        if (_totalSupply == 0) {
             return 0;
         } else {
-            return amount.mul(fate.balanceOf(address(xFate))).div(totalSupply);
+            return amount.mul(fate.balanceOf(address(xFate))).div(_totalSupply);
         }
     }
 
-    function _getUserFateBalance(address lpToken, address _fate, address user) private view returns (uint) {
+    function _getUserFateBalance(
+        address lpToken,
+        uint lpTokenIndex,
+        address _fate,
+        address user
+    ) private view returns (uint) {
         (uint112 reserve0, uint112 reserve1,) = IUniswapV2Pair(lpToken).getReserves();
         IERC20 token = IERC20(lpToken);
         uint reserves = IUniswapV2Pair(lpToken).token0() == _fate ? reserve0 : reserve1;
-        return token.balanceOf(user).mul(reserves).div(token.totalSupply());
+        (uint lpBalance,) = controller.userInfo(lpTokenIndex, user);
+        lpBalance = lpBalance.add(token.balanceOf(user));
+        return lpBalance.mul(reserves).div(token.totalSupply());
     }
 
     function _getAllFateLpTokens() private returns (address[] memory) {

@@ -26,7 +26,7 @@ https://fatexdao.io
 | Advisor Vault             | 0xFe2976Fc317667743d72D232DCEdd4E250170f1B    | https://explorer.harmony.one/address/0xFe2976Fc317667743d72D232DCEdd4E250170f1B   |
 | Advisor Vault             | 0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34    | https://explorer.harmony.one/address/0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34   |
 | Team Vault                | 0xFD266a3D4DA9d185A0491f71cE61C5a22014d874    | https://explorer.harmony.one/address/0xFD266a3D4DA9d185A0491f71cE61C5a22014d874   |
-| Snapshot Voting Token     | 0xB35cc33fe09f02c6C907eC11d278F0522Fd3CB69    | https://explorer.harmony.one/address/0xB35cc33fe09f02c6C907eC11d278F0522Fd3CB69   |
+| Snapshot Voting Token     | 0x24478D53D3306081Ed88334319C9d0AfddC279bB    | https://explorer.harmony.one/address/0x24478D53D3306081Ed88334319C9d0AfddC279bB   |
 
 ## Docs
 
