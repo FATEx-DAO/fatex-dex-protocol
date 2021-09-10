@@ -20,12 +20,13 @@ https://fatexdao.io
 | AmmPoolRouter             | 0x82145037096870BA3a5f7beE4C3602BD36e27Bff    | https://explorer.harmony.one/address/0x82145037096870BA3a5f7beE4C3602BD36e27Bff   |
 | FGCD Vault                | 0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44    | https://explorer.harmony.one/address/0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44   |
 | Legal Vault               | 0x5828930EF8e1Dc22360785c330aBe62BDa4B67E6    | https://explorer.harmony.one/address/0x5828930EF8e1Dc22360785c330aBe62BDa4B67E6   |
-| Growth Vault              | 0xE07DEACbB15C45a09E7026888cA1e703Aa8217F6    | https://explorer.harmony.one/address/0xE07DEACbB15C45a09E7026888cA1e703Aa8217F6   |
+| Growth Vault              | 0xA402084A04c222e25ae5748CFB12C76445a2a709    | https://explorer.harmony.one/address/0xA402084A04c222e25ae5748CFB12C76445a2a709   |
 | Presale Vault             | 0xe5bA0b2f098cB2f2efA986bF605Bd6DBc8acD7D6    | https://explorer.harmony.one/address/0xe5bA0b2f098cB2f2efA986bF605Bd6DBc8acD7D6   |
 | Founder Vault             | 0x5b351d270216848026DB6ac9fafBf4d422d5Ca43    | https://explorer.harmony.one/address/0x5b351d270216848026DB6ac9fafBf4d422d5Ca43   |
 | Advisor Vault             | 0xFe2976Fc317667743d72D232DCEdd4E250170f1B    | https://explorer.harmony.one/address/0xFe2976Fc317667743d72D232DCEdd4E250170f1B   |
 | Advisor Vault             | 0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34    | https://explorer.harmony.one/address/0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34   |
 | Team Vault                | 0xFD266a3D4DA9d185A0491f71cE61C5a22014d874    | https://explorer.harmony.one/address/0xFD266a3D4DA9d185A0491f71cE61C5a22014d874   |
+| Admin Multisig            | 0x4853365bc81f8270d902076892e13f27c27e7266    | https://explorer.harmony.one/address/0x4853365bc81f8270d902076892e13f27c27e7266   |
 | Snapshot Voting Token     | 0x24478D53D3306081Ed88334319C9d0AfddC279bB    | https://explorer.harmony.one/address/0x24478D53D3306081Ed88334319C9d0AfddC279bB   |
 
 ## Docs
