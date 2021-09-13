@@ -29,6 +29,25 @@ https://fatexdao.io
 | Admin Multisig            | 0x4853365bc81f8270d902076892e13f27c27e7266    | https://explorer.harmony.one/address/0x4853365bc81f8270d902076892e13f27c27e7266   |
 | Snapshot Voting Token     | 0x24478D53D3306081Ed88334319C9d0AfddC279bB    | https://explorer.harmony.one/address/0x24478D53D3306081Ed88334319C9d0AfddC279bB   |
 
+## Staking Pools (with IDs for FateRewardController)
+
+| Pair              | Address                                       | Pool ID   |
+|-------------------|-----------------------------------------------|-----------|
+| FATE:WONE         | 0xdCd307ac265c4cf1fdE5FFB7850DE1AC03c15303    | 0         |
+| WONE:1USDC        | 0xe4C5d745896bce117aB741DE5dF4869DE8bbF32F    | 1         |
+| WONE:1WBTC        | 0x8b83cedE68DDCb42fa31E9997983fD0919ce81cD    | 2         |
+| WONE:1ETH         | 0x304Ca6305A95CfBCF026FfB266cb2678d55709c8    | 3         |
+| FATE:1ETH         | 0x706B5ef2aAEE29d6C3F29625224FFA233963d4C6    | 5         |
+| FATE:1WBTC        | 0xB654069F1730fCf5AA9F4F33abB17b6FC5A54Ac2    | 6         |
+| FATE:1USDC        | 0x212f5B0681d90882A6A0312fAF282FB856bA077a    | 7         |
+| FATE:XFATE        | 0x751066d4188ab600bc55ee162b2719ad24b46674    | 8         |
+| WONE:BUSD         | 0x125fe08811f40f2fc2ae7a6daa4b4ecc5dafb88d    | 9         |
+| FATE:BUSD         | 0x8E06A9db3C7468B124e5ef36145E98AE947ED45B    | 10        |
+| FATE:UST          | 0x0b15197d22A872A9e1703201d7e1A0DEbf656CB7    | 11        |
+| FATE:bscBUSD      | 0x9b1D1B1eBAF903827cc02a3D9286A001Ad127CBf    | 12        |
+| WONE:UST          | 0xF023007C76f19496d80e4316e83487DD3fB5D388    | 13        |
+| WONE:bscBUSD      | 0x98b5faE6bbE3309f9398a57Ba4E50C2a52ED7F93    | 14        |
+
 ## Docs
 
 [Development](docs/DEVELOPMENT.md)
