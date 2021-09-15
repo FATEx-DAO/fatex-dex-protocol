@@ -49,6 +49,8 @@ https://fatexdao.io
 | FATE:bscBUSD      | 0x9b1D1B1eBAF903827cc02a3D9286A001Ad127CBf    | 12        |
 | WONE:UST          | 0xF023007C76f19496d80e4316e83487DD3fB5D388    | 13        |
 | WONE:bscBUSD      | 0x98b5faE6bbE3309f9398a57Ba4E50C2a52ED7F93    | 14        |
+| FATE:1PAXG        | 0xEC2fC3c5856fD8509691C562Af65a82D1EFaB704    | 15        |
+| 1ETH:1WBTC        | 0x570d9010340282bE65FE47109b3f3cDa7a0549e4    | 16        |
 
 ## Docs
 
