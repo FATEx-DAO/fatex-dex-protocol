@@ -13,6 +13,7 @@ https://fatexdao.io
 | FeeTokenConverterToFate   | 0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1    | https://explorer.harmony.one/address/0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1   |
 | GovernorAlpha             | 0xF6e6e7Bd8a051cA0466c7B06Bcb789A789E1f1bc    | https://explorer.harmony.one/address/0xF6e6e7Bd8a051cA0466c7B06Bcb789A789E1f1bc   |
 | GovernorTimelock          | 0xd0a439bbe1a18d634e87c77d18c3e93953e44d22    | https://explorer.harmony.one/address/0xd0a439bbe1a18d634e87c77d18c3e93953e44d22   |
+| FuzzSwap Migrator         | 0x5AA4cD364c87Ffa363bF82E3489f72E39E024abC    | https://explorer.harmony.one/address/0x5AA4cD364c87Ffa363bF82E3489f72E39E024abC   |
 | SushiSwap Migrator        | 0x4FA5f948785510035B8316Dab2FA67e31ce278F7    | https://explorer.harmony.one/address/0x4FA5f948785510035B8316Dab2FA67e31ce278F7   |
 | ViperSwap Migrator        | 0xd50D8901aB7F455494cE50eb7665DFB263B0a962    | https://explorer.harmony.one/address/0xd50D8901aB7F455494cE50eb7665DFB263B0a962   |
 | RewardScheduleV1          | 0x243FB0a5bD826Ddb0d6D7d4f84137D77F8e4f78a    | https://explorer.harmony.one/address/0x243FB0a5bD826Ddb0d6D7d4f84137D77F8e4f78a   |
@@ -28,6 +29,7 @@ https://fatexdao.io
 | Team Vault                | 0xFD266a3D4DA9d185A0491f71cE61C5a22014d874    | https://explorer.harmony.one/address/0xFD266a3D4DA9d185A0491f71cE61C5a22014d874   |
 | Admin Multisig            | 0x4853365bc81f8270d902076892e13f27c27e7266    | https://explorer.harmony.one/address/0x4853365bc81f8270d902076892e13f27c27e7266   |
 | Snapshot Voting Token     | 0x24478D53D3306081Ed88334319C9d0AfddC279bB    | https://explorer.harmony.one/address/0x24478D53D3306081Ed88334319C9d0AfddC279bB   |
+| Multi Call                | 0x41Fec4E5De930d8a618900973f0A678114C27361    | https://explorer.harmony.one/address/0x41Fec4E5De930d8a618900973f0A678114C27361   |
 
 ## Staking Pools (with IDs for FateRewardController)
 

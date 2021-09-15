@@ -116,7 +116,7 @@ contract FeeTokenConverterToFate is Ownable {
 
     // F1 - F10: OK
     // C1- C24: OK
-    function _convert(address token0, address token1) internal {
+    function _convert(address token0, address token1) internal virtual {
         // Interactions
         // S1 - S4: OK
         IUniswapV2Pair pair = IUniswapV2Pair(factory.getPair(token0, token1));
