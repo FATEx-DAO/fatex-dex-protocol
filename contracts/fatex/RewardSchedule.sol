@@ -2,10 +2,10 @@
 
 pragma solidity 0.6.12;
 
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "../utils/SafeMathLocal.sol";
 
 contract RewardSchedule {
-    using SafeMath for uint;
+    using SafeMathLocal for uint;
 
     // This is the emission schedule for each block for a given week
     uint[72] public FATE_PER_BLOCK = [

@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Vault is Ownable {
+contract FateRewardControllerVault is Ownable {
     using SafeERC20 for IERC20;
 
     address public fate;
