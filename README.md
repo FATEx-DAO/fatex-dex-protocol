@@ -16,7 +16,7 @@ https://fatexdao.io
 | FuzzSwap Migrator         | 0x5AA4cD364c87Ffa363bF82E3489f72E39E024abC    | https://explorer.harmony.one/address/0x5AA4cD364c87Ffa363bF82E3489f72E39E024abC   |
 | SushiSwap Migrator        | 0x4FA5f948785510035B8316Dab2FA67e31ce278F7    | https://explorer.harmony.one/address/0x4FA5f948785510035B8316Dab2FA67e31ce278F7   |
 | ViperSwap Migrator        | 0xd50D8901aB7F455494cE50eb7665DFB263B0a962    | https://explorer.harmony.one/address/0xd50D8901aB7F455494cE50eb7665DFB263B0a962   |
-| RewardScheduleV1          | 0x243FB0a5bD826Ddb0d6D7d4f84137D77F8e4f78a    | https://explorer.harmony.one/address/0x243FB0a5bD826Ddb0d6D7d4f84137D77F8e4f78a   |
+| RewardScheduleV1          | 0xE8738CC824731e791DB589Db79dA77703e64212e    | https://explorer.harmony.one/address/0xE8738CC824731e791DB589Db79dA77703e64212e   |
 | AmmPoolFactory            | 0xa4EF1da515096DB768Bc47DBC080888795643442    | https://explorer.harmony.one/address/0xa4EF1da515096DB768Bc47DBC080888795643442   |
 | AmmPoolRouter             | 0x82145037096870BA3a5f7beE4C3602BD36e27Bff    | https://explorer.harmony.one/address/0x82145037096870BA3a5f7beE4C3602BD36e27Bff   |
 | FGCD Vault                | 0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44    | https://explorer.harmony.one/address/0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44   |
