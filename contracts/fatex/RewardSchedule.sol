@@ -8,7 +8,9 @@ contract RewardSchedule {
     using SafeMathLocal for uint;
 
     /// @notice This is the emission schedule for each block for a given week. These numbers represent how much FATE is
-    ///         rewarded per block. Each index represents a week.
+    ///         rewarded per block. Each index represents a week. The starting day/week, according to the Reward
+    ///         Controller was 2021-08-26T19:43:45.000Z (UTC time). Meaning, week 2 started on 2021-09-02T19:43:45.000Z
+    ///         (UTC time).
     uint[72] public FATE_PER_BLOCK = [
     36.00e18,   // week 1
     36.51e18,   // week 2
@@ -105,6 +107,12 @@ contract RewardSchedule {
         } else {
             return FATE_PER_BLOCK[index];
         }
+    }
+
+    function calculateCurrentIndex(
+        uint _startBlock
+    ) public view returns (uint) {
+        return (block.number - _startBlock) / BLOCKS_PER_WEEK;
     }
 
     /// @notice returns the average amount of FATE earned per block over any block period. If spanned over multiple
