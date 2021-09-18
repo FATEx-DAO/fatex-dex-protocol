@@ -6,7 +6,6 @@ https://fatexdao.io
 
 | Name                      | Address                                       | Explorer                                                                          |
 |---------------------------|-----------------------------------------------|-----------------------------------------------------------------------------------|
-| RewardScheduleV2          | 0x6e3bb09772531daca2380c302a97b9220bf65baf    |  https://explorer.harmony.one/address/0x6e3bb09772531daca2380c302a97b9220bf65baf 
 | FateRewardController      | 0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27    | https://explorer.harmony.one/address/0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27   |
 | FateRewardVault           | 0x3170e252D06f01a846e92CB0139Cdb16c69E867d    | https://explorer.harmony.one/address/0x3170e252D06f01a846e92CB0139Cdb16c69E867d   |
 | FateToken                 | 0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC    | https://explorer.harmony.one/address/0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC   |
@@ -18,6 +17,7 @@ https://fatexdao.io
 | SushiSwap Migrator        | 0x4FA5f948785510035B8316Dab2FA67e31ce278F7    | https://explorer.harmony.one/address/0x4FA5f948785510035B8316Dab2FA67e31ce278F7   |
 | ViperSwap Migrator        | 0xd50D8901aB7F455494cE50eb7665DFB263B0a962    | https://explorer.harmony.one/address/0xd50D8901aB7F455494cE50eb7665DFB263B0a962   |
 | RewardScheduleV1          | 0xE8738CC824731e791DB589Db79dA77703e64212e    | https://explorer.harmony.one/address/0xE8738CC824731e791DB589Db79dA77703e64212e   |
+| RewardScheduleV2          | 0x6e3bb09772531daca2380c302a97b9220bf65baf    | https://explorer.harmony.one/address/0x6e3bb09772531daca2380c302a97b9220bf65baf   |
 | AmmPoolFactory            | 0xa4EF1da515096DB768Bc47DBC080888795643442    | https://explorer.harmony.one/address/0xa4EF1da515096DB768Bc47DBC080888795643442   |
 | AmmPoolRouter             | 0x82145037096870BA3a5f7beE4C3602BD36e27Bff    | https://explorer.harmony.one/address/0x82145037096870BA3a5f7beE4C3602BD36e27Bff   |
 | FGCD Vault                | 0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44    | https://explorer.harmony.one/address/0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44   |
