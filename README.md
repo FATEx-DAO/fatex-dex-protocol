@@ -6,6 +6,7 @@ https://fatexdao.io
 
 | Name                      | Address                                       | Explorer                                                                          |
 |---------------------------|-----------------------------------------------|-----------------------------------------------------------------------------------|
+| RewardScheduleV8          | 0xfAF6A7DB0477419EF511250F89c4B3A9Ff6b5AA6    | https://explorer.harmony.one/address/0xfAF6A7DB0477419EF511250F89c4B3A9Ff6b5AA6   |
 | RewardScheduleV7          | 0x94465616815a01146c26e60Cf326Ff3F0e1ddd91    | https://explorer.harmony.one/address/0x94465616815a01146c26e60Cf326Ff3F0e1ddd91   |
 | RewardScheduleV6          | 0xBa4f12315d4E11762b22Dc80aCFED160737E310e    | https://explorer.harmony.one/address/0xBa4f12315d4E11762b22Dc80aCFED160737E310e   |
 | RewardScheduleV5          | 0xa8B65Ce92b0Fe602741D674984B3fDE147e4F8a0    | https://explorer.harmony.one/address/0xa8B65Ce92b0Fe602741D674984B3fDE147e4F8a0   |
