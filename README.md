@@ -83,6 +83,7 @@ https://fatexdao.io
 | 1PAXG:1WBTC       | 0xD5bA885cEaa5c5837D14Ee1314243D3a3B69f294    | 32        |
 | 1PAXG:WONE        | 0xD5bA885cEaa5c5837D14Ee1314243D3a3B69f294    | 33        |
 | xFATE:1PAXG       | 0xFa1E034621FdCDCEEa4131C538bc896380aac69c    | 34        |
+| UST:1DAI          | 0x67DbfbAf9A78da465b24330869717F25BF241EC6    | 35        |
 
 ## Docs
 
