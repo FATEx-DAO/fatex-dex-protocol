@@ -6,7 +6,8 @@ https://fatexdao.io
 
 | Name                      | Address                                           | Explorer                                                                        |
 |---------------------------|---------------------------------------------------|---------------------------------------------------------------------------------|
-| FateRewardController      | 0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27        | https://explorer.harmony.one/address/0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27 |
+| FateRewardControllerV1    | 0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27        | https://explorer.harmony.one/address/0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27 |
+| FateRewardControllerV2    | 0xB2a4F4a4a91a36FB41a21Af3A99a6c51Fc8c0Ed0        | https://explorer.harmony.one/address/0xB2a4F4a4a91a36FB41a21Af3A99a6c51Fc8c0Ed0 |
 | FateRewardVault           | 0x3170e252D06f01a846e92CB0139Cdb16c69E867d        | https://explorer.harmony.one/address/0x3170e252D06f01a846e92CB0139Cdb16c69E867d |
 | FateToken                 | 0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC        | https://explorer.harmony.one/address/0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC |
 | xFateToken                | 0x6f4078cb47438157c914409d10358a0Cf4b06AB7        | https://explorer.harmony.one/address/0x6f4078cb47438157c914409d10358a0Cf4b06AB7 |
@@ -31,6 +32,7 @@ https://fatexdao.io
 | RewardScheduleV12         | 0xDE9e8070Fd3A67cCaAa0E2b3F9e8E228462F2912        | https://explorer.harmony.one/address/0xDE9e8070Fd3A67cCaAa0E2b3F9e8E228462F2912 |
 | RewardScheduleV13         | 0x41c3f5a5b69c21e6332b416e71f67b156222da87        | https://explorer.harmony.one/address/0x41c3f5a5b69c21e6332b416e71f67b156222da87 |
 | RewardScheduleV14         | 0x5DD5e8bA7e68f60f09349617EDBd5D842899FfC7        | https://explorer.harmony.one/address/0x5DD5e8bA7e68f60f09349617EDBd5D842899FfC7 |
+| RewardScheduleV15         | 0x54026eea0799e52B2ac57c2C63F5AB1D652f88c0        | https://explorer.harmony.one/address/0x54026eea0799e52B2ac57c2C63F5AB1D652f88c0 |
 | AmmPoolFactory            | 0xa4EF1da515096DB768Bc47DBC080888795643442        | https://explorer.harmony.one/address/0xa4EF1da515096DB768Bc47DBC080888795643442 |
 | AmmPoolRouter             | 0x82145037096870BA3a5f7beE4C3602BD36e27Bff        | https://explorer.harmony.one/address/0x82145037096870BA3a5f7beE4C3602BD36e27Bff |
 | FGCD Vault                | 0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44        | https://explorer.harmony.one/address/0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44 |
