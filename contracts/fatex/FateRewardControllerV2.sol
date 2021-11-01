@@ -16,7 +16,7 @@ import "./MockLpToken.sol";
 // distributed and the community can show to govern itself.
 //
 // Have fun reading it. Hopefully it's bug-free. God bless.
-contract FateRewardControllerV2 is Ownable, IMigratorChef, IFateRewardController {
+contract FateRewardControllerV2 is IFateRewardController {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -148,13 +148,13 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef, IFateRewardController
     }
 
     // Set the migrator contract. Can only be called by the owner.
-    function setMigrator(IMigratorChef _migrator) public onlyOwner {
+    function setMigrator(IMigratorChef _migrator) public override onlyOwner {
         migrator = _migrator;
         emit MigratorSet(address(_migrator));
     }
 
     // Migrate lp token to another lp contract. Can be called by anyone. We trust that migrator contract is good.
-    function migrate(uint256 _pid) public {
+    function migrate(uint256 _pid) public override {
         require(address(migrator) != address(0), "migrate: no migrator");
         PoolInfo storage pool = poolInfo[_pid];
         IERC20 lpToken = pool.lpToken;

@@ -2,12 +2,13 @@
 
 pragma solidity 0.6.12;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./IMigratorChef.sol";
 import "./IRewardSchedule.sol";
 
-abstract contract IFateRewardController {
+abstract contract IFateRewardController is Ownable, IMigratorChef {
 
     // Info of each user.
     struct UserInfo {
@@ -44,6 +45,9 @@ abstract contract IFateRewardController {
     function startBlock() external virtual view returns (uint);
     function totalAllocPoint() external virtual view returns (uint);
     function pendingFate(uint256 _pid, address _user) external virtual view returns (uint256);
+
+    function setMigrator(IMigratorChef _migrator) external virtual;
     function setVault(address _vault) external virtual;
+    function migrate(uint256 _pid) external virtual;
 
 }
