@@ -36,7 +36,7 @@ https://fatexdao.io
 | FGCD Vault                | 0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44        | https://explorer.harmony.one/address/0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44 |
 | ~~Legal Vault~~           | ~~0x5828930EF8e1Dc22360785c330aBe62BDa4B67E6~~    |https://explorer.harmony.one/address/0x5828930EF8e1Dc22360785c330aBe62BDa4B67E6~~|
 | Legal Vault V2            | 0xc7d76DA3F4Da35Bd85de3042CDD8c59dC8dc6226        | https://explorer.harmony.one/address/0xc7d76DA3F4Da35Bd85de3042CDD8c59dC8dc6226 |
-| Community Vault           | 0x21edECa351858756B89E0865fFdbD51Deae41bCD        | https://explorer.harmony.one/address/0x21edECa351858756B89E0865fFdbD51Deae41bCD       |
+| Community Vault           | 0x21edECa351858756B89E0865fFdbD51Deae41bCD        | https://explorer.harmony.one/address/0x21edECa351858756B89E0865fFdbD51Deae41bCD |
 | Growth Vault              | 0xA402084A04c222e25ae5748CFB12C76445a2a709        | https://explorer.harmony.one/address/0xA402084A04c222e25ae5748CFB12C76445a2a709 |
 | Presale Vault             | 0xe5bA0b2f098cB2f2efA986bF605Bd6DBc8acD7D6        | https://explorer.harmony.one/address/0xe5bA0b2f098cB2f2efA986bF605Bd6DBc8acD7D6 |
 | Founder Vault             | 0x5b351d270216848026DB6ac9fafBf4d422d5Ca43        | https://explorer.harmony.one/address/0x5b351d270216848026DB6ac9fafBf4d422d5Ca43 |
@@ -86,6 +86,14 @@ https://fatexdao.io
 | 1PAXG:WONE        | 0xD5bA885cEaa5c5837D14Ee1314243D3a3B69f294    | 33        |
 | xFATE:1PAXG       | 0xFa1E034621FdCDCEEa4131C538bc896380aac69c    | 34        |
 | UST:1DAI          | 0x67DbfbAf9A78da465b24330869717F25BF241EC6    | 35        |
+
+## Testnet Deployed Contracts (unless otherwise noted below, all addresses are the same)
+
+| Name                      | Address                                           | Explorer                                                                        |
+|---------------------------|---------------------------------------------------|---------------------------------------------------------------------------------|
+| FateRewardControllerV2    | 0x61544e3aa27DcE173bDA940838CE04A1A1427de3        | https://explorer.pops.one/address/0x61544e3aa27DcE173bDA940838CE04A1A1427de3 |
+| RewardScheduleV1          | 0xa7769eABE0212a43FE0067A95343105CbaEf5DB0        | https://explorer.pops.one/address/0xa7769eABE0212a43FE0067A95343105CbaEf5DB0 |
+| Multi Call                | 0xE3CaC535fcb777A42Dc2C234E0a8884049A4264e        | https://explorer.pops.one/address/0xE3CaC535fcb777A42Dc2C234E0a8884049A4264e |
 
 ## Docs
 

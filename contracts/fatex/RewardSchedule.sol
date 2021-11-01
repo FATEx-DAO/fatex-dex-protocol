@@ -20,12 +20,12 @@ contract RewardSchedule {
     38.60e18,   // week 6
     39.14e18,   // week 7
     39.69e18,   // week 8
-    40.24e18,   // week 9
-    40.81e18,   // week 10
-    41.38e18,   // week 11
-    41.96e18,   // week 12
-    42.55e18,   // week 13
-    72.00e18,   // week 14
+    13.6187700022e18,   // week 9 //10/25/2021,   // week 9 //10/21/2021
+    13.6187700022e18,   // week 10 //10/25/2021,
+    13.6187700022e18,   // week 11 //10/25/2021,
+    13.6187700022e18,   // week 12 //10/25/2021,
+    13.6187700022e18,   // week 13//10/25/2021,
+    13.6187700022e18,   // week 14 //10/25/2021,
     0.00e18,    // week 15
     0.00e18,    // week 16
     0.00e18,    // week 17
@@ -151,17 +151,15 @@ contract RewardSchedule {
         uint toIndex = (_toBlock - _startBlock) / BLOCKS_PER_WEEK;
 
         if (fromIndex < toIndex) {
-            uint points = BLOCKS_PER_WEEK - ((_fromBlock - _startBlock) % BLOCKS_PER_WEEK);
-            uint fatePerBlock = points * getFateAtIndex(fromIndex);
+            uint blocksAtIndex = BLOCKS_PER_WEEK - ((_fromBlock - _startBlock) % BLOCKS_PER_WEEK);
+            uint fatePerBlock = blocksAtIndex * getFateAtIndex(fromIndex);
 
             for (uint i = fromIndex + 1; i < toIndex; i++) {
                 fatePerBlock = fatePerBlock + (BLOCKS_PER_WEEK * getFateAtIndex(i));
             }
 
-            points = (_toBlock - _startBlock) % BLOCKS_PER_WEEK;
-            fatePerBlock = fatePerBlock + (points * getFateAtIndex(toIndex));
-
-            return fatePerBlock / (_toBlock - _fromBlock);
+            blocksAtIndex = (_toBlock - _startBlock) % BLOCKS_PER_WEEK;
+            return fatePerBlock + (blocksAtIndex * getFateAtIndex(toIndex));
         } else {
             // indices are the same
             assert(fromIndex == toIndex);
