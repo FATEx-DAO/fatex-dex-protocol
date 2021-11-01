@@ -1,29 +1,27 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity 0.6.12;
-pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
-import "./FateRewardController.sol";
-import "./FateToken.sol";
+import "./IFateRewardController.sol";
+import "./IRewardSchedule.sol";
 import "./MockLpToken.sol";
-import "./RewardSchedule.sol";
 
 // Note that it's ownable and the owner wields tremendous power. The ownership
 // will be transferred to a governance smart contract once FATE is sufficiently
 // distributed and the community can show to govern itself.
 //
 // Have fun reading it. Hopefully it's bug-free. God bless.
-contract FateRewardControllerV2 is Ownable, IMigratorChef {
+contract FateRewardControllerV2 is Ownable, IMigratorChef, IFateRewardController {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
     // Info of each user.
-    struct UserInfo {
+    struct UserInfoV2 {
         uint256 amount; // How many LP tokens the user has provided.
         uint256 rewardDebt; // Reward debt. See explanation below.
         bool isUpdated; // true if the user has been migrated from the v1 controller to v2
@@ -40,37 +38,29 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
         //   4. User's `rewardDebt` gets updated.
     }
 
-    // Info of each pool.
-    struct PoolInfo {
-        IERC20 lpToken; // Address of LP token contract.
-        uint256 allocPoint; // How many allocation points assigned to this pool. FATEs to distribute per block.
-        uint256 lastRewardBlock; // Last block number that FATEs distribution occurs.
-        uint256 accumulatedFatePerShare; // Accumulated FATEs per share, times 1e12. See below.
-    }
+    IERC20 public override fate;
 
-    FateToken public fate;
+    address public override vault;
 
-    address public vault;
-
-    FateRewardController[] public oldControllers;
+    IFateRewardController[] public oldControllers;
 
     // The emission scheduler that calculates fate per block over a given period
-    RewardSchedule public emissionSchedule;
+    IRewardSchedule public override emissionSchedule;
 
     // The migrator contract. It has a lot of power. Can only be set through governance (owner).
-    IMigratorChef public migrator;
+    IMigratorChef public override migrator;
 
     // Info of each pool.
-    PoolInfo[] public poolInfo;
+    PoolInfo[] public override poolInfo;
 
     // Info of each user that stakes LP tokens.
-    mapping(uint256 => mapping(address => UserInfo)) internal _userInfo;
+    mapping(uint256 => mapping(address => UserInfoV2)) internal _userInfo;
 
     // Total allocation points. Must be the sum of all allocation points in all pools.
-    uint256 public totalAllocPoint = 0;
+    uint256 public override totalAllocPoint = 0;
 
     // The block number when FATE mining starts.
-    uint256 public startBlock;
+    uint256 public override startBlock;
 
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
 
@@ -82,6 +72,8 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
 
     event EmissionScheduleSet(address indexed emissionSchedule);
 
+    event MigratorSet(address indexed migrator);
+
     event VaultSet(address indexed emissionSchedule);
 
     event PoolAdded(uint indexed pid, address indexed lpToken, uint allocPoint);
@@ -89,10 +81,10 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
     event PoolAllocPointSet(uint indexed pid, uint allocPoint);
 
     constructor(
-        FateToken _fate,
-        RewardSchedule _emissionSchedule,
+        IERC20 _fate,
+        IRewardSchedule _emissionSchedule,
         address _vault,
-        FateRewardController[] memory _oldControllers
+        IFateRewardController[] memory _oldControllers
     ) public {
         fate = _fate;
         emissionSchedule = _emissionSchedule;
@@ -101,7 +93,7 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
         startBlock = _oldControllers[0].startBlock();
     }
 
-    function poolLength() external view returns (uint256) {
+    function poolLength() external override view returns (uint256) {
         return poolInfo.length;
     }
 
@@ -158,6 +150,7 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
     // Set the migrator contract. Can only be called by the owner.
     function setMigrator(IMigratorChef _migrator) public onlyOwner {
         migrator = _migrator;
+        emit MigratorSet(address(_migrator));
     }
 
     // Migrate lp token to another lp contract. Can be called by anyone. We trust that migrator contract is good.
@@ -175,7 +168,7 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
     function migrate(
         IERC20 token
     ) external override returns (IERC20) {
-        FateRewardController oldController = FateRewardController(address(0));
+        IFateRewardController oldController = IFateRewardController(address(0));
         for (uint i = 0; i < oldControllers.length; i++) {
             if (address(oldControllers[i]) == msg.sender) {
                 oldController = oldControllers[i];
@@ -223,8 +216,8 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
     function userInfo(
         uint _pid,
         address _user
-    ) public view returns (uint amount, uint rewardDebt) {
-        UserInfo memory user = _userInfo[_pid][_user];
+    ) public override view returns (uint amount, uint rewardDebt) {
+        UserInfoV2 memory user = _userInfo[_pid][_user];
         if (user.isUpdated) {
             return (user.amount, user.rewardDebt);
         } else {
@@ -232,27 +225,28 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
         }
     }
 
-    function getUserInfo(
+    function _getUserInfo(
         uint _pid,
         address _user
-    ) public view returns (FateRewardController.UserInfo memory) {
-        UserInfo memory user = _userInfo[_pid][_user];
+    ) internal view returns (IFateRewardController.UserInfo memory) {
+        UserInfoV2 memory user = _userInfo[_pid][_user];
         if (user.isUpdated) {
-            return FateRewardController.UserInfo(user.amount, user.rewardDebt);
+            return IFateRewardController.UserInfo(user.amount, user.rewardDebt);
         } else {
             (uint amount, uint rewardDebt) = oldControllers[0].userInfo(_pid, _user);
-            return FateRewardController.UserInfo(amount, rewardDebt);
+            return IFateRewardController.UserInfo(amount, rewardDebt);
         }
     }
 
     // View function to see pending FATE tokens on frontend.
     function pendingFate(uint256 _pid, address _user)
     external
+    override
     view
     returns (uint256)
     {
         PoolInfo storage pool = poolInfo[_pid];
-        FateRewardController.UserInfo memory user = getUserInfo(_pid, _user);
+        IFateRewardController.UserInfo memory user = _getUserInfo(_pid, _user);
         uint256 accumulatedFatePerShare = pool.accumulatedFatePerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
         if (block.number > pool.lastRewardBlock && lpSupply != 0) {
@@ -303,11 +297,11 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
     // Deposit LP tokens to MasterChef for FATE allocation.
     function deposit(uint256 _pid, uint256 _amount) public {
         PoolInfo storage pool = poolInfo[_pid];
-        FateRewardController.UserInfo memory user = getUserInfo(_pid, msg.sender);
+        IFateRewardController.UserInfo memory user = _getUserInfo(_pid, msg.sender);
         updatePool(_pid);
         if (user.amount > 0) {
             uint256 pending = user.amount.mul(pool.accumulatedFatePerShare).div(1e12).sub(user.rewardDebt);
-            safeFateTransfer(msg.sender, pending);
+            _safeFateTransfer(msg.sender, pending);
             emit ClaimRewards(msg.sender, _pid, pending);
         }
         pool.lpToken.safeTransferFrom(
@@ -317,7 +311,7 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
         );
         uint userBalance = user.amount.add(_amount);
 
-        _userInfo[_pid][msg.sender] = UserInfo({
+        _userInfo[_pid][msg.sender] = UserInfoV2({
         amount : userBalance,
         rewardDebt : userBalance.mul(pool.accumulatedFatePerShare).div(1e12),
         isUpdated : true
@@ -328,16 +322,16 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
     // Withdraw LP tokens from MasterChef.
     function withdraw(uint256 _pid, uint256 _amount) public {
         PoolInfo storage pool = poolInfo[_pid];
-        FateRewardController.UserInfo memory user = getUserInfo(_pid, msg.sender);
+        IFateRewardController.UserInfo memory user = _getUserInfo(_pid, msg.sender);
         require(user.amount >= _amount, "withdraw: not good");
         updatePool(_pid);
 
         uint256 pending = user.amount.mul(pool.accumulatedFatePerShare).div(1e12).sub(user.rewardDebt);
-        safeFateTransfer(msg.sender, pending);
+        _safeFateTransfer(msg.sender, pending);
         emit ClaimRewards(msg.sender, _pid, pending);
 
         uint userBalance = user.amount.sub(_amount);
-        _userInfo[_pid][msg.sender] = UserInfo({
+        _userInfo[_pid][msg.sender] = UserInfoV2({
         amount : userBalance,
         rewardDebt : userBalance.mul(pool.accumulatedFatePerShare).div(1e12),
         isUpdated : true
@@ -350,14 +344,14 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
     // claim any pending rewards from this pool, from msg.sender
     function claimReward(uint256 _pid) public {
         PoolInfo storage pool = poolInfo[_pid];
-        FateRewardController.UserInfo memory user = getUserInfo(_pid, msg.sender);
+        IFateRewardController.UserInfo memory user = _getUserInfo(_pid, msg.sender);
         updatePool(_pid);
 
         uint256 pending = user.amount.mul(pool.accumulatedFatePerShare).div(1e12).sub(user.rewardDebt);
-        safeFateTransfer(msg.sender, pending);
+        _safeFateTransfer(msg.sender, pending);
         emit ClaimRewards(msg.sender, _pid, pending);
 
-        _userInfo[_pid][msg.sender] = UserInfo({
+        _userInfo[_pid][msg.sender] = UserInfoV2({
         amount : user.amount,
         rewardDebt : user.amount.mul(pool.accumulatedFatePerShare).div(1e12),
         isUpdated : true
@@ -374,11 +368,11 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
     // Withdraw without caring about rewards. EMERGENCY ONLY.
     function emergencyWithdraw(uint256 _pid) public {
         PoolInfo storage pool = poolInfo[_pid];
-        FateRewardController.UserInfo memory user = getUserInfo(_pid, msg.sender);
+        IFateRewardController.UserInfo memory user = _getUserInfo(_pid, msg.sender);
         pool.lpToken.safeTransfer(address(msg.sender), user.amount);
         emit EmergencyWithdraw(msg.sender, _pid, user.amount);
 
-        _userInfo[_pid][msg.sender] = UserInfo({
+        _userInfo[_pid][msg.sender] = UserInfoV2({
         amount : 0,
         rewardDebt : 0,
         isUpdated : true
@@ -386,7 +380,7 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
     }
 
     // Safe fate transfer function, just in case if rounding error causes pool to not have enough FATEs.
-    function safeFateTransfer(address _to, uint256 _amount) internal {
+    function _safeFateTransfer(address _to, uint256 _amount) internal {
         uint256 fateBal = fate.balanceOf(address(this));
         if (_amount > fateBal) {
             fate.transfer(_to, fateBal);
@@ -396,7 +390,7 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
     }
 
     function setEmissionSchedule(
-        RewardSchedule _emissionSchedule
+        IRewardSchedule _emissionSchedule
     )
     public
     onlyOwner {
@@ -410,6 +404,7 @@ contract FateRewardControllerV2 is Ownable, IMigratorChef {
         address _vault
     )
     public
+    override
     onlyOwner {
         // pro-rate the pools to the current block, before changing the schedule
         vault = _vault;
