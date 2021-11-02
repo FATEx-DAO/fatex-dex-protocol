@@ -10,6 +10,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./IFateRewardController.sol";
 import "./IRewardSchedule.sol";
 import "./MockLpToken.sol";
+import "./IMockLpTokenFactory.sol";
 
 // Note that it's ownable and the owner wields tremendous power. The ownership
 // will be transferred to a governance smart contract once FATE is sufficiently
@@ -62,6 +63,8 @@ contract FateRewardControllerV2 is IFateRewardController {
     // The block number when FATE mining starts.
     uint256 public override startBlock;
 
+    IMockLpTokenFactory public mockLpTokenFactory;
+
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
 
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
@@ -84,12 +87,14 @@ contract FateRewardControllerV2 is IFateRewardController {
         IERC20 _fate,
         IRewardSchedule _emissionSchedule,
         address _vault,
-        IFateRewardController[] memory _oldControllers
+        IFateRewardController[] memory _oldControllers,
+        IMockLpTokenFactory _mockLpTokenFactory
     ) public {
         fate = _fate;
         emissionSchedule = _emissionSchedule;
         vault = _vault;
         oldControllers = _oldControllers;
+        mockLpTokenFactory = _mockLpTokenFactory;
         startBlock = _oldControllers[0].startBlock();
     }
 
@@ -210,7 +215,7 @@ contract FateRewardControllerV2 is IFateRewardController {
         }
         totalAllocPoint = _totalAllocPoint;
 
-        return IERC20(address(new MockLpToken(address(token), address(this))));
+        return IERC20(mockLpTokenFactory.create(address(lpToken), address(this)));
     }
 
     function userInfo(

@@ -46,6 +46,7 @@ contract FateRewardControllerUpgrader is Ownable {
         );
 
         controllerV1.setMigrator(IMigratorChef(address(controllerV2)));
+
         for (uint i = 0; i < 36; i++) {
             controllerV1.migrate(i);
             (IERC20 lpTokenV1, uint256 allocPointV1, uint256 lastRewardBlockV1, uint256 accumulatedFatePerShareV1) = controllerV1.poolInfo(i);
