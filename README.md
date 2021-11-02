@@ -49,7 +49,7 @@ https://fatexdao.io
 | Snapshot Voting Token             | 0x24478D53D3306081Ed88334319C9d0AfddC279bB        | https://explorer.harmony.one/address/0x24478D53D3306081Ed88334319C9d0AfddC279bB |
 | Multi Call                        | 0x41Fec4E5De930d8a618900973f0A678114C27361        | https://explorer.harmony.one/address/0x41Fec4E5De930d8a618900973f0A678114C27361 |
 | MockLpTokenFactory                | 0xd9D9a75f0eFe0A2dD580f212005a8211CC8dF4FD        | https://explorer.harmony.one/address/0xd9D9a75f0eFe0A2dD580f212005a8211CC8dF4FD |
-| FateRewardControllerUpgraderV1    | 0x34Be8d2bED3d3943571c00bAA4FDc219247f7cF8        | https://explorer.harmony.one/address/0x34Be8d2bED3d3943571c00bAA4FDc219247f7cF8 |
+| FateRewardControllerUpgraderV1    | 0xbF5423B7035e4305608490F6925169998644c422        | https://explorer.harmony.one/address/0xbF5423B7035e4305608490F6925169998644c422 |
 
 ## Staking Pools (with IDs for FateRewardController)
 
@@ -90,6 +90,7 @@ https://fatexdao.io
 | 1PAXG:WONE        | 0xD5bA885cEaa5c5837D14Ee1314243D3a3B69f294    | 33        |
 | xFATE:1PAXG       | 0xFa1E034621FdCDCEEa4131C538bc896380aac69c    | 34        |
 | UST:1DAI          | 0x67DbfbAf9A78da465b24330869717F25BF241EC6    | 35        |
+| FATE:bscBNB       | 0xc720E4F91DB0FC02a762D7adFC57b560f931E59D    | 36        |
 
 ## Testnet Deployed Contracts (unless otherwise noted below, all addresses are the same)
 
