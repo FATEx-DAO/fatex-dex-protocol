@@ -8,16 +8,14 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../uniswap-v2/interfaces/IUniswapV2Pair.sol";
 import "../uniswap-v2/interfaces/IUniswapV2Factory.sol";
 
-import "../fatex/FateRewardController.sol";
-import "../fatex/FateToken.sol";
-import "../fatex/XFateToken.sol";
+import "../fatex/IFateRewardController.sol";
 
 contract VotingPowerToken {
     using SafeMath for uint;
 
-    FateToken fate;
-    XFateToken xFate;
-    FateRewardController controller;
+    IERC20 fate;
+    IERC20 xFate;
+    IFateRewardController controller;
     IUniswapV2Factory factory;
 
     constructor(
@@ -26,9 +24,9 @@ contract VotingPowerToken {
         address _controller,
         address _factory
     ) public {
-        fate = FateToken(_fate);
-        xFate = XFateToken(_xFate);
-        controller = FateRewardController(_controller);
+        fate = IERC20(_fate);
+        xFate = IERC20(_xFate);
+        controller = IFateRewardController(_controller);
         factory = IUniswapV2Factory(_factory);
     }
 
