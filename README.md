@@ -92,6 +92,8 @@ https://fatexdao.io
 | xFATE:1PAXG       | 0xFa1E034621FdCDCEEa4131C538bc896380aac69c    | 34        |
 | UST:1DAI          | 0x67DbfbAf9A78da465b24330869717F25BF241EC6    | 35        |
 | FATE:bscBNB       | 0xc720E4F91DB0FC02a762D7adFC57b560f931E59D    | 36        |
+| 1SUSHI:1PAXG      | 0x8b8A7127f14F9CE4912Be954340AC58400411dB7    | 37        |
+| bscBNB:1PAXG      | 0x253F86191996e5E1075210405DE620bb136CB646    | 38        |
 
 ## Testnet Deployed Contracts (unless otherwise noted below, all addresses are the same)
 
