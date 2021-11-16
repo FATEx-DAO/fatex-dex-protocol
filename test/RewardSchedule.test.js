@@ -54,7 +54,7 @@ describe("EmissionSchedule", () => {
     // _toBlock = 907,150
     // diff = 907,050
     // (10,882,800 + 11,040,624 + 11,192,997) / (_toBlock / _fromBlock) * 0.2
-    expect(await getFatePerBlock(startBlock, startBlock + 100, startBlock + (BLOCKS_PER_WEEK * 3) - 50)).to.equal('7302005622622788159')
+    expect(await getFatePerBlock(startBlock, startBlock + 100, startBlock + (BLOCKS_PER_WEEK * 3) - 50)).to.equal('6623284200000000000000000')
   })
 
   it("should work for basic query when _toBlock is after the last block", async () => {
@@ -63,7 +63,7 @@ describe("EmissionSchedule", () => {
     // 72 FATE per week at last week --> 173.9
     // 173.9 * BLOCKS_PER_WEEK --> 52,587,360
     // 52,587,360 / (72 weeks * 302,400 blocks per week - 1 block exclusivity in the end) --> 2.415277 FATE per block
-    expect(await getFatePerBlock(startBlock, startBlock, startBlock + (BLOCKS_PER_WEEK * 75))).to.equal('2415277888708750767')
+    expect(await getFatePerBlock(startBlock, startBlock, startBlock + (BLOCKS_PER_WEEK * 75))).to.equal('42613156858398336000000000')
   })
 
   it("should return 0 when _toBlock is before _startBlock", async () => {
