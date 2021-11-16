@@ -18,6 +18,15 @@ contract VotingPowerToken {
     IFateRewardController controller;
     IUniswapV2Factory factory;
 
+    enum PairType {
+        FATE, X_FATE
+    }
+
+    struct LpTokenPair {
+        address lpToken;
+        PairType pairType;
+    }
+
     constructor(
         address _fate,
         address _xFate,
@@ -58,14 +67,23 @@ contract VotingPowerToken {
         return false;
     }
 
-    function totalSupply() public returns (uint) {
-        address[] memory lpTokens = _getAllFateLpTokens();
+    function totalSupply() public view returns (uint) {
+        LpTokenPair[] memory lpTokens = _getAllFateLpTokens();
         address _fate = address(fate);
+        address _xFate = address(xFate);
         uint lpTotalSupply = 0;
         for (uint i = 0; i < lpTokens.length; i++) {
-            if (lpTokens[i] != address(0)) {
-                (uint112 reserve0, uint112 reserve1,) = IUniswapV2Pair(lpTokens[i]).getReserves();
-                uint reserves = IUniswapV2Pair(lpTokens[i]).token0() == _fate ? reserve0 : reserve1;
+            if (lpTokens[i].lpToken != address(0)) {
+                (uint112 reserve0, uint112 reserve1,) = IUniswapV2Pair(lpTokens[i].lpToken).getReserves();
+                uint reserves;
+                if (lpTokens[i].pairType == PairType.FATE) {
+                    reserves = IUniswapV2Pair(lpTokens[i].lpToken).token0() == _fate ? reserve0 : reserve1;
+                } else {
+                    require(lpTokens[i].pairType == PairType.X_FATE, "totalSupply: invalid pairType");
+
+                    reserves = IUniswapV2Pair(lpTokens[i].lpToken).token0() == _xFate ? reserve0 : reserve1;
+                    reserves = _xFateToFate(reserves);
+                }
                 lpTotalSupply = lpTotalSupply.add(reserves);
             }
         }
@@ -73,13 +91,14 @@ contract VotingPowerToken {
         return fate.totalSupply().add(_xFateToFate(xFate.totalSupply())).add(lpTotalSupply);
     }
 
-    function balanceOf(address user) public returns (uint) {
-        address[] memory lpTokens = _getAllFateLpTokens();
+    function balanceOf(address user) public view returns (uint) {
+        LpTokenPair[] memory lpTokens = _getAllFateLpTokens();
         address _fate = address(fate);
+        address _xFate = address(xFate);
         uint lpBalance = 0;
         for (uint i = 0; i < lpTokens.length; i++) {
-            if (lpTokens[i] != address(0)) {
-                uint userBalance = _getUserFateBalance(lpTokens[i], i, _fate, user);
+            if (lpTokens[i].lpToken != address(0)) {
+                uint userBalance = _getUserFateBalance(lpTokens[i], i, _fate, _xFate, user);
                 lpBalance = lpBalance.add(userBalance);
             }
         }
@@ -97,40 +116,55 @@ contract VotingPowerToken {
     }
 
     function _getUserFateBalance(
-        address lpToken,
+        LpTokenPair memory pair,
         uint lpTokenIndex,
         address _fate,
+        address _xFate,
         address user
     ) private view returns (uint) {
-        (uint112 reserve0, uint112 reserve1,) = IUniswapV2Pair(lpToken).getReserves();
-        IERC20 token = IERC20(lpToken);
-        uint reserves = IUniswapV2Pair(lpToken).token0() == _fate ? reserve0 : reserve1;
+        (uint112 reserve0, uint112 reserve1,) = IUniswapV2Pair(pair.lpToken).getReserves();
+        IERC20 token = IERC20(pair.lpToken);
+
+        uint reserves;
+        if (pair.pairType == PairType.FATE) {
+            reserves = IUniswapV2Pair(pair.lpToken).token0() == _fate ? reserve0 : reserve1;
+        } else {
+            require(pair.pairType == PairType.X_FATE, "totalSupply: invalid pairType");
+
+            reserves = IUniswapV2Pair(pair.lpToken).token0() == _xFate ? reserve0 : reserve1;
+            reserves = _xFateToFate(reserves);
+        }
+
         (uint lpBalance,) = controller.userInfo(lpTokenIndex, user);
         lpBalance = lpBalance.add(token.balanceOf(user));
         return lpBalance.mul(reserves).div(token.totalSupply());
     }
 
-    function _getAllFateLpTokens() private returns (address[] memory) {
+    function _getAllFateLpTokens() private view returns (LpTokenPair[] memory) {
         uint poolLength = controller.poolLength();
-        address[] memory tokens = new address[](poolLength);
+        LpTokenPair[] memory pairs = new LpTokenPair[](poolLength);
+        address _fate = address(fate);
+        address _xFate = address(xFate);
         for (uint i = 0; i < poolLength; i++) {
             (IERC20 lpToken,,,) = controller.poolInfo(i);
             IUniswapV2Pair pair = IUniswapV2Pair(address(lpToken));
             address token0 = _callToken(pair, pair.token0.selector);
             address token1 = _callToken(pair, pair.token1.selector);
-            if (token0 == address(fate) || token1 == address(fate)) {
-                tokens[i] = address(pair);
+            if (token0 == _fate || token1 == _fate) {
+                pairs[i] = LpTokenPair(address(lpToken), PairType.FATE);
+            } else if (token0 == _xFate || token1 == _xFate) {
+                pairs[i] = LpTokenPair(address(lpToken), PairType.X_FATE);
             }
         }
-        return tokens;
+        return pairs;
     }
 
-    function _callToken(IUniswapV2Pair pair, bytes4 selector) private returns (address) {
+    function _callToken(IUniswapV2Pair pair, bytes4 selector) private view returns (address) {
         // We need to perform a low level call here, to bypass Solidity's return data size checking mechanism, since
         // we're implementing it ourselves. We use {Address.functionCall} to perform this call, which verifies that
         // the target address contains contract code and also asserts for success in the low-level call.
 
-        (bool success, bytes memory returnData) = address(pair).call(abi.encodePacked(selector));
+        (bool success, bytes memory returnData) = address(pair).staticcall(abi.encodePacked(selector));
         if (!success || returnData.length == 0) {
             return address(0);
         } else {

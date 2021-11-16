@@ -47,7 +47,8 @@ https://fatexdao.io
 | Team Vault                        | 0xFD266a3D4DA9d185A0491f71cE61C5a22014d874        | https://explorer.harmony.one/address/0xFD266a3D4DA9d185A0491f71cE61C5a22014d874 |
 | Admin Multisig                    | 0x4853365bc81f8270d902076892e13f27c27e7266        | https://explorer.harmony.one/address/0x4853365bc81f8270d902076892e13f27c27e7266 |
 | ~~Snapshot Voting Token~~         | 0x24478D53D3306081Ed88334319C9d0AfddC279bB        | https://explorer.harmony.one/address/0x24478D53D3306081Ed88334319C9d0AfddC279bB |
-| Snapshot Voting Token V2          | 0x43d2Cbe53793DA86FC676A4a69741b1e63AC8b2C        | https://explorer.harmony.one/address/0x43d2Cbe53793DA86FC676A4a69741b1e63AC8b2C |
+| ~~Snapshot Voting Token V2~~      | 0x43d2Cbe53793DA86FC676A4a69741b1e63AC8b2C        | https://explorer.harmony.one/address/0x43d2Cbe53793DA86FC676A4a69741b1e63AC8b2C |
+| Snapshot Voting Token V3          | 0x72d2f2d57CC5D3e78c456616E1d17e73e8848c3A        | https://explorer.harmony.one/address/0x72d2f2d57CC5D3e78c456616E1d17e73e8848c3A |
 | Multi Call                        | 0x41Fec4E5De930d8a618900973f0A678114C27361        | https://explorer.harmony.one/address/0x41Fec4E5De930d8a618900973f0A678114C27361 |
 | MockLpTokenFactory                | 0xd9D9a75f0eFe0A2dD580f212005a8211CC8dF4FD        | https://explorer.harmony.one/address/0xd9D9a75f0eFe0A2dD580f212005a8211CC8dF4FD |
 | FateRewardControllerUpgraderV1    | 0xbF5423B7035e4305608490F6925169998644c422        | https://explorer.harmony.one/address/0xbF5423B7035e4305608490F6925169998644c422 |
