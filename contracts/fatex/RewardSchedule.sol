@@ -102,8 +102,8 @@ contract RewardSchedule {
      */
     function getFateAtIndex(uint index) public view returns (uint) {
         if (index < 13) {
-            // vesting occurs at an 80/20 rate for the first 13 weeks
-            return FATE_PER_BLOCK[index] * 2 / 10;
+            // vesting occurs at an 90/10 rate for the first 13 weeks
+            return FATE_PER_BLOCK[index] * 1 / 10;
         } else {
             return FATE_PER_BLOCK[index];
         }
