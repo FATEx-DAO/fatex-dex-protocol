@@ -100,6 +100,8 @@ https://fatexdao.io
 | 1ETH:UST          | 0x3dAeFFC126DaB5C817c40dEfe99709aBDBBee75F    | 40        |
 | 1SUSHI:UST        | 0x5247E5A8640Fd1D68001460e48549542b1cbe009    | 41        |
 | bscBNB:UST        | 0xB53F27ce275230FB594c472809ed458C9b01BCE5    | 42        |
+| 1PAXG:UST         | 0xD799952800A4b3C052b268c103914ECc682eB25F    | 43        |
+| UST:1USDC         | 0x65F2962643E2dD5edca7D95A0176A0724af3a60D    | 44        |
 
 ## Testnet Deployed Contracts (unless otherwise noted below, all addresses are the same)
 
