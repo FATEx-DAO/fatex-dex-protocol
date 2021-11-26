@@ -76,13 +76,13 @@ async function main() {
     if (!totalLockedFatesByUser[userStruct.user]) {
       totalLockedFatesByUser[userStruct.user] = ethers.BigNumber.from('0');
     }
-    totalLockedFatesByUser[userStruct.user] = totalLockedFatesByUser[userStruct.user].add(userStruct.amountFate).add(pendingFate)
+    totalLockedFatesByUser[userStruct.user] = totalLockedFatesByUser[userStruct.user].add(userStruct.amountFate).add(pendingFate);
   })
 
   const result = Object.keys(totalLockedFatesByUser).map(key => {
     return {
       user: key,
-      amountFate: totalLockedFatesByUser[key].toString(),
+      amountFate: ethers.utils.formatEther(totalLockedFatesByUser[key]),
     }
   })
 

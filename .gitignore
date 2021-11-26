@@ -11,3 +11,4 @@ coverage.json
 .DS_Store
 .idea/
 flat/
+scripts/epoch-0-rewards.csv
