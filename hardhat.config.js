@@ -142,7 +142,8 @@ module.exports = {
       tags: ["staging"],
     },
     harmony: {
-      url: "https://api.harmony.one",
+      // url: "https://api.harmony.one",
+      url: "https://a.api.s0.t.hmny.io",
       accounts,
       chainId: 1666600000,
       live: true,
