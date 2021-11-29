@@ -90,7 +90,7 @@ contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
         address _vault,
         IFateRewardController[] memory _oldControllers,
         IMockLpTokenFactory _mockLpTokenFactory,
-        uint256 _EPOCH_END_BLOCK
+        uint256 _epochEndBlock
     ) public {
         fate = _fate;
         emissionSchedule = _emissionSchedule;
@@ -98,7 +98,7 @@ contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
         oldControllers = _oldControllers;
         mockLpTokenFactory = _mockLpTokenFactory;
         startBlock = _oldControllers[0].startBlock();
-        EPOCH_END_BLOCK = _EPOCH_END_BLOCK;
+        epochEndBlock = _epochEndBlock;
     }
 
     function poolLength() external override view returns (uint256) {
@@ -326,7 +326,7 @@ contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
         isUpdated : true
         });
 
-        recordDepositBlock(_pid, msg.sender);
+        _recordDepositBlock(_pid, msg.sender);
 
         emit Deposit(msg.sender, _pid, _amount);
     }

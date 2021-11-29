@@ -45,20 +45,16 @@ abstract contract LPWithdrawFee is FateLockedRewardFee {
 
     /// @dev calculate lpWithdrawFees as percent that will be sent to the rewardController
     function lpWithdrawFeePercent(uint256 _pid, address _caller) internal view returns(uint256 percent) {
-        if (!isFatePool[_pid] || isExcludedAddress[_caller]) {
-            percent = 0;
-        } else {
-            MembershipInfo memory membership = userMembershipInfo[_pid][_caller];
-            uint256 endBlock = getEndBlock();
-            if (endBlock > membership.lastWithdrawBlock) {
-                uint256 withdraw_period_in_blocks = endBlock - membership.lastWithdrawBlock;
-                percent = LP_WITHDRAW_FEE_PERCENT[
-                    getIndexOfBlocks(
-                        withdraw_period_in_blocks,
-                        LP_WITHDRAW_PERIOD_BLOCKS
-                    )
-                ];
-            }
+        MembershipInfo memory membership = userMembershipInfo[_pid][_caller];
+        uint256 endBlock = getEndBlock();
+        if (endBlock > membership.lastWithdrawBlock) {
+            uint256 withdraw_period_in_blocks = endBlock - membership.lastWithdrawBlock;
+            percent = LP_WITHDRAW_FEE_PERCENT[
+                getIndexOfBlocks(
+                    withdraw_period_in_blocks,
+                    LP_WITHDRAW_PERIOD_BLOCKS
+                )
+            ];
         }
     }
 

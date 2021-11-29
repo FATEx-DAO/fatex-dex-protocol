@@ -3,15 +3,16 @@
 pragma solidity 0.6.12;
 
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "../../libraries/RankedArray.sol";
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 /// @title MembershipWithPoints
 /// @author @commonlot
 ////////////////////////////////////////////////////////////////////////////////////////////
-abstract contract MembershipWithPoints {
+abstract contract MembershipWithPoints is Ownable {
     uint256 constant public POINTS_PER_BLOCK = 0.08e18;
-    uint256 public EPOCH_END_BLOCK;
+    uint256 public epochEndBlock;
 
     struct MembershipInfo{
         uint256 firstDepositBlock; // set when first deposit
@@ -24,15 +25,35 @@ abstract contract MembershipWithPoints {
 
     // pid => address => membershipInfo
     mapping(uint256 => mapping (address => MembershipInfo)) public userMembershipInfo;
+
+    mapping(uint256 => bool) public isFatePool;
+
+    mapping(address => bool) public isExcludedAddress;
+
+    /// @dev set FatePool Ids
+    function setFatePoolIds(uint256[] memory pids) external onlyOwner {
+        require(pids.length > 0, "setFatePoolIds: invalid pids");
+        for (uint i = 0; i < pids.length; i++) {
+            isFatePool[pids[i]] = true;
+        }
+    }
+
+    /// @dev set excluded addresses
+    function setExcludedAddresses(address[] memory accounts) external onlyOwner {
+        require(accounts.length > 0, "setExcludedAddresses: invalid accounts");
+        for (uint i = 0; i < accounts.length; i++) {
+            isExcludedAddress[accounts[i]] = true;
+        }
+    }
     
     /// @dev record deposit block
-    function recordDepositBlock(uint256 _pid, address _user) internal {
+    function _recordDepositBlock(uint256 _pid, address _user) internal {
         uint256 currentBlockNumber = block.number;
-        require(currentBlockNumber <= EPOCH_END_BLOCK, "recordDepositBlock: epoch ended");
+        require(currentBlockNumber <= epochEndBlock, "_recordDepositBlock: epoch ended");
 
         uint256 userIndex = _getIndexOfArray(depositedUsers[_pid], _user);
 
-        if(userIndex == depositedUsers[_pid].length) {
+        if (userIndex == depositedUsers[_pid].length) {
             // not recored yet (first deposit)
             depositedUsers[_pid].push(_user);
             userMembershipInfo[_pid][_user] = MembershipInfo({
@@ -45,7 +66,7 @@ abstract contract MembershipWithPoints {
 
     function getEndBlock() internal view returns(uint256 endBlock) {
         uint256 currentBlockNumber = block.number;
-        endBlock = currentBlockNumber > EPOCH_END_BLOCK ? EPOCH_END_BLOCK : currentBlockNumber;
+        endBlock = currentBlockNumber > epochEndBlock ? epochEndBlock : currentBlockNumber;
     }
 
     /// @dev calculate Points earned by this user
