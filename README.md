@@ -34,6 +34,8 @@ https://fatexdao.io
 | RewardScheduleV14                 | 0x5DD5e8bA7e68f60f09349617EDBd5D842899FfC7        | https://explorer.harmony.one/address/0x5DD5e8bA7e68f60f09349617EDBd5D842899FfC7 |
 | RewardScheduleV15                 | 0x54026eea0799e52B2ac57c2C63F5AB1D652f88c0        | https://explorer.harmony.one/address/0x54026eea0799e52B2ac57c2C63F5AB1D652f88c0 |
 | RewardScheduleV16                 | 0x36da7c3ba699dde119be1f794a410b86419fa465        | https://explorer.harmony.one/address/0x36da7c3ba699dde119be1f794a410b86419fa465 |
+| RewardScheduleV17                 | 0x70113ed062aeD0E23302D05Ac64A420b626f16e5        | https://explorer.harmony.one/address/0x70113ed062aeD0E23302D05Ac64A420b626f16e5 |       | RewardScheduleV18                 | 0x04170495EA41288225025De3CDFE9A9799121861        | https://explorer.harmony.one/address/0x04170495EA41288225025De3CDFE9A9799121861 |       
+| RewardScheduleV19                 | 0xab2907833ff4fd60216aaf16012e9a3a71aff222        | https://explorer.harmony.one/address/0xab2907833ff4fd60216aaf16012e9a3a71aff222 |       
 | AmmPoolFactory                    | 0xa4EF1da515096DB768Bc47DBC080888795643442        | https://explorer.harmony.one/address/0xa4EF1da515096DB768Bc47DBC080888795643442 |
 | AmmPoolRouter                     | 0x82145037096870BA3a5f7beE4C3602BD36e27Bff        | https://explorer.harmony.one/address/0x82145037096870BA3a5f7beE4C3602BD36e27Bff |
 | FGCD Vault                        | 0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44        | https://explorer.harmony.one/address/0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44 |
@@ -96,6 +98,24 @@ https://fatexdao.io
 | FATE:bscBNB       | 0xc720E4F91DB0FC02a762D7adFC57b560f931E59D    | 36        |
 | 1SUSHI:1PAXG      | 0x8b8A7127f14F9CE4912Be954340AC58400411dB7    | 37        |
 | bscBNB:1PAXG      | 0x253F86191996e5E1075210405DE620bb136CB646    | 38        |
+| 1WBTC:UST         | 0xdE69c5B73C79A28362AE743588453bFBFc6E29A9    | 39        |
+| 1ETH:UST          | 0x3dAeFFC126DaB5C817c40dEfe99709aBDBBee75F    | 40        |
+| 1SUSHI:UST        | 0x5247E5A8640Fd1D68001460e48549542b1cbe009    | 41        |
+| bscBNB:UST        | 0xB53F27ce275230FB594c472809ed458C9b01BCE5    | 42        |
+| 1PAXG:UST         | 0xD799952800A4b3C052b268c103914ECc682eB25F    | 43        |
+| UST:1USDC         | 0x65F2962643E2dD5edca7D95A0176A0724af3a60D    | 44        |
+| FATE:WMATIC       | 0x56B97658A1a36e16a1B7e70Fd61D211E47f4ee58    | 45        |
+| xFATE:WMATIC      | 0xa405fEf503eEEce0dA2Fd98e6f9d59424095B2F9    | 46        |
+| 1PAXG:WMATIC      | 0xC4Fa33eCff60652c3fC7AC6767391c534Bea734E    | 47        |
+| FATE:FTM          | 0x7CcB609bFf2EdA524e7Dd10a25471966Bda7a68D    | 48        |
+| xFATE:FTM         | 0xeb7Da49F3a0349872Ff69Fa225Aa8f4435120279    | 49        |
+| 1PAXG:FTM         | 0x89A9a124b4A19A1c8D7024524a06c998E7dE0d84    | 50        |
+| FATE:LUNA         | 0x98E2cDcC91888EE4140b01FcA9386e10481d15Ce    | 51        |
+| xFATE:LUNA        | 0xFD6c4080DB685433A74e5577AB2b8Da868974D2d    | 52        |
+| 1PAXG:LUNA        | 0x58C0fEb672bea463FF623c3b2c42b1229a947F30    | 53        |
+| FATE:AVAX         | 0x271b050498c8FA1A307860FF11f5FdF18BEe7Fc1    | 54        |
+| xFATE:AVAX        | 0xb50bF3017e1F1D5d19Afa7c391f0D3b560F26129    | 55        |
+| 1PAXG:AVAX        | 0xE8d6f9905B0431428DCb9444f30C91B59d471498    | 56        |
 
 ## Testnet Deployed Contracts (unless otherwise noted below, all addresses are the same)
 
