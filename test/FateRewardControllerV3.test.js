@@ -10,6 +10,22 @@ const { BigNumber } = ethers
 describe("FateRewardControllerV3", () => {
     const epoch_period_blocks = 30 * 60 * 24 * 7 * 9 // 8 weeks
 
+    const doDeposit = async (depositore, depositAmount) => {
+      const beforeBalance = await this.lp.balanceOf(depositore.address)
+      await this.fateRewardControllerV3.connect(depositore).deposit(0, depositAmount)
+      const afterBalance = await this.lp.balanceOf(depositore.address)
+      // confirm balance change after deposit
+      expect(beforeBalance.sub(afterBalance)).to.be.equal(depositAmount)
+    }
+
+    const doSomeDeposists = async () => {
+      await doDeposit(this.bob, getBigNumber(10))
+      await advanceBlock()
+      await advanceBlock()
+      await doDeposit(this.dev, getBigNumber(10))
+      await advanceBlock()
+    }
+
     before(async () => {
       this.signers = await ethers.getSigners()
       this.alice = this.signers[0]
@@ -77,40 +93,98 @@ describe("FateRewardControllerV3", () => {
       )
     })
 
-    const doDeposit = async (depositore, depositAmount) => {
-      const beforeBalance = await this.lp.balanceOf(depositore.address)
-      await this.fateRewardControllerV3.connect(depositore).deposit(0, depositAmount)
-      const afterBalance = await this.lp.balanceOf(depositore.address)
+    // it("MembershipReward", async () => {
+    //   // do some deposit actions
+    //   await doSomeDeposists()
 
-      // confirm balance change after deposit
-      expect(beforeBalance.sub(afterBalance)).to.be.equal(depositAmount)
-    }
+    //   const bobUserPoints = await this.fateRewardControllerV3.userPoints(0, this.bob.address)
+    //   const devUserPoints = await this.fateRewardControllerV3.userPoints(0, this.dev.address)
 
-    it("MembershipReward", async () => {
-      await doDeposit(this.bob, getBigNumber(10))
-      await advanceBlock()
-      await advanceBlock()
-      await doDeposit(this.dev, getBigNumber(10))
-      await advanceBlock()
+    //   expect(bobUserPoints).to.above(devUserPoints)
 
-      const bobUserPoints = await this.fateRewardControllerV3.userPoints(0, this.bob.address)
-      const devUserPoints = await this.fateRewardControllerV3.userPoints(0, this.dev.address)
-
-      expect(bobUserPoints).to.above(devUserPoints)
-
-      await this.fateRewardControllerV3.rank(0)
-      const bobMembershipInfo = await this.fateRewardControllerV3.userMembershipInfo(
-        0, this.bob.address
-      )
-      const devMembershipInfo = await this.fateRewardControllerV3.userMembershipInfo(
-        0, this.dev.address
-      )
-      expect(bobMembershipInfo.rankedNumber).to.equal(0);
-      expect(devMembershipInfo.rankedNumber).to.equal(1);
-    })
-
-    // it("LockedRewardsFee", async () => {
+    //   await this.fateRewardControllerV3.rank(0)
+    //   const bobMembershipInfo = await this.fateRewardControllerV3.userMembershipInfo(
+    //     0, this.bob.address
+    //   )
+    //   const devMembershipInfo = await this.fateRewardControllerV3.userMembershipInfo(
+    //     0, this.dev.address
+    //   )
+    //   expect(bobMembershipInfo.rankedNumber).to.equal(0)
+    //   expect(devMembershipInfo.rankedNumber).to.equal(1)
     // })
+
+    describe("LockedRewardsFee", async () => {
+      // describe("setLockedRewardsData", async() => {
+      //   it("reverted cases:", async() => {
+      //     // when trying to set with not-owner
+      //     await expect(
+      //       this.fateRewardControllerV3.connect(this.dev).setLockedRewardsData(
+      //         [30, 60],
+      //         [getBigNumber(1), getBigNumber(98, 16)]
+      //       )
+      //     ).to.be.revertedWith('Ownable: caller is not the owner')
+
+      //     // when trying with invalid input data
+      //     await expect(
+      //       this.fateRewardControllerV3.setLockedRewardsData([],[])
+      //     ).to.be.revertedWith('setLockedRewardsData: invalid input data')
+
+      //     await expect(
+      //       this.fateRewardControllerV3.setLockedRewardsData([30, 60],[])
+      //     ).to.be.revertedWith('setLockedRewardsData: invalid input data')
+      //   }),
+
+      //   it("success cases:", async() => {
+      //     await this.fateRewardControllerV3.setLockedRewardsData(
+      //       [10, 20],[getBigNumber(1), getBigNumber(98, 16)]
+      //     )
+      //     const lockedRewardsPeriodBlock = await this.fateRewardControllerV3.lockedRewardsPeriodBlocks(0)
+      //     expect(lockedRewardsPeriodBlock).to.be.equal(10)
+      //     const lockedRewardsFeePercent = await this.fateRewardControllerV3.lockedRewardsFeePercents(0)
+      //     expect(lockedRewardsFeePercent).to.be.equal(getBigNumber(1))
+      //   })
+      // })
+
+      // describe("excluded Addresses", async () => {
+      //   it("reverted cases", async() => {
+      //     // when trying to set with not-owner
+      //     await expect(
+      //       this.fateRewardControllerV3.connect(this.dev).setExcludedAddresses(
+      //         [this.alice.address],
+      //         [true]
+      //       )
+      //     ).to.be.revertedWith('Ownable: caller is not the owner')
+
+      //     // when trying with invalid input data
+      //     await expect(
+      //       this.fateRewardControllerV3.setExcludedAddresses(
+      //         [this.alice.address],
+      //         []
+      //       )
+      //     ).to.be.revertedWith('setExcludedAddresses: invalid data')
+      //   })
+
+      //   it('success cases', async() => {
+      //     const beforeStatus = await this.fateRewardControllerV3.isExcludedAddress(
+      //       this.dev.address
+      //     )
+      //     expect(beforeStatus).to.be.false
+      //     await this.fateRewardControllerV3.setExcludedAddresses(
+      //       [this.dev.address],
+      //       [true]
+      //     )
+      //     const afterStatus = await this.fateRewardControllerV3.isExcludedAddress(
+      //       this.dev.address
+      //     )
+      //     expect(afterStatus).to.be.true
+      //   })
+      // })
+
+      it("check math calc", async () => {
+        await doSomeDeposists()
+        
+      })
+    })
 
     // it("LPWithdrawFee", async () => {
     // })

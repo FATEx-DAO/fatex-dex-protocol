@@ -38,4 +38,32 @@ library RankedArray {
             }
         }
     }
+
+    function getIndexOfAddressArray(address[] memory data, address addr) internal pure returns (uint256 index) {
+        index = data.length;
+        for (uint i=0; i < data.length; i++) {
+            if (data[i] == addr) index = i;
+        }
+    }
+
+    /// @dev calculate index of LockedRewardFee data
+    function getIndexOfBlocks(
+        uint256 periodBlocks,
+        uint256[] memory blocks
+    ) internal pure returns(uint256 index) {
+        if (periodBlocks < blocks[0]) {
+            index = 0;
+        } else if (periodBlocks > blocks[blocks.length - 1]) {
+            index = blocks.length - 1;
+        } else {
+            for (uint i = 0; i < blocks.length - 1; i++) {
+                if (
+                    periodBlocks >= blocks[i] &&
+                    periodBlocks < blocks[i + 1]
+                ) {
+                    index = i;
+                }
+            }
+        }
+    }
 }

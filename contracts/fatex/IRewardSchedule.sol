@@ -13,4 +13,12 @@ interface IRewardSchedule {
     view
     returns (uint);
 
+
+    function calculateCurrentIndex(
+        uint _startBlock
+    )
+    external
+    view
+    returns (uint);
+
 }

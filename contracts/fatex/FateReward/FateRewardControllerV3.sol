@@ -11,14 +11,14 @@ import "../IFateRewardController.sol";
 import "../IRewardSchedule.sol";
 import "../MockLpToken.sol";
 import "../IMockLpTokenFactory.sol";
-import "./LPWithdrawFee.sol";
+import "./MembershipWithReward.sol";
 
 // Note that it's ownable and the owner wields tremendous power. The ownership
 // will be transferred to a governance smart contract once FATE is sufficiently
 // distributed and the community can show to govern itself.
 //
 // Have fun reading it. Hopefully it's bug-free. God bless.
-contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
+contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -90,6 +90,7 @@ contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
         address _vault,
         IFateRewardController[] memory _oldControllers,
         IMockLpTokenFactory _mockLpTokenFactory,
+        uint256 _epochStartBlock,
         uint256 _epochEndBlock
     ) public {
         fate = _fate;
@@ -99,6 +100,7 @@ contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
         mockLpTokenFactory = _mockLpTokenFactory;
         startBlock = _oldControllers[0].startBlock();
         epochEndBlock = _epochEndBlock;
+        epochStartBlock = _epochStartBlock;
     }
 
     function poolLength() external override view returns (uint256) {
@@ -309,9 +311,8 @@ contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
         updatePool(_pid);
         if (user.amount > 0) {
             uint256 pending = user.amount.mul(pool.accumulatedFatePerShare).div(1e12).sub(user.rewardDebt);
-            // _safeFateTransfer(msg.sender, pending);
-            // emit ClaimRewards(msg.sender, _pid, pending);
-            _claimRewards(msg.sender, _pid, pending);
+            _safeFateTransfer(msg.sender, pending);
+            emit ClaimRewards(msg.sender, _pid, pending);
         }
         pool.lpToken.safeTransferFrom(
             address(msg.sender),
@@ -321,9 +322,9 @@ contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
         uint userBalance = user.amount.add(_amount);
 
         _userInfo[_pid][msg.sender] = UserInfoV2({
-        amount : userBalance,
-        rewardDebt : userBalance.mul(pool.accumulatedFatePerShare).div(1e12),
-        isUpdated : true
+            amount : userBalance,
+            rewardDebt : userBalance.mul(pool.accumulatedFatePerShare).div(1e12),
+            isUpdated : true
         });
 
         _recordDepositBlock(_pid, msg.sender);
@@ -339,20 +340,36 @@ contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
         updatePool(_pid);
 
         uint256 pending = user.amount.mul(pool.accumulatedFatePerShare).div(1e12).sub(user.rewardDebt);
-        // _safeFateTransfer(msg.sender, pending);
-        // emit ClaimRewards(msg.sender, _pid, pending);
-        _claimRewards(msg.sender, _pid, pending);
+        _safeFateTransfer(msg.sender, pending);
+        emit ClaimRewards(msg.sender, _pid, pending);
+        
 
         uint userBalance = user.amount.sub(_amount);
         _userInfo[_pid][msg.sender] = UserInfoV2({
-        amount : userBalance,
-        rewardDebt : userBalance.mul(pool.accumulatedFatePerShare).div(1e12),
-        isUpdated : true
+            amount : userBalance,
+            rewardDebt : userBalance.mul(pool.accumulatedFatePerShare).div(1e12),
+            isUpdated : true
         });
 
-        uint256 withdrawAmount = calcWithdrawAmount(_pid, msg.sender, _amount);
-        pool.lpToken.safeTransfer(address(msg.sender), withdrawAmount);
-        emit Withdraw(msg.sender, _pid, withdrawAmount);
+        // // calculate fees and minu from transfer amount
+        // uint256 withdrawAmount = (
+        //     1e18 - _getLPWithdrawFeePercent(_pid, _user)
+        // ) * _amount / 1e18; // minus fees
+
+        // // update lastWithdrawBlock of userMembershipInfo
+        // MembershipInfo memory membership = userMembershipInfo[_pid][_user];
+        // userMembershipInfo[_pid][_user] = MembershipInfo({
+        //     firstDepositBlock: membership.firstDepositBlock,
+        //     rankedNumber: membership.rankedNumber,
+        //     lastWithdrawBlock: block.number
+        // });
+
+        // // transfer withdraw amount and emit events
+        // pool.lpToken.safeTransfer(address(msg.sender), withdrawAmount);
+        // emit Withdraw(msg.sender, _pid, withdrawAmount);
+
+        pool.lpToken.safeTransfer(msg.sender, _amount);
+        emit Withdraw(msg.sender, _pid, _amount);
     }
 
     // claim any pending rewards from this pool, from msg.sender
@@ -362,14 +379,13 @@ contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
         updatePool(_pid);
 
         uint256 pending = user.amount.mul(pool.accumulatedFatePerShare).div(1e12).sub(user.rewardDebt);
-        // _safeFateTransfer(msg.sender, pending);
-        // emit ClaimRewards(msg.sender, _pid, pending);
-        _claimRewards(msg.sender, _pid, pending);
+        _safeFateTransfer(msg.sender, pending);
+        emit ClaimRewards(msg.sender, _pid, pending);
 
         _userInfo[_pid][msg.sender] = UserInfoV2({
-        amount : user.amount,
-        rewardDebt : user.amount.mul(pool.accumulatedFatePerShare).div(1e12),
-        isUpdated : true
+            amount : user.amount,
+            rewardDebt : user.amount.mul(pool.accumulatedFatePerShare).div(1e12),
+            isUpdated : true
         });
     }
 
@@ -388,9 +404,9 @@ contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
         emit EmergencyWithdraw(msg.sender, _pid, user.amount);
 
         _userInfo[_pid][msg.sender] = UserInfoV2({
-        amount : 0,
-        rewardDebt : 0,
-        isUpdated : true
+            amount : 0,
+            rewardDebt : 0,
+            isUpdated : true
         });
     }
 
@@ -424,17 +440,5 @@ contract FateRewardControllerV3 is IFateRewardController, LPWithdrawFee {
         // pro-rate the pools to the current block, before changing the schedule
         vault = _vault;
         emit VaultSet(_vault);
-    }
-
-
-    function _claimRewards(
-        address _caller,
-        uint256 _pid,
-        uint256 _pending
-    ) internal {
-        uint256 feePercent = lockedRewardsFeePercent(_pid, _caller);
-        uint256 rewardAmount = (100e18 - feePercent) * _pending / 100e18;
-        _safeFateTransfer(_caller, rewardAmount);
-        emit ClaimRewards(_caller, _pid, rewardAmount);
     }
 }
