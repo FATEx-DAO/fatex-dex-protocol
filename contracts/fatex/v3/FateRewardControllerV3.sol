@@ -363,8 +363,31 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
             isUpdated : true
         });
 
-        pool.lpToken.safeTransfer(msg.sender, _amount);
-        emit Withdraw(msg.sender, _pid, _amount);
+
+        uint256 withdrawAmount = _amount;
+        if (isFatePool[_pid]) {// fees are trigger for Fate LP
+            // LockedRewardFee
+            uint256 lockedRewardFee = userLockedRewards[_pid][msg.sender]
+                * (1e18 - _getLockedRewardsFeePercent(_pid, msg.sender))
+                / 1e18;
+            userLockedRewards[_pid][msg.sender] -= lockedRewardFee;
+
+            // LPWithdrawFee
+            uint256 lpWithdrawFee = _amount
+                * (1e18 - _getLPWithdrawFeePercent(_pid, msg.sender))
+                / 1e18;
+            withdrawAmount = withdrawAmount - lpWithdrawFee;
+
+            // record last withdraw block
+            MembershipInfo memory membership = userMembershipInfo[_pid][msg.sender];
+            userMembershipInfo[_pid][msg.sender] = MembershipInfo({
+                firstDepositBlock: membership.firstDepositBlock,
+                lastWithdrawBlock: block.number
+            });
+        }
+
+        pool.lpToken.safeTransfer(msg.sender, withdrawAmount);
+        emit Withdraw(msg.sender, _pid, withdrawAmount);
     }
 
     function _claimRewards(
@@ -377,6 +400,15 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
             .mul(pool.accumulatedFatePerShare)
             .div(1e12)
             .sub(user.rewardDebt);
+
+        // recored locked rewards
+        uint256 lockedRewards = pending;
+        if (block.number <= emissionSchedule.epochEndBlock()) {
+            // in process of epoch
+            lockedRewards = pending / 2 * 8;
+        }
+        userLockedRewards[_pid][_user] += lockedRewards;
+
         _safeFateTransfer(_user, pending);
         emit ClaimRewards(_user, _pid, pending);
     }

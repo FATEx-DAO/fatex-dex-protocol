@@ -25,10 +25,7 @@ abstract contract MembershipWithReward is Ownable {
     mapping(uint256 => mapping (address => MembershipInfo)) public userMembershipInfo;    
 
     /// @dev pid => user address => lockedRewards
-    mapping(uint256 => mapping (address => uint256)) public lockedRewards;
-
-    /// @dev pid => user address => charged Locked Rewards Fees
-    mapping(uint256 => mapping (address => uint256)) public lockedRewardChargedFee;
+    mapping(uint256 => mapping (address => uint256)) public userLockedRewards;
 
     /// @dev data for FateLockedRewardFee
     uint256[] public lockedRewardsPeriodBlocks = [
@@ -91,13 +88,13 @@ abstract contract MembershipWithReward is Ownable {
         888
     ];
     uint256[] public lpWithdrawFeePercent = [
-        18e18,
-        8e18,
-        3.60e18,
-        1.43e18,
-        0.80e18,
-        0.36e18,
-        0.18e18
+        0.18e18,
+        0.08e18,
+        0.036e18,
+        0.0143e18,
+        0.0080e18,
+        0.0036e18,
+        0.0018e18
     ];
 
     event LockedRewardsDataSet(uint256[] _lockedRewardsPeriodBlocks, uint256[] _lockedRewardsFeePercents);
@@ -156,6 +153,11 @@ abstract contract MembershipWithReward is Ownable {
         }
     }
 
+    /// @dev calculate Points earned by this user
+    function userPoints(uint256 _pid, address _user) public returns (uint256 points){
+        points = _getBlocksOfPeriod(_pid, _user, true) * POINTS_PER_BLOCK;
+    }
+
     /// @dev record deposit block
     function _recordDepositBlock(uint256 _pid, address _user) internal {
         if (isFatePool[_pid]) {
@@ -173,11 +175,6 @@ abstract contract MembershipWithReward is Ownable {
                 });
             }
         }
-    }
-
-    /// @dev calculate Points earned by this user
-    function userPoints(uint256 _pid, address _user) public returns (uint256 points){
-        points = _getBlocksOfPeriod(_pid, _user, true) * POINTS_PER_BLOCK;
     }
 
     function _getBlocksOfPeriod(
