@@ -2,22 +2,33 @@
 
 pragma solidity 0.6.12;
 
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "../IRewardSchedule.sol";
+import "./IRewardSchedule.sol";
+import "./IFateRewardController.sol";
 import "../../libraries/RankedArray.sol";
 
-abstract contract FateRewardControllerBase is Ownable {
+abstract contract MembershipWithReward is Ownable {
+    uint256 constant public POINTS_PER_BLOCK = 0.08e18;
+
     // The emission scheduler that calculates fate per block over a given period
     IRewardSchedule public emissionSchedule;
 
-    uint256 public punitivePeriod = 8 weeks;
+    struct MembershipInfo {
+        uint256 firstDepositBlock; // set when first deposit
+        uint256 lastWithdrawBlock; // set when first deposit, updates whenever withdraws
+    }
 
     mapping(uint256 => bool) public isFatePool;
     mapping(address => bool) public isExcludedAddress;
 
-    /// @dev charged FateLockedReward Fees that users should pay
-    mapping(address => uint256) public lockedRewardDebit;
+    // pid => address => membershipInfo
+    mapping(uint256 => mapping (address => MembershipInfo)) public userMembershipInfo;    
+
+    /// @dev pid => user address => lockedRewards
+    mapping(uint256 => mapping (address => uint256)) public lockedRewards;
+
+    /// @dev pid => user address => charged Locked Rewards Fees
+    mapping(uint256 => mapping (address => uint256)) public lockedRewardChargedFee;
 
     /// @dev data for FateLockedRewardFee
     uint256[] public lockedRewardsPeriodBlocks = [
@@ -144,22 +155,6 @@ abstract contract FateRewardControllerBase is Ownable {
             emit ExcludedAddressSet(accounts[i], status[i]);
         }
     }
-}
-
-abstract contract MembershipWithReward is FateRewardControllerBase {
-    uint256 constant public POINTS_PER_BLOCK = 0.08e18;
-
-    struct MembershipInfo {
-        uint256 firstDepositBlock; // set when first deposit
-        uint256 rankedNumber;
-        uint256 lastWithdrawBlock; // set when first deposit, updates whenever withdraws
-    }
-
-    // pid => depositors' address array
-    mapping(uint256 => address[]) public depositedUsers;
-
-    // pid => address => membershipInfo
-    mapping(uint256 => mapping (address => MembershipInfo)) public userMembershipInfo;
 
     /// @dev record deposit block
     function _recordDepositBlock(uint256 _pid, address _user) internal {
@@ -170,16 +165,10 @@ abstract contract MembershipWithReward is FateRewardControllerBase {
                 "_recordDepositBlock: epoch ended"
             );
 
-            uint256 userIndex = RankedArray.getIndexOfAddressArray(
-                depositedUsers[_pid],
-                _user
-            );
-            if (userIndex == depositedUsers[_pid].length) {
-                // not recored yet (first deposit)
-                depositedUsers[_pid].push(_user);
+            if (userMembershipInfo[_pid][_user].firstDepositBlock == 0) {
+                // not recorded yet
                 userMembershipInfo[_pid][_user] = MembershipInfo({
                     firstDepositBlock: currentBlockNumber,
-                    rankedNumber: 2 ** 256 - 1,
                     lastWithdrawBlock: currentBlockNumber
                 });
             }
@@ -188,39 +177,7 @@ abstract contract MembershipWithReward is FateRewardControllerBase {
 
     /// @dev calculate Points earned by this user
     function userPoints(uint256 _pid, address _user) public returns (uint256 points){
-        points = _getBlocksOfPeriod(
-            _pid,
-            _user,
-            true
-        ) * POINTS_PER_BLOCK;
-    }
-
-    /// @dev rank with Points and set rankedNumber to each user
-    function rank(uint256 _pid) public returns (uint256) {
-        if (isFatePool[_pid]) {
-            address[] memory pool_deposited_user_list = depositedUsers[_pid];
-            uint256 deposited_user_counts = pool_deposited_user_list.length;
-            require(deposited_user_counts > 0, "rank: no_deposited_users_yet");
-            
-
-            uint256[] memory pointsList = new uint256[](deposited_user_counts);
-            for(uint i = 0; i < deposited_user_counts; i++) {
-                pointsList[i] = userPoints(_pid, pool_deposited_user_list[i]);
-            }
-
-            uint256[] memory sortedPointsList = RankedArray.sort(pointsList);
-            for (uint i = 0; i < deposited_user_counts; i++) {
-                address userAddr = depositedUsers[_pid][i];
-                MembershipInfo memory membership = userMembershipInfo[_pid][userAddr];
-
-                userMembershipInfo[_pid][userAddr] = MembershipInfo({
-                    firstDepositBlock: membership.firstDepositBlock,
-                    rankedNumber: RankedArray.getIndex(sortedPointsList, pointsList[i]),
-                    lastWithdrawBlock: membership.lastWithdrawBlock
-                });
-            }
-
-        }
+        points = _getBlocksOfPeriod(_pid, _user, true) * POINTS_PER_BLOCK;
     }
 
     function _getBlocksOfPeriod(
