@@ -3,14 +3,12 @@
 pragma solidity 0.6.12;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "../uniswap-v2/interfaces/IUniswapV2Pair.sol";
 
 import "./IFateRewardController.sol";
 
-contract FateRewardControllerUpgrader is Ownable {
+contract FateRewardControllerAssetAdder is Ownable {
 
     IFateRewardController public controller;
 
