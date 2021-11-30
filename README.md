@@ -55,6 +55,7 @@ https://fatexdao.io
 | Multi Call                        | 0x41Fec4E5De930d8a618900973f0A678114C27361        | https://explorer.harmony.one/address/0x41Fec4E5De930d8a618900973f0A678114C27361 |
 | MockLpTokenFactory                | 0xd9D9a75f0eFe0A2dD580f212005a8211CC8dF4FD        | https://explorer.harmony.one/address/0xd9D9a75f0eFe0A2dD580f212005a8211CC8dF4FD |
 | FateRewardControllerUpgraderV1    | 0xbF5423B7035e4305608490F6925169998644c422        | https://explorer.harmony.one/address/0xbF5423B7035e4305608490F6925169998644c422 |
+| FateRewardControllerAssetAdder    | 0x878F1b45C0Fd91b324E45A2294E9B9a27d748605        | https://explorer.harmony.one/address/0x878F1b45C0Fd91b324E45A2294E9B9a27d748605 |
 
 ## Staking Pools (with IDs for FateRewardController)
 
