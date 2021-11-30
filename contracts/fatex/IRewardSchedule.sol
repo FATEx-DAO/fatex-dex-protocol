@@ -21,4 +21,6 @@ interface IRewardSchedule {
     view
     returns (uint);
 
+    function epochStartBlock() external returns (uint);
+    function epochEndBlock() external returns (uint);
 }

@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "../IFateRewardController.sol";
-import "../IRewardSchedule.sol";
 import "../MockLpToken.sol";
 import "../IMockLpTokenFactory.sol";
 import "./MembershipWithReward.sol";
@@ -45,9 +44,6 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
     address public override vault;
 
     IFateRewardController[] public oldControllers;
-
-    // The emission scheduler that calculates fate per block over a given period
-    IRewardSchedule public override emissionSchedule;
 
     // The migrator contract. It has a lot of power. Can only be set through governance (owner).
     IMigratorChef public override migrator;
@@ -89,9 +85,7 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         IRewardSchedule _emissionSchedule,
         address _vault,
         IFateRewardController[] memory _oldControllers,
-        IMockLpTokenFactory _mockLpTokenFactory,
-        uint256 _epochStartBlock,
-        uint256 _epochEndBlock
+        IMockLpTokenFactory _mockLpTokenFactory
     ) public {
         fate = _fate;
         emissionSchedule = _emissionSchedule;
@@ -99,8 +93,6 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         oldControllers = _oldControllers;
         mockLpTokenFactory = _mockLpTokenFactory;
         startBlock = _oldControllers[0].startBlock();
-        epochEndBlock = _epochEndBlock;
-        epochStartBlock = _epochStartBlock;
     }
 
     function poolLength() external override view returns (uint256) {
@@ -202,15 +194,15 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         }
 
         // transfer all of the tokens from the previous controller to here
-        token.transferFrom(msg.sender, address(this), token.balanceOf(msg.sender));
+        token.safeTransferFrom(msg.sender, address(this), token.balanceOf(msg.sender));
 
         poolInfo.push(
             PoolInfo({
-        lpToken : lpToken,
-        allocPoint : allocPoint,
-        lastRewardBlock : lastRewardBlock,
-        accumulatedFatePerShare : accumulatedFatePerShare
-        })
+                lpToken : lpToken,
+                allocPoint : allocPoint,
+                lastRewardBlock : lastRewardBlock,
+                accumulatedFatePerShare : accumulatedFatePerShare
+            })
         );
         emit PoolAdded(poolInfo.length - 1, address(token), allocPoint);
 

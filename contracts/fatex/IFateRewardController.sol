@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./IMigratorChef.sol";
-import "./IRewardSchedule.sol";
 
 abstract contract IFateRewardController is Ownable, IMigratorChef {
 
@@ -37,7 +36,6 @@ abstract contract IFateRewardController is Ownable, IMigratorChef {
 
     function fate() external virtual view returns (IERC20);
     function vault() external virtual view returns (address);
-    function emissionSchedule() external virtual view returns (IRewardSchedule);
     function migrator() external virtual view returns (IMigratorChef);
     function poolInfo(uint _pid) external virtual view returns (IERC20 lpToken, uint256 allocPoint, uint256 lastRewardBlock, uint256 accumulatedFatePerShare);
     function userInfo(uint _pid, address _user) external virtual view returns (uint256 amount, uint256 rewardDebt);

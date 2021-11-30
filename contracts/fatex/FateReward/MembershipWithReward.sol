@@ -4,11 +4,13 @@ pragma solidity 0.6.12;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "../IRewardSchedule.sol";
 import "../../libraries/RankedArray.sol";
 
 abstract contract FateRewardControllerBase is Ownable {
-    uint256 public epochEndBlock;
-    uint256 public epochStartBlock;
+    // The emission scheduler that calculates fate per block over a given period
+    IRewardSchedule public emissionSchedule;
+
     uint256 public punitivePeriod = 8 weeks;
 
     mapping(uint256 => bool) public isFatePool;
@@ -87,6 +89,10 @@ abstract contract FateRewardControllerBase is Ownable {
         0.18e18
     ];
 
+    event LockedRewardsDataSet(uint256[] _lockedRewardsPeriodBlocks, uint256[] _lockedRewardsFeePercents);
+    event LPWithdrawDataSet(uint256[] _lpWithdrawPeriodBlocks, uint256[] _lpWithdrawFeePercent);
+    event ExcludedAddressSet(address _account, bool _status);
+
     /// @dev set lockedRewardsPeriodBlocks & lockedRewardsFeePercents
     function setLockedRewardsData(
         uint256[] memory _lockedRewardsPeriodBlocks,
@@ -99,6 +105,8 @@ abstract contract FateRewardControllerBase is Ownable {
         );
         lockedRewardsPeriodBlocks = _lockedRewardsPeriodBlocks;
         lockedRewardsFeePercents = _lockedRewardsFeePercents;
+
+        emit LockedRewardsDataSet(_lockedRewardsPeriodBlocks, _lockedRewardsFeePercents);
     }
 
     /// @dev set lpWithdrawPeriodBlocks & lpWithdrawFeePercent
@@ -112,6 +120,8 @@ abstract contract FateRewardControllerBase is Ownable {
         );
         lpWithdrawPeriodBlocks = _lpWithdrawPeriodBlocks;
         lpWithdrawFeePercent = _lpWithdrawFeePercent;
+
+        emit LPWithdrawDataSet(_lpWithdrawPeriodBlocks, _lpWithdrawFeePercent);
     }
 
     /// @dev set FatePool Ids
@@ -131,6 +141,7 @@ abstract contract FateRewardControllerBase is Ownable {
         );
         for (uint i = 0; i < accounts.length; i++) {
             isExcludedAddress[accounts[i]] = status[i];
+            emit ExcludedAddressSet(accounts[i], status[i]);
         }
     }
 }
@@ -138,7 +149,7 @@ abstract contract FateRewardControllerBase is Ownable {
 abstract contract MembershipWithReward is FateRewardControllerBase {
     uint256 constant public POINTS_PER_BLOCK = 0.08e18;
 
-    struct MembershipInfo{
+    struct MembershipInfo {
         uint256 firstDepositBlock; // set when first deposit
         uint256 rankedNumber;
         uint256 lastWithdrawBlock; // set when first deposit, updates whenever withdraws
@@ -149,13 +160,15 @@ abstract contract MembershipWithReward is FateRewardControllerBase {
 
     // pid => address => membershipInfo
     mapping(uint256 => mapping (address => MembershipInfo)) public userMembershipInfo;
-    
-    
+
     /// @dev record deposit block
     function _recordDepositBlock(uint256 _pid, address _user) internal {
         if (isFatePool[_pid]) {
             uint256 currentBlockNumber = block.number;
-            require(currentBlockNumber <= epochEndBlock, "_recordDepositBlock: epoch ended");
+            require(
+                currentBlockNumber <= emissionSchedule.epochEndBlock(),
+                "_recordDepositBlock: epoch ended"
+            );
 
             uint256 userIndex = RankedArray.getIndexOfAddressArray(
                 depositedUsers[_pid],
@@ -174,7 +187,7 @@ abstract contract MembershipWithReward is FateRewardControllerBase {
     }
 
     /// @dev calculate Points earned by this user
-    function userPoints(uint256 _pid, address _user) public view returns (uint256 points){
+    function userPoints(uint256 _pid, address _user) public returns (uint256 points){
         points = _getBlocksOfPeriod(
             _pid,
             _user,
@@ -214,10 +227,12 @@ abstract contract MembershipWithReward is FateRewardControllerBase {
         uint256 _pid,
         address _user,
         bool _isDepositPeriod
-    ) internal view returns (uint256 blocksOfPeriod) {
+    ) internal returns (uint256 blocksOfPeriod) {
         if (isFatePool[_pid]) {
             uint256 currentBlockNumber = block.number;
+            uint256 epochEndBlock = emissionSchedule.epochEndBlock();
             uint256 endBlock = currentBlockNumber > epochEndBlock ? epochEndBlock : currentBlockNumber;
+
             MembershipInfo memory membership = userMembershipInfo[_pid][_user];
             uint256 startBlock = _isDepositPeriod ? membership.firstDepositBlock : membership.lastWithdrawBlock;
             
@@ -231,7 +246,7 @@ abstract contract MembershipWithReward is FateRewardControllerBase {
     function _getLockedRewardsFeePercent(
         uint256 _pid,
         address _caller
-    ) internal view returns(uint256 percent) {
+    ) internal returns(uint256 percent) {
         if (isExcludedAddress[_caller]) {
             percent = 0;
         } else {
@@ -249,7 +264,7 @@ abstract contract MembershipWithReward is FateRewardControllerBase {
     }
 
     /// @dev calculate lpWithdrawFees as percent that will be sent to the rewardController
-    function _getLPWithdrawFeePercent(uint256 _pid, address _caller) internal view returns(uint256 percent) {
+    function _getLPWithdrawFeePercent(uint256 _pid, address _caller) internal returns(uint256 percent) {
         if (isExcludedAddress[_caller]) {
             percent = 0;
         } else {
