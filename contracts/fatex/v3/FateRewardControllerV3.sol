@@ -93,6 +93,17 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         oldControllers = _oldControllers;
         mockLpTokenFactory = _mockLpTokenFactory;
         startBlock = _oldControllers[0].startBlock();
+
+        // inset old controller's pooInfo
+        for (uint i = 0; i < _oldControllers[0].poolLength(); i++) {
+            (IERC20 lpToken,uint256 allocPoint,,) = _oldControllers[0].poolInfo(i);
+            poolInfo[i] = PoolInfo({
+              lpToken: lpToken,
+              allocPoint: allocPoint,
+              lastRewardBlock: 0,
+              accumulatedFatePerShare: 0
+            });
+        }
     }
 
     function poolLength() external override view returns (uint256) {
