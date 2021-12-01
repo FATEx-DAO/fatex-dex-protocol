@@ -209,7 +209,6 @@ abstract contract MembershipWithReward is Ownable {
         address _user,
         bool _isDepositPeriod
     ) internal view returns (uint256 blocks) {
-
         if (isFatePool[_pid]) {
             uint256 currentBlockNumber = block.number;
             uint256 epochEndBlock = emissionSchedule.epochEndBlock();
@@ -225,12 +224,17 @@ abstract contract MembershipWithReward is Ownable {
         }
     }
 
-    /// @dev calculate lockedRewardsFees as percent that will be sent to the rewardController
+    /// @dev calculate percent of lockedRewardFee based on their deposit period
+    /// when withdraw during epoch, this fee will be reduced from member's lockedRewards
+    /// this fee does not work for excluded address and after epoch is ended
     function _getLockedRewardsFeePercent(
         uint256 _pid,
         address _caller
     ) internal view returns(uint256 percent) {
-        if (isExcludedAddress[_caller]) {
+        if (
+            isExcludedAddress[_caller] ||
+            block.number >= emissionSchedule.epochEndBlock()
+        ) {
             percent = 0;
         } else {
             percent = _getPercentFromBlocks(
@@ -245,12 +249,18 @@ abstract contract MembershipWithReward is Ownable {
         }
     }
 
-    /// @dev calculate lpWithdrawFees as percent that will be sent to the rewardController
+    /// @dev calculate percent of lpWithdrawFee based on their deposit period
+    /// when users withdaw during epoch, this fee will be reduced from their withdrawAmount
+    /// this fee will be still stored on FateRewardControllerV3 contract
+    /// this fee does not work for excluded address and after epoch is ended
     function _getLPWithdrawFeePercent(
         uint256 _pid,
         address _caller
     ) internal view returns(uint256 percent) {
-        if (isExcludedAddress[_caller]) {
+        if (
+            isExcludedAddress[_caller] ||
+            block.number >= emissionSchedule.epochEndBlock()
+        ) {
             percent = 0;
         } else {
             percent = _getPercentFromBlocks(
