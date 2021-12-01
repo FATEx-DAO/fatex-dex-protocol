@@ -2,13 +2,15 @@
 
 pragma solidity 0.6.12;
 
+import "hardhat/console.sol";
 import "../../utils/SafeMathLocal.sol";
 
-contract RewardSchedule {
+contract RewardScheduleV3 {
     using SafeMathLocal for uint;
 
     uint immutable public epochStartBlock;
     uint immutable public epochEndBlock;
+    uint immutable public lockedPercent;    // 1e18 for 100%
 
     /// @notice This is the emission schedule for each block for a given week. These numbers represent how much FATE is
     ///         rewarded per block. Each index represents a week. The starting day/week, according to the Reward
@@ -94,15 +96,19 @@ contract RewardSchedule {
 
     constructor(
         uint _epochStartBlock,
-        uint _epochPeriodBlocks
+        uint _epochPeriodBlocks,
+        uint _lockedPercent
     ) public {
         require(
+            _lockedPercent > 0 &&
+            _lockedPercent < 1e18 &&
             _epochStartBlock > 0 &&
             _epochPeriodBlocks > 0,
-            "RewardSchedule::Contructor: invalid params"
+            "RewardScheduleV3::Contructor: invalid params"
         );
         epochStartBlock = _epochStartBlock;
         epochEndBlock = _epochStartBlock + _epochPeriodBlocks;
+        lockedPercent = _lockedPercent;
     }
 
     function rewardsNumberOfWeeks() external view returns (uint) {
@@ -116,7 +122,10 @@ contract RewardSchedule {
     function getFateAtIndex(uint index) public view returns (uint, uint) {
         if (index < 13) {
             // vesting occurs at an 80/20 rate for the first 13 weeks
-            return (FATE_PER_BLOCK[index] * 8 / 10, FATE_PER_BLOCK[index] * 2 / 10);
+            return (
+                FATE_PER_BLOCK[index] * lockedPercent / 1e18,
+                FATE_PER_BLOCK[index] * (1e18 - lockedPercent) / 1e18
+            );
         } else {
             return (0, FATE_PER_BLOCK[index]);
         }
@@ -147,7 +156,7 @@ contract RewardSchedule {
 
         require(
             _fromBlock <= _toBlock,
-            "EmissionSchedule::getFatePerBlock: INVALID_RANGE"
+            "RewardScheduleV3::getFatePerBlock: INVALID_RANGE"
         );
 
         uint endBlockExclusive = _startBlock + (FATE_PER_BLOCK.length * BLOCKS_PER_WEEK);

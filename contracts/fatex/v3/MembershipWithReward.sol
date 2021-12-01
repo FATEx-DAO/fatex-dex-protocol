@@ -2,6 +2,7 @@
 
 pragma solidity 0.6.12;
 
+import 'hardhat/console.sol';
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IRewardSchedule.sol";
 import "./IFateRewardController.sol";
@@ -133,10 +134,14 @@ abstract contract MembershipWithReward is Ownable {
     }
 
     /// @dev set FatePool Ids
-    function setFatePoolIds(uint256[] memory pids) external onlyOwner {
-        require(pids.length > 0, "setFatePoolIds: invalid pids");
+    function setFatePoolIds(uint256[] memory pids, bool[] memory status) external onlyOwner {
+        require(
+            pids.length > 0 &&
+            pids.length == status.length,
+            "setFatePoolIds: invalid pids"
+        );
         for (uint i = 0; i < pids.length; i++) {
-            isFatePool[pids[i]] = true;
+            isFatePool[pids[i]] = status[i];
         }
     }
 
@@ -154,7 +159,7 @@ abstract contract MembershipWithReward is Ownable {
     }
 
     /// @dev calculate Points earned by this user
-    function userPoints(uint256 _pid, address _user) public returns (uint256 points){
+    function userPoints(uint256 _pid, address _user) external view returns (uint256 points){
         points = _getBlocksOfPeriod(_pid, _user, true) * POINTS_PER_BLOCK;
     }
 
@@ -177,21 +182,45 @@ abstract contract MembershipWithReward is Ownable {
         }
     }
 
+    /// @dev calculate index of LockedRewardFee data
+    function _getPercentFromBlocks(
+        uint256 periodBlocks,
+        uint256[] memory blocks,
+        uint256[] memory percents
+    ) internal pure returns(uint256 percent) {
+        if (periodBlocks <= blocks[0]) {
+            percent = percents[0];
+        } else if (periodBlocks > blocks[blocks.length - 1]) {
+            percent = percents[percents.length - 1];
+        } else {
+            for (uint i = 0; i < blocks.length - 1; i++) {
+                if (
+                    periodBlocks > blocks[i] &&
+                    periodBlocks <= blocks[i + 1]
+                ) {
+                    percent = percents[i];
+                }
+            }
+        }
+    }
+
     function _getBlocksOfPeriod(
         uint256 _pid,
         address _user,
         bool _isDepositPeriod
-    ) internal returns (uint256 blocksOfPeriod) {
+    ) internal view returns (uint256 blocks) {
+
         if (isFatePool[_pid]) {
             uint256 currentBlockNumber = block.number;
             uint256 epochEndBlock = emissionSchedule.epochEndBlock();
             uint256 endBlock = currentBlockNumber > epochEndBlock ? epochEndBlock : currentBlockNumber;
 
             MembershipInfo memory membership = userMembershipInfo[_pid][_user];
-            uint256 startBlock = _isDepositPeriod ? membership.firstDepositBlock : membership.lastWithdrawBlock;
+            uint256 startBlock = _isDepositPeriod ? 
+                membership.firstDepositBlock : membership.lastWithdrawBlock;
             
             if (endBlock >= startBlock) {
-                blocksOfPeriod = endBlock - startBlock;
+                blocks = endBlock - startBlock;
             }
         }
     }
@@ -200,38 +229,39 @@ abstract contract MembershipWithReward is Ownable {
     function _getLockedRewardsFeePercent(
         uint256 _pid,
         address _caller
-    ) internal returns(uint256 percent) {
+    ) internal view returns(uint256 percent) {
         if (isExcludedAddress[_caller]) {
             percent = 0;
         } else {
-            percent = lockedRewardsFeePercents[
-                RankedArray.getIndexOfBlocks(
-                    _getBlocksOfPeriod(
-                        _pid,
-                        _caller,
-                        true
-                    ),
-                    lockedRewardsPeriodBlocks
-                )
-            ];
+            percent = _getPercentFromBlocks(
+                _getBlocksOfPeriod(
+                    _pid,
+                    _caller,
+                    true
+                ),
+                lockedRewardsPeriodBlocks,
+                lockedRewardsFeePercents
+            );
         }
     }
 
     /// @dev calculate lpWithdrawFees as percent that will be sent to the rewardController
-    function _getLPWithdrawFeePercent(uint256 _pid, address _caller) internal returns(uint256 percent) {
+    function _getLPWithdrawFeePercent(
+        uint256 _pid,
+        address _caller
+    ) internal view returns(uint256 percent) {
         if (isExcludedAddress[_caller]) {
             percent = 0;
         } else {
-            percent = lpWithdrawFeePercent[
-                RankedArray.getIndexOfBlocks(
-                    _getBlocksOfPeriod(
-                        _pid,
-                        _caller,
-                        false
-                    ),
-                    lpWithdrawPeriodBlocks
-                )
-            ];
+            percent = _getPercentFromBlocks(
+                _getBlocksOfPeriod(
+                    _pid,
+                    _caller,
+                    false
+                ),
+                lpWithdrawPeriodBlocks,
+                lpWithdrawFeePercent
+            );
         }
     }
 }

@@ -313,12 +313,11 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         uint256 fateReward = fatePerBlock
             .mul(pool.allocPoint)
             .div(totalAllocPoint);
+
         if (fateReward > 0) {
             fate.transferFrom(vault, address(this), fateReward);
             pool.accumulatedFatePerShare = pool.accumulatedFatePerShare
-                .add(fateReward
-                .mul(1e12)
-                .div(lpSupply));
+                .add(fateReward.mul(1e12).div(lpSupply));
         }
         pool.lastRewardBlock = block.number;
     }
@@ -363,20 +362,17 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
             isUpdated : true
         });
 
-
         uint256 withdrawAmount = _amount;
         if (isFatePool[_pid]) {// fees are trigger for Fate LP
-            // LockedRewardFee
-            uint256 lockedRewardFee = userLockedRewards[_pid][msg.sender]
+            // minus LockedRewardFee
+            userLockedRewards[_pid][msg.sender] = userLockedRewards[_pid][msg.sender]
                 * (1e18 - _getLockedRewardsFeePercent(_pid, msg.sender))
                 / 1e18;
-            userLockedRewards[_pid][msg.sender] -= lockedRewardFee;
 
-            // LPWithdrawFee
-            uint256 lpWithdrawFee = _amount
+            // minus LPWithdrawFee
+            withdrawAmount = _amount
                 * (1e18 - _getLPWithdrawFeePercent(_pid, msg.sender))
                 / 1e18;
-            withdrawAmount = withdrawAmount - lpWithdrawFee;
 
             // record last withdraw block
             MembershipInfo memory membership = userMembershipInfo[_pid][msg.sender];

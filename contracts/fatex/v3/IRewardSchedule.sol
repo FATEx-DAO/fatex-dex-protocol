@@ -21,6 +21,7 @@ interface IRewardSchedule {
     view
     returns (uint);
 
-    function epochStartBlock() external returns (uint);
-    function epochEndBlock() external returns (uint);
+    function epochStartBlock() external view returns (uint);
+    function epochEndBlock() external view returns (uint);
+    function lockedPercent() external view returns (uint);
 }
