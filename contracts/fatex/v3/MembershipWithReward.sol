@@ -3,15 +3,17 @@
 pragma solidity 0.6.12;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./IRewardSchedule.sol";
-import "./IFateRewardController.sol";
+
 import "../../libraries/RankedArray.sol";
+
+import "./IRewardScheduleV3.sol";
+import "./IFateRewardControllerV3.sol";
 
 abstract contract MembershipWithReward is Ownable {
     uint256 constant public POINTS_PER_BLOCK = 0.08e18;
 
     // The emission scheduler that calculates fate per block over a given period
-    IRewardSchedule public emissionSchedule;
+    IRewardScheduleV3 public emissionSchedule;
 
     struct MembershipInfo {
         uint256 firstDepositBlock; // set when first deposit
@@ -42,16 +44,16 @@ abstract contract MembershipWithReward is Ownable {
         432000,
         518400,
         604800,
-        691200, 
+        691200,
         777600,
-        864000, 
+        864000,
         950400,
         1036800,
-        1123200, 
+        1123200,
         1209600,
         1296000,
-        1382400, 
-        1468800, 
+        1382400,
+        1468800,
         1555200
     ];
     uint256[] public lockedRewardsFeePercents = [
@@ -64,7 +66,7 @@ abstract contract MembershipWithReward is Ownable {
         0.7e18,
         0.65e18,
         0.6e18,
-        0.55e18, 
+        0.55e18,
         0.5e18,
         0.45e18,
         0.4e18,
@@ -72,7 +74,7 @@ abstract contract MembershipWithReward is Ownable {
         0.3e18,
         0.25e18,
         0.2e18,
-        0.15e18, 
+        0.15e18,
         0.1e18,
         0.03e18,
         0.01e18,
@@ -216,7 +218,7 @@ abstract contract MembershipWithReward is Ownable {
             uint256 endBlock = currentBlockNumber > epochEndBlock ? epochEndBlock : currentBlockNumber;
 
             MembershipInfo memory membership = userMembershipInfo[_pid][_user];
-            uint256 startBlock = _isDepositPeriod ? 
+            uint256 startBlock = _isDepositPeriod ?
                 membership.firstDepositBlock : membership.lastWithdrawBlock;
 
             if (startBlock == 0) {

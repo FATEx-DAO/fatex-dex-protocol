@@ -4,12 +4,14 @@ pragma solidity 0.6.12;
 
 import "../../utils/SafeMathLocal.sol";
 
-contract RewardScheduleV3 {
+import "./IRewardScheduleV3.sol";
+
+contract RewardScheduleV3 is IRewardScheduleV3 {
     using SafeMathLocal for uint;
 
-    uint immutable public epochStartBlock;
-    uint immutable public epochEndBlock;
-    uint immutable public lockedPercent;    // 1e18 for 100%
+    uint immutable public override epochStartBlock;
+    uint immutable public override epochEndBlock;
+    uint immutable public override lockedPercent;    // 1e18 for 100%
 
     /// @notice This is the emission schedule for each block for a given week. These numbers represent how much FATE is
     ///         rewarded per block. Each index represents a week. The starting day/week, according to the Reward
@@ -132,7 +134,7 @@ contract RewardScheduleV3 {
 
     function calculateCurrentIndex(
         uint _startBlock
-    ) public view returns (uint) {
+    ) public override view returns (uint) {
         return (block.number - _startBlock) / BLOCKS_PER_WEEK;
     }
 
@@ -144,6 +146,7 @@ contract RewardScheduleV3 {
         uint _toBlock
     )
     external
+    override
     view
     returns (uint, uint) {
         if (_startBlock > _toBlock || _fromBlock == _toBlock) {

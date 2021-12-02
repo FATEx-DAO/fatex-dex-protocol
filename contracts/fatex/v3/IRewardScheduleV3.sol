@@ -2,7 +2,7 @@
 
 pragma solidity 0.6.12;
 
-interface IRewardSchedule {
+interface IRewardScheduleV3 {
 
     function getFatePerBlock(
         uint _startBlock,
