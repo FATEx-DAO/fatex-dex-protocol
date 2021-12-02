@@ -387,6 +387,8 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         emit Withdraw(msg.sender, _pid, withdrawAmount);
     }
 
+    // reduce lpWithdrawFee and lockedRewardFees
+    // if withdraw all, add current reward points to additional user points and do not earn any new user points
     function _reduceFeeAndUpdateMembershipInfo(
         uint256 _pid,
         address _account,
