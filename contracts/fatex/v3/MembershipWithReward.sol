@@ -2,7 +2,6 @@
 
 pragma solidity 0.6.12;
 
-import 'hardhat/console.sol';
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IRewardSchedule.sol";
 import "./IFateRewardController.sol";
@@ -23,7 +22,9 @@ abstract contract MembershipWithReward is Ownable {
     mapping(address => bool) public isExcludedAddress;
 
     // pid => address => membershipInfo
-    mapping(uint256 => mapping (address => MembershipInfo)) public userMembershipInfo;    
+    mapping(uint256 => mapping (address => MembershipInfo)) public userMembershipInfo;
+
+    mapping(uint256 => mapping (address => uint256)) public additionalPoints;
 
     /// @dev pid => user address => lockedRewards
     mapping(uint256 => mapping (address => uint256)) public userLockedRewards;
@@ -161,6 +162,7 @@ abstract contract MembershipWithReward is Ownable {
     /// @dev calculate Points earned by this user
     function userPoints(uint256 _pid, address _user) external view returns (uint256 points){
         points = _getBlocksOfPeriod(_pid, _user, true) * POINTS_PER_BLOCK;
+        points += additionalPoints[_pid][_user];
     }
 
     /// @dev record deposit block
@@ -217,8 +219,10 @@ abstract contract MembershipWithReward is Ownable {
             MembershipInfo memory membership = userMembershipInfo[_pid][_user];
             uint256 startBlock = _isDepositPeriod ? 
                 membership.firstDepositBlock : membership.lastWithdrawBlock;
-            
-            if (endBlock >= startBlock) {
+
+            if (startBlock == 0) {
+                blocks = 0;
+            } else if (endBlock >= startBlock) {
                 blocks = endBlock - startBlock;
             }
         }

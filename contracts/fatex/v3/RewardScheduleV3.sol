@@ -2,7 +2,6 @@
 
 pragma solidity 0.6.12;
 
-import "hardhat/console.sol";
 import "../../utils/SafeMathLocal.sol";
 
 contract RewardScheduleV3 {

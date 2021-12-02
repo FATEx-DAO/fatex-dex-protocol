@@ -112,10 +112,12 @@ describe("FateRewardControllerV3", () => {
   
         const bobUserPoints = await this.fateRewardControllerV3.userPoints(0, this.bob.address)
         const devUserPoints = await this.fateRewardControllerV3.userPoints(0, this.dev.address)
+        const vaultUserPoints = await this.fateRewardControllerV3.userPoints(0, this.vault.address)
   
         expect(bobUserPoints).to.above(0)
         expect(devUserPoints).to.above(0)
         expect(bobUserPoints).to.above(devUserPoints)
+        expect(vaultUserPoints).to.be.equal(0)
       }),
 
       it("Withdraw", async () => {
@@ -135,6 +137,31 @@ describe("FateRewardControllerV3", () => {
         // userLockedRewards should be zero since lockedRewardFee is 100%
         const bobLockedRewards = await this.fateRewardControllerV3.userLockedRewards(0, this.bob.address);
         expect(bobLockedRewards).to.be.equal(0);
+
+
+        // withdraw all dev
+        await this.fateRewardControllerV3.connect(this.dev).withdraw(
+          0, getBigNumber(10)
+        );
+        const beforeDevPoints = await this.fateRewardControllerV3.userPoints(
+          0,
+          this.dev.address
+        )
+        await advanceBlock()
+        let afterDevPoints = await this.fateRewardControllerV3.userPoints(
+          0,
+          this.dev.address
+        )
+        expect(beforeDevPoints).to.be.equal(afterDevPoints);
+
+        // deposit again
+        await doDeposit(this.dev, getBigNumber(9))
+        await advanceBlock()
+        afterDevPoints = await this.fateRewardControllerV3.userPoints(
+          0,
+          this.dev.address
+        )
+        expect(afterDevPoints).to.above(beforeDevPoints)
       })
     })
 

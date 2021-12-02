@@ -374,27 +374,51 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         });
 
         uint256 withdrawAmount = _amount;
-        if (isFatePool[_pid]) {// fees are trigger for Fate LP
-            // minus LockedRewardFee
-            userLockedRewards[_pid][msg.sender] = userLockedRewards[_pid][msg.sender]
-                * (1e18 - _getLockedRewardsFeePercent(_pid, msg.sender))
-                / 1e18;
-
-            // minus LPWithdrawFee
-            withdrawAmount = _amount
-                * (1e18 - _getLPWithdrawFeePercent(_pid, msg.sender))
-                / 1e18;
-
-            // record last withdraw block
-            MembershipInfo memory membership = userMembershipInfo[_pid][msg.sender];
-            userMembershipInfo[_pid][msg.sender] = MembershipInfo({
-                firstDepositBlock: membership.firstDepositBlock,
-                lastWithdrawBlock: block.number
-            });
+        if (isFatePool[_pid]) {
+            withdrawAmount = _reduceFeeAndUpdateMembershipInfo(
+                _pid,
+                msg.sender,
+                withdrawAmount,
+                _amount == user.amount
+            );
         }
 
         pool.lpToken.safeTransfer(msg.sender, withdrawAmount);
         emit Withdraw(msg.sender, _pid, withdrawAmount);
+    }
+
+    function _reduceFeeAndUpdateMembershipInfo(
+        uint256 _pid,
+        address _account,
+        uint256 _amount,
+        bool _withdrawAll
+    ) internal returns(uint256 withdrawAmount) {
+        // minus LockedRewardFee
+        userLockedRewards[_pid][_account] = userLockedRewards[_pid][_account]
+            * (1e18 - _getLockedRewardsFeePercent(_pid, _account))
+            / 1e18;
+
+        // minus LPWithdrawFee
+        withdrawAmount = _amount
+            * (1e18 - _getLPWithdrawFeePercent(_pid, _account))
+            / 1e18;
+
+        // record last withdraw block
+        MembershipInfo memory membership = userMembershipInfo[_pid][_account];
+        if (_withdrawAll) {
+            additionalPoints[_pid][_account] += _getBlocksOfPeriod(_pid, _account, true)
+                * POINTS_PER_BLOCK;
+
+            userMembershipInfo[_pid][_account] = MembershipInfo({
+                firstDepositBlock: 0,
+                lastWithdrawBlock: 0
+            });
+        } else {
+            userMembershipInfo[_pid][_account] = MembershipInfo({
+                firstDepositBlock: membership.firstDepositBlock,
+                lastWithdrawBlock: block.number
+            });
+        }
     }
 
     function _claimRewards(
