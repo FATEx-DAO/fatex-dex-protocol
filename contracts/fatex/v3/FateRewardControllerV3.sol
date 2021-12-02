@@ -96,11 +96,11 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
 
         // inset old controller's pooInfo
         for (uint i = 0; i < _oldControllers[0].poolLength(); i++) {
-            (IERC20 lpToken,uint256 allocPoint,,) = _oldControllers[0].poolInfo(i);
+            (IERC20 lpToken, uint256 allocPoint, ,) = _oldControllers[0].poolInfo(i);
             poolInfo[i] = PoolInfo({
               lpToken: lpToken,
               allocPoint: allocPoint,
-              lastRewardBlock: 0,
+              lastRewardBlock: startBlock,
               accumulatedFatePerShare: 0
             });
         }
@@ -110,6 +110,16 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         return poolInfo.length;
     }
 
+    function addMany(
+        IERC20[] calldata _lpTokens
+    ) external onlyOwner {
+        uint allocPoint = 0;
+        for (uint i = 0; i < _lpTokens.length; i++) {
+            bool shouldUpdate = i == _lpTokens.length - 1;
+            _add(allocPoint, _lpTokens[i], shouldUpdate);
+        }
+    }
+
     // Add a new lp to the pool. Can only be called by the owner.
     // XXX DO NOT add the same LP token more than once. Rewards will be messed up if you do.
     function add(
@@ -117,6 +127,14 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         IERC20 _lpToken,
         bool _withUpdate
     ) public onlyOwner {
+        _add(_allocPoint, _lpToken, _withUpdate);
+    }
+
+    function _add(
+        uint256 _allocPoint,
+        IERC20 _lpToken,
+        bool _withUpdate
+    ) internal {
         for (uint i = 0; i < poolInfo.length; i++) {
             require(
                 poolInfo[i].lpToken != _lpToken,
@@ -136,11 +154,11 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         totalAllocPoint = totalAllocPoint.add(_allocPoint);
         poolInfo.push(
             PoolInfo({
-                lpToken : _lpToken,
-                allocPoint : _allocPoint,
-                lastRewardBlock : lastRewardBlock,
-                accumulatedFatePerShare : 0
-            })
+        lpToken : _lpToken,
+        allocPoint : _allocPoint,
+        lastRewardBlock : lastRewardBlock,
+        accumulatedFatePerShare : 0
+        })
         );
         emit PoolAdded(poolInfo.length - 1, address(_lpToken), _allocPoint);
     }
@@ -231,11 +249,7 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         address _user
     ) public override view returns (uint amount, uint rewardDebt) {
         UserInfoV2 memory user = _userInfo[_pid][_user];
-        if (user.isUpdated) {
-            return (user.amount, user.rewardDebt);
-        } else {
-            return oldControllers[0].userInfo(_pid, _user);
-        }
+        return (user.amount, user.rewardDebt);
     }
 
     function _getUserInfo(
@@ -243,17 +257,12 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         address _user
     ) internal view returns (IFateRewardController.UserInfo memory) {
         UserInfoV2 memory user = _userInfo[_pid][_user];
-        if (user.isUpdated) {
-            return IFateRewardController.UserInfo(user.amount, user.rewardDebt);
-        } else {
-            (uint amount, uint rewardDebt) = oldControllers[0].userInfo(_pid, _user);
-            return IFateRewardController.UserInfo(amount, rewardDebt);
-        }
+        return IFateRewardController.UserInfo(user.amount, user.rewardDebt);
     }
 
     // View function to see pending FATE tokens on frontend.
     function pendingFate(uint256 _pid, address _user)
-    external
+    public
     override
     view
     returns (uint256)
@@ -281,6 +290,18 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
             .mul(accumulatedFatePerShare)
             .div(1e12)
             .sub(user.rewardDebt);
+    }
+
+    function allPendingFate(address _user)
+    external
+    view
+    returns (uint256)
+    {
+        uint _pendingFateRewards = 0;
+        for (uint i = 0; i < poolInfo.length; i++) {
+            _pendingFateRewards = _pendingFateRewards.add(pendingFate(i, _user));
+        }
+        return _pendingFateRewards;
     }
 
     // Update reward variables for all pools. Be careful of gas spending!
