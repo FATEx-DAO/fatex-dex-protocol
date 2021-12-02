@@ -49,4 +49,6 @@ abstract contract IFateRewardController is Ownable, IMigratorChef {
     function setVault(address _vault) external virtual;
     function migrate(uint256 _pid) external virtual;
 
+    function add(uint256 _allocPoint, IERC20 _lpToken, bool _withUpdate) external virtual;
+
 }
