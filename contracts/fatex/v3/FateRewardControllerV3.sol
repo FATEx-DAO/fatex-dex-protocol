@@ -455,7 +455,7 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
             .div(1e12)
             .sub(user.rewardDebt);
 
-        // recored locked rewards
+        // recorded locked rewards
         uint256 lockedRewards = pending;
         if (block.number <= emissionSchedule.epochEndBlock()) {
             // in process of epoch
