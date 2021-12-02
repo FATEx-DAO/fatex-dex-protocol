@@ -161,8 +161,7 @@ abstract contract MembershipWithReward is Ownable {
 
     /// @dev calculate Points earned by this user
     function userPoints(uint256 _pid, address _user) external view returns (uint256 points){
-        points = _getBlocksOfPeriod(_pid, _user, true) * POINTS_PER_BLOCK;
-        points += additionalPoints[_pid][_user];
+        points = _getBlocksOfPeriod(_pid, _user, true) * POINTS_PER_BLOCK + additionalPoints[_pid][_user];
     }
 
     /// @dev record deposit block
@@ -175,7 +174,7 @@ abstract contract MembershipWithReward is Ownable {
             );
 
             if (userMembershipInfo[_pid][_user].firstDepositBlock == 0) {
-                // not recorded yet
+                // record deposit block number
                 userMembershipInfo[_pid][_user] = MembershipInfo({
                     firstDepositBlock: currentBlockNumber,
                     lastWithdrawBlock: currentBlockNumber

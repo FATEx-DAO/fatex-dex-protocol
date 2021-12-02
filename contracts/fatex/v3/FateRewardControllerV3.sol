@@ -408,8 +408,8 @@ contract FateRewardControllerV3 is IFateRewardController, MembershipWithReward {
         // record last withdraw block
         MembershipInfo memory membership = userMembershipInfo[_pid][_account];
         if (_withdrawAll) {
-            additionalPoints[_pid][_account] += _getBlocksOfPeriod(_pid, _account, true)
-                * POINTS_PER_BLOCK;
+            additionalPoints[_pid][_account] +=
+                _getBlocksOfPeriod(_pid, _account, true) * POINTS_PER_BLOCK;
 
             userMembershipInfo[_pid][_account] = MembershipInfo({
                 firstDepositBlock: 0,
