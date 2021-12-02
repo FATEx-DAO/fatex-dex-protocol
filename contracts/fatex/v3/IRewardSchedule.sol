@@ -11,7 +11,7 @@ interface IRewardSchedule {
     )
     external
     view
-    returns (uint);
+    returns (uint, uint);
 
 
     function calculateCurrentIndex(
@@ -21,4 +21,7 @@ interface IRewardSchedule {
     view
     returns (uint);
 
+    function epochStartBlock() external view returns (uint);
+    function epochEndBlock() external view returns (uint);
+    function lockedPercent() external view returns (uint);
 }

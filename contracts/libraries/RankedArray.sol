@@ -38,4 +38,11 @@ library RankedArray {
             }
         }
     }
+
+    function getIndexOfAddressArray(address[] memory data, address addr) internal pure returns (uint256 index) {
+        index = data.length;
+        for (uint i=0; i < data.length; i++) {
+            if (data[i] == addr) index = i;
+        }
+    }
 }

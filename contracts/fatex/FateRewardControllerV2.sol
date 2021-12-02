@@ -46,7 +46,7 @@ contract FateRewardControllerV2 is IFateRewardController {
     IFateRewardController[] public oldControllers;
 
     // The emission scheduler that calculates fate per block over a given period
-    IRewardSchedule public override emissionSchedule;
+    IRewardSchedule public emissionSchedule;
 
     // The migrator contract. It has a lot of power. Can only be set through governance (owner).
     IMigratorChef public override migrator;
