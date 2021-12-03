@@ -11,7 +11,7 @@ interface IRewardScheduleV3 {
     )
     external
     view
-    returns (uint, uint);
+    returns (uint lockedFatePerBlock, uint unlockedFatePerBlock);
 
 
     function calculateCurrentIndex(

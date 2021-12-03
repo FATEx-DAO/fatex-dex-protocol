@@ -33,6 +33,7 @@ describe("FateRewardControllerV3", () => {
       this.bob = this.signers[1]
       this.dev = this.signers[2]
       this.vault = this.signers[3]
+      this.feeTo = this.signers[4]
   
       this.LP = await ethers.getContractFactory("ERC20Mock")
       this.FateToken = await ethers.getContractFactory("FateToken")
@@ -76,13 +77,14 @@ describe("FateRewardControllerV3", () => {
         this.rewardSchedule.address,
         this.vault.address,
         [this.fateRewardControllerV2.address],
-        this.mockLpTokenFactory.address
+        this.mockLpTokenFactory.address,
+        this.feeTo.address
       )
       await this.fateRewardControllerV3.deployed()
 
       // add pool
       await this.fateRewardControllerV3.add(1, this.lp.address, true)
-      await this.fateRewardControllerV3.setFatePoolIds([0], [true]);
+      // await this.fateRewardControllerV3.setFatePoolIds([0], [true]);
 
       await this.lp.connect(this.alice).transfer(this.bob.address, getBigNumber(100))
       await this.lp.connect(this.bob).approve
@@ -118,7 +120,7 @@ describe("FateRewardControllerV3", () => {
         expect(devUserPoints).to.above(0)
         expect(bobUserPoints).to.above(devUserPoints)
         expect(vaultUserPoints).to.be.equal(0)
-      }),
+      })
 
       it("Withdraw", async () => {
         await doSomeDeposists();
@@ -126,13 +128,18 @@ describe("FateRewardControllerV3", () => {
         const withdrawAmount = getBigNumber(1);
         const bobBeforeLPAmount = await this.lp.balanceOf(this.bob.address);
 
-        // when withdraw after 5 blocks, lockedRewardFee: 100%, lpWithdrawFee: 18%
+        // when withdraw after 5 blocks, lockedRewardFee: 100%, lpWithdrawFee: 88%
         await this.fateRewardControllerV3.connect(this.bob).withdraw(0, withdrawAmount);
         const bobAfterLPAmount = await this.lp.balanceOf(this.bob.address);
         const receivedAmount = bobAfterLPAmount.sub(bobBeforeLPAmount);
 
         // check received amount after withdraw: withdrawAmount * (100 - lpWithdrawFee)
-        expect(receivedAmount).to.be.equal(withdrawAmount.mul(100 - 18).div(100));
+        expect(receivedAmount).to.be.equal(withdrawAmount.mul(100 - 88).div(100));
+
+        // check fee is sent to fateFeeTo
+        expect(await this.fateRewardControllerV3.fateFeeTo()).to.be.equal(this.feeTo.address);
+        const feeToBalance = await this.lp.balanceOf(this.feeTo.address);
+        expect(feeToBalance).to.be.eq(withdrawAmount.mul(88).div(100));
 
         // userLockedRewards should be zero since lockedRewardFee is 100%
         const bobLockedRewards = await this.fateRewardControllerV3.userLockedRewards(0, this.bob.address);

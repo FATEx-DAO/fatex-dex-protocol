@@ -5,7 +5,6 @@ pragma solidity 0.6.12;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "../MockLpToken.sol";
 import "../IMockLpTokenFactory.sol";
@@ -20,8 +19,9 @@ import "./IFateRewardControllerV3.sol";
 //
 // Have fun reading it. Hopefully it's bug-free. God bless.
 contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward {
-    using SafeMath for uint256;
     using SafeERC20 for IERC20;
+
+    address public fateFeeTo;
 
     // Info of each user.
     struct UserInfoV3 {
@@ -65,6 +65,9 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
 
     IMockLpTokenFactory public mockLpTokenFactory;
 
+    // address of FeeTokenConverterToFate contract
+    event FateFeeToSet(address _fateFeeTo);
+
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
 
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
@@ -88,7 +91,8 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         IRewardScheduleV3 _emissionSchedule,
         address _vault,
         IFateRewardController[] memory _oldControllers,
-        IMockLpTokenFactory _mockLpTokenFactory
+        IMockLpTokenFactory _mockLpTokenFactory,
+        address _fateFeeTo
     ) public {
         fate = _fate;
         emissionSchedule = _emissionSchedule;
@@ -96,6 +100,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         oldControllers = _oldControllers;
         mockLpTokenFactory = _mockLpTokenFactory;
         startBlock = _oldControllers[0].startBlock();
+        fateFeeTo = _fateFeeTo;
 
         // inset old controller's pooInfo
         for (uint i = 0; i < _oldControllers[0].poolLength(); i++) {
@@ -108,6 +113,12 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
               accumulatedLockedFatePerShare: 0
             });
         }
+    }
+
+    function setFateFeeTo(address _fateFeeTo) external onlyOwner {
+        require(_fateFeeTo != address(0), 'setFateFeeTo: invalid feeTo');
+        fateFeeTo = _fateFeeTo;
+        emit FateFeeToSet(fateFeeTo);
     }
 
     function poolLength() external override view returns (uint256) {
@@ -319,7 +330,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
                 startBlock,
                 pool.lastRewardBlock,
                 block.number
-            ); // only unlocked Fates
+            ); // only locked Fates
             uint256 lockedFateReward = lockedFatePerBlock
                 .mul(pool.allocPoint)
                 .div(totalAllocPoint);
@@ -433,7 +444,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         }
         if (lockedFateReward > 0) {
             pool.accumulatedLockedFatePerShare = pool.accumulatedLockedFatePerShare
-            .add(lockedFateReward.mul(1e12).div(lpSupply));
+                .add(lockedFateReward.mul(1e12).div(lpSupply));
         }
         pool.lastRewardBlock = block.number;
     }
@@ -459,7 +470,19 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             lockedRewardDebt : userBalance.mul(pool.accumulatedLockedFatePerShare).div(1e12),
             isUpdated : true
         });
-        _recordDepositBlock(_pid, msg.sender);
+
+        // record deposit block
+        MembershipInfo memory membership = userMembershipInfo[_pid][msg.sender];
+        if (
+            block.number <= emissionSchedule.epochEndBlock() &&
+            membership.firstDepositBlock == 0
+        ) {
+            userMembershipInfo[_pid][msg.sender] = MembershipInfo({
+                firstDepositBlock: block.number,
+                lastWithdrawBlock: membership.lastWithdrawBlock
+            });
+        }
+
         emit Deposit(msg.sender, _pid, _amount);
     }
 
@@ -480,54 +503,48 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             isUpdated : true
         });
 
-        uint256 withdrawAmount = _amount;
-        if (isFatePool[_pid]) {
-            withdrawAmount = _reduceFeeAndUpdateMembershipInfo(
-                _pid,
-                msg.sender,
-                withdrawAmount,
-                _amount == user.amount
-            );
+        uint256 withdrawAmount = _reduceWithdrawalForFeesAndUpdateMembershipInfo(
+            _pid,
+            msg.sender,
+            _amount,
+            userBalance == 0
+        );
+
+        // send Fee to FeeTokenConverterToFate
+        if (_amount > withdrawAmount) {
+            uint256 feeAmount = _amount.sub(withdrawAmount);
+            pool.lpToken.safeTransfer(fateFeeTo, feeAmount);
         }
 
         pool.lpToken.safeTransfer(msg.sender, withdrawAmount);
         emit Withdraw(msg.sender, _pid, withdrawAmount);
     }
 
-    // reduce lpWithdrawFee and lockedRewardFees
-    // if withdraw all, add current reward points to additional user points and do not earn any new user points
-    function _reduceFeeAndUpdateMembershipInfo(
+    // Reduce LPWithdrawFee and record last withdraw block
+    function _reduceWithdrawalForFeesAndUpdateMembershipInfo(
         uint256 _pid,
         address _account,
         uint256 _amount,
         bool _withdrawAll
-    ) internal returns(uint256 withdrawAmount) {
-        // minus LockedRewardFee
-        userLockedRewards[_pid][_account] = userLockedRewards[_pid][_account]
-            * (1e18 - _getLockedRewardsFeePercent(_pid, _account))
-            / 1e18;
-
-        // minus LPWithdrawFee
-        withdrawAmount = _amount
-            * (1e18 - _getLPWithdrawFeePercent(_pid, _account))
-            / 1e18;
-
-        // record last withdraw block
+    ) internal returns(uint256) {
         MembershipInfo memory membership = userMembershipInfo[_pid][_account];
-        if (_withdrawAll) {
-            additionalPoints[_pid][_account] +=
-                _getBlocksOfPeriod(_pid, _account, true) * POINTS_PER_BLOCK;
+        uint256 firstDepositBlock = membership.firstDepositBlock;
 
-            userMembershipInfo[_pid][_account] = MembershipInfo({
-                firstDepositBlock: 0,
-                lastWithdrawBlock: 0
-            });
-        } else {
-            userMembershipInfo[_pid][_account] = MembershipInfo({
-                firstDepositBlock: membership.firstDepositBlock,
-                lastWithdrawBlock: block.number
-            });
+        if (_withdrawAll) {
+            // record points earned and do not earn any more
+            trackedPoints[_pid][_account] = trackedPoints[_pid][_account]
+                .add(_getBlocksOfPeriod(_pid, _account, true).mul(POINTS_PER_BLOCK));
+
+            firstDepositBlock = 0;
         }
+
+        userMembershipInfo[_pid][_account] = MembershipInfo({
+            firstDepositBlock: firstDepositBlock,
+            lastWithdrawBlock: block.number
+        });
+
+        // minus LPWithdrawFee = amount * (1e18 - lpFee) / 1e18 = amount - amount * lpFee / 1e18
+        return _amount.sub(_amount.mul(_getLPWithdrawFeePercent(_pid, _account)).div(1e18));
     }
 
     function _claimRewards(
@@ -546,8 +563,9 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             .div(1e12)
             .sub(user.lockedRewardDebt);
 
-        // TODO: Stephon reduce pendingUnlocked & pendingLocked variables by self-assigning and multiplying by the fee
-        // TODO: the user has for their rewards by using `lockedRewardsFeePercents` from the MembershipWithReward contract
+        // implement fee reduction for pendlingLocked
+        // = pendingLocked * (1e18 - fee) / 1e18 = pendingLocked - pendingLocked * fee / 1e18
+        pendingLocked = pendingLocked.sub(pendingLocked.mul(_getLockedRewardsFeePercent(_pid, _user)).div(1e18));
 
         // recorded locked rewards
         userLockedRewards[_pid][_user] = userLockedRewards[_pid][_user].add(pendingLocked);

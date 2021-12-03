@@ -18,19 +18,19 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     ///         Controller was 2021-08-26T19:43:45.000Z (UTC time). Meaning, week 2 started on 2021-09-02T19:43:45.000Z
     ///         (UTC time).
     uint[72] public FATE_PER_BLOCK = [
-        36.00e18,   // week 1
-        36.51e18,   // week 2
-        37.02e18,   // week 3
-        37.54e18,   // week 4
-        38.06e18,   // week 5
-        38.60e18,   // week 6
-        39.14e18,   // week 7
-        13.6187700022e18,   // week 8
-        13.6187700022e18,   // week 9
-        13.6187700022e18,   // week 10
-        13.6187700022e18,   // week 11
-        13.6187700022e18,   // week 12
-        13.6187700022e18,   // week 13
+        0.00e18,   // week 1
+        0.00e18,   // week 2
+        0.00e18,   // week 3
+        0.00e18,   // week 4
+        0.00e18,   // week 5
+        0.00e18,   // week 6
+        0.00e18,   // week 7
+        0.00e18,   // week 8
+        0.00e18,   // week 9
+        0.00e18,   // week 10
+        0.00e18,   // week 11
+        0.00e18,   // week 12
+        0.00e18,   // week 13
         72.00e18,   // week 14
         0.00e18,    // week 15
         0.00e18,    // week 16
@@ -101,10 +101,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
         uint _lockedPercent
     ) public {
         require(
-            _lockedPercent > 0 &&
-            _lockedPercent < 1e18 &&
-            _epochStartBlock > 0 &&
-            _epochPeriodBlocks > 0,
+            _lockedPercent < 1e18,
             "RewardScheduleV3::Contructor: invalid params"
         );
         epochStartBlock = _epochStartBlock;
@@ -120,15 +117,18 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
      * @param index The week at which the amount of FATE per block should be rewarded. Index starts at 0, meaning index
      *              1 is actually week 2. Index 12 is week 13.
      */
-    function getFateAtIndex(uint index) public view returns (uint, uint) {
-        if (index < 13) {
-            // vesting occurs at an 80/20 rate for the first 13 weeks
+    function getFateAtIndex(uint index)
+    public
+    view
+    returns (uint, uint) {
+        if (index >= 13) {
+            // vesting occurs at an 100-lockedPercent/lockedPercent rate for the first 13 weeks
             return (
                 FATE_PER_BLOCK[index] * lockedPercent / 1e18,
                 FATE_PER_BLOCK[index] * (1e18 - lockedPercent) / 1e18
             );
         } else {
-            return (0, FATE_PER_BLOCK[index]);
+            return (0, 0);
         }
     }
 
