@@ -642,4 +642,20 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         vault = _vault;
         emit VaultSet(_vault);
     }
+
+    /// @dev calculate Points earned by this user
+    function userPoints(uint256 _pid, address _user) external view returns (uint256){
+        if (!isFatePool(_pid)) {
+            return 0;
+        } else {
+            return POINTS_PER_BLOCK
+                .mul(_getBlocksOfPeriod(_pid, _user, true))
+                .add(trackedPoints[_pid][_user]);
+        }
+    }
+
+    /// @dev check if pool is FatePool or not
+    function isFatePool(uint _pid) internal view returns(bool) {
+        return _pid < poolInfo.length && address(poolInfo[_pid].lpToken) != address(0);
+    }
 }

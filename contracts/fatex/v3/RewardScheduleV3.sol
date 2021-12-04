@@ -31,14 +31,14 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
         0.00e18,   // week 11
         0.00e18,   // week 12
         0.00e18,   // week 13
-        72.00e18,   // week 14
-        0.00e18,    // week 15
-        0.00e18,    // week 16
-        0.00e18,    // week 17
-        0.00e18,    // week 18
-        0.00e18,    // week 19
-        0.00e18,    // week 20
-        0.00e18,    // week 21
+        36.00e18,   // week 14
+        36.51e18,   // week 15
+        37.02e18,   // week 16
+        37.54e18,   // week 17
+        38.06e18,   // week 18
+        38.60e18,   // week 19
+        39.14e18,   // week 20
+        13.6187700022e18,   // week 21
         0.00e18,    // week 22
         0.00e18,    // week 23
         0.00e18,    // week 24
