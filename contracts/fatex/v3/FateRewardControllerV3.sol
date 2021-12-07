@@ -475,11 +475,12 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         MembershipInfo memory membership = userMembershipInfo[_pid][msg.sender];
         if (
             block.number <= emissionSchedule.epochEndBlock() &&
-            membership.firstDepositBlock == 0
+            membership.firstDepositBlock == 0 // not recoreded (or deposited) yet
         ) {
             userMembershipInfo[_pid][msg.sender] = MembershipInfo({
                 firstDepositBlock: block.number,
-                lastWithdrawBlock: membership.lastWithdrawBlock
+                lastWithdrawBlock:
+                    membership.lastWithdrawBlock > 0 ? membership.lastWithdrawBlock : block.number
             });
         }
 

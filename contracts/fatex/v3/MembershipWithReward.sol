@@ -192,7 +192,8 @@ abstract contract MembershipWithReward is Ownable {
         if (periodBlocks < blocks[0]) {
             return percents[0];
         } else if (periodBlocks > blocks[blocks.length - 1]) {
-            return percents[percents.length - 1];
+            // return percents[percents.length - 1];
+            return 1e18;
         } else {
             for (uint i = 0; i < blocks.length - 1; i++) {
                 if (

@@ -21,8 +21,7 @@ describe("RewardSchedule", () => {
   beforeEach(async () => {
     this.rewardSchedule = await this.RewardSchedule.deploy(
       startBlock,
-      BLOCKS_PER_WEEK * 8,  // 80% are locked
-      getBigNumber(8, 17)
+      BLOCKS_PER_WEEK * 8  // 92% are locked
     )
     await this.rewardSchedule.deployed()
   })  
@@ -45,14 +44,8 @@ describe("RewardSchedule", () => {
 
   it("should work for basic query", async () => {
     const fatePerBlocks = await getFatePerBlock(startBlock, startBlock, startBlock + 100);
-    expect(fatePerBlocks[0].toString()).to.be.equal('2880000000000000000000'); // lockedRewards
-    expect(fatePerBlocks[1].toString()).to.be.equal('720000000000000000000'); // unlockedRewards
-  })
-
-  it("should work for basic query when _fromBlock is before _startBlock", async () => {
-    const fatePerBlocks = await getFatePerBlock(startBlock, startBlock - 10, startBlock + 100);
-    expect(fatePerBlocks[0].toString()).to.be.equal('2880000000000000000000'); // lockedRewards
-    expect(fatePerBlocks[1].toString()).to.be.equal('720000000000000000000'); // unlockedRewards
+    expect(fatePerBlocks[0].toString()).to.be.equal('3312000000000000000000'); // lockedRewards
+    expect(fatePerBlocks[1].toString()).to.be.equal('288000000000000000000'); // unlockedRewards
   })
 
   it("should work for basic query when _toBlock is before _startBlock", async () => {
@@ -68,20 +61,9 @@ describe("RewardSchedule", () => {
     // (10,882,800 + 11,040,624 + 11,192,997) / (_toBlock / _fromBlock) * 0.2
 
     const fatePerBlocks = await getFatePerBlock(startBlock, startBlock + 100, startBlock + (BLOCKS_PER_WEEK * 3) - 50);
-    expect(fatePerBlocks[0].toString()).to.be.equal('26493136800000000000000000'); // lockedRewards
-    expect(fatePerBlocks[1].toString()).to.be.equal('6623284200000000000000000'); // unlockedRewards
-  })
 
-  it("should work for basic query when _toBlock is after the last block", async () => {
-    // There are 72 weeks in total.
-    // 509.5 FATE per WEEK in total @ 80% lockup --> 101.9
-    // 72 FATE per week at last week --> 173.9
-    // 173.9 * BLOCKS_PER_WEEK --> 52,587,360
-    // 52,587,360 / (72 weeks * 302,400 blocks per week - 1 block exclusivity in the end) --> 2.415277 FATE per block
-
-    const fatePerBlocks = await getFatePerBlock(startBlock, startBlock, startBlock + (BLOCKS_PER_WEEK * 75));
-    expect(fatePerBlocks[0].toString()).to.be.equal('83361427433593344000000000'); // lockedRewards
-    expect(fatePerBlocks[1].toString()).to.be.equal('42613156858398336000000000'); // unlockedRewards
+    expect(fatePerBlocks[0].toString()).to.be.equal('30467107320000000000000000'); // lockedRewards
+    expect(fatePerBlocks[1].toString()).to.be.equal('2649313680000000000000000'); // unlockedRewards
   })
 
   it("should return 0 when _toBlock is before _startBlock", async () => {
