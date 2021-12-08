@@ -188,7 +188,7 @@ abstract contract MembershipWithReward is Ownable {
         uint256 periodBlocks,
         uint256[] memory blocks,
         uint256[] memory percents
-    ) internal pure returns(uint256) {
+    ) internal pure returns (uint256) {
         if (periodBlocks < blocks[0]) {
             return percents[0];
         } else if (periodBlocks > blocks[blocks.length - 1]) {
@@ -202,6 +202,7 @@ abstract contract MembershipWithReward is Ownable {
                     return percents[i];
                 }
             }
+            revert("_getPercentFromBlocks: should have returned value");
         }
     }
 

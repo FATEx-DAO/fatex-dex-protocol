@@ -105,13 +105,15 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         // inset old controller's pooInfo
         for (uint i = 0; i < _oldControllers[0].poolLength(); i++) {
             (IERC20 lpToken, uint256 allocPoint, ,) = _oldControllers[0].poolInfo(i);
-            poolInfo[i] = PoolInfoV3({
-              lpToken: lpToken,
-              allocPoint: allocPoint,
-              lastRewardBlock: startBlock,
-              accumulatedFatePerShare: 0,
-              accumulatedLockedFatePerShare: 0
-            });
+            poolInfo.push(
+                PoolInfoV3({
+                    lpToken: lpToken,
+                    allocPoint: allocPoint,
+                    lastRewardBlock: startBlock,
+                    accumulatedFatePerShare: 0,
+                    accumulatedLockedFatePerShare: 0
+                })
+            );
         }
     }
 
