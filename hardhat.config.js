@@ -47,6 +47,7 @@ module.exports = {
     deployer: {
       default: 0, // here this will by default take the first account as deployer
       1: 0, // similarly on mainnet it will take the first account as deployer. Note though that depending on how hardhat network are configured, the account 0 on one network can be different than on another
+      harmony_testnet: '0xabB6D4a1015e291b1bc71e7e56ff2c9204665b07'
     },
     alice: {
       default: 1,
@@ -152,7 +153,8 @@ module.exports = {
     },
     harmony_testnet: {
       url: "https://api.s0.b.hmny.io",
-      accounts,
+      // accounts,
+      accounts: [process.env.PRIVATE_KEY],
       chainId: 1666700000,
       live: true,
       saveDeployments: true,

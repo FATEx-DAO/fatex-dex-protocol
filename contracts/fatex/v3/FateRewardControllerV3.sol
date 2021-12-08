@@ -545,7 +545,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         });
 
         // minus LPWithdrawFee = amount * (1e18 - lpFee) / 1e18 = amount - amount * lpFee / 1e18
-        return _amount.sub(_amount.mul(_getLPWithdrawFeePercent(_pid, _account)).div(1e18));
+        return _amount.sub(_amount.mul(getLPWithdrawFeePercent(_pid, _account)).div(1e18));
     }
 
     function _claimRewards(
@@ -566,7 +566,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
 
         // implement fee reduction for pendlingLocked
         // = pendingLocked * (1e18 - fee) / 1e18 = pendingLocked - pendingLocked * fee / 1e18
-        pendingLocked = pendingLocked.sub(pendingLocked.mul(_getLockedRewardsFeePercent(_pid, _user)).div(1e18));
+        pendingLocked = pendingLocked.sub(pendingLocked.mul(getLockedRewardsFeePercent(_pid, _user)).div(1e18));
 
         // recorded locked rewards
         userLockedRewards[_pid][_user] = userLockedRewards[_pid][_user].add(pendingLocked);

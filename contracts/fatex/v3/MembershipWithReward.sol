@@ -225,10 +225,10 @@ abstract contract MembershipWithReward is Ownable {
     /// @dev calculate percent of lockedRewardFee based on their deposit period
     /// when withdraw during epoch, this fee will be reduced from member's lockedRewards
     /// this fee does not work for excluded address and after epoch is ended
-    function _getLockedRewardsFeePercent(
+    function getLockedRewardsFeePercent(
         uint256 _pid,
         address _caller
-    ) internal view returns(uint256) {
+    ) public view returns(uint256) {
         if (
             isExcludedAddress[_caller] ||
             block.number > emissionSchedule.epochEndBlock()
@@ -251,10 +251,10 @@ abstract contract MembershipWithReward is Ownable {
     /// when users withdaw during epoch, this fee will be reduced from their withdrawAmount
     /// this fee will be still stored on FateRewardControllerV3 contract
     /// this fee does not work for excluded address and after epoch is ended
-    function _getLPWithdrawFeePercent(
+    function getLPWithdrawFeePercent(
         uint256 _pid,
         address _caller
-    ) internal view returns(uint256) {
+    ) public view returns(uint256) {
         if (
             isExcludedAddress[_caller] ||
             block.number > emissionSchedule.epochEndBlock()
