@@ -37,6 +37,7 @@ https://fatexdao.io
 | RewardScheduleV17                 | 0x70113ed062aeD0E23302D05Ac64A420b626f16e5        | https://explorer.harmony.one/address/0x70113ed062aeD0E23302D05Ac64A420b626f16e5 |
 | RewardScheduleV18                 | 0x04170495EA41288225025De3CDFE9A9799121861        | https://explorer.harmony.one/address/0x04170495EA41288225025De3CDFE9A9799121861 |
 | RewardScheduleV19                 | 0xab2907833ff4fd60216aaf16012e9a3a71aff222        | https://explorer.harmony.one/address/0xab2907833ff4fd60216aaf16012e9a3a71aff222 |
+| RewardScheduleV20                 | 0x17093221925Ad9e4c69aB17D3f128458CeEC587D        | https://explorer.harmony.one/address/0x17093221925Ad9e4c69aB17D3f128458CeEC587D |
 | AmmPoolFactory                    | 0xa4EF1da515096DB768Bc47DBC080888795643442        | https://explorer.harmony.one/address/0xa4EF1da515096DB768Bc47DBC080888795643442 |
 | AmmPoolRouter                     | 0x82145037096870BA3a5f7beE4C3602BD36e27Bff        | https://explorer.harmony.one/address/0x82145037096870BA3a5f7beE4C3602BD36e27Bff |
 | FGCD Vault                        | 0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44        | https://explorer.harmony.one/address/0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44 |
@@ -118,6 +119,20 @@ https://fatexdao.io
 | FATE:AVAX         | 0x271b050498c8FA1A307860FF11f5FdF18BEe7Fc1    | 54        |
 | xFATE:AVAX        | 0xb50bF3017e1F1D5d19Afa7c391f0D3b560F26129    | 55        |
 | 1PAXG:AVAX        | 0xE8d6f9905B0431428DCb9444f30C91B59d471498    | 56        |
+| JEWEL:1USDC       | 0xde80E29894fE0277500f45434Ab4F8Dd071A998d    | 57        |
+| JEWEL:UST         | 0xc5F6458833E5A971972Ee50e748F64085D4C7011    | 58        |
+| JEWEL:FATE        | 0x8aB2418628E683a153e6D3202621837f74EE84C6    | 59        |
+| JEWEL:1PAXG       | 0x5DDd43DA796Ff7e2AF5aB9c42461492B63E5Cf4e    | 60        |
+| JEWEL:xFATE       | 0xaCB927Fa6B14501918dD2F80Fadb089D8814dc08    | 61        |
+| JEWEL:WONE        | 0x4d04040b902DFABF2782f5EaFa7f4F442Ca360f6    | 62        |
+| JEWEL:1DAI        | 0xA6cb254CeC518C05f4a29731103928695961538c    | 63        |
+| bscLINK:1USDC     | 0x8525AB1C84Cf9C9c25572c1709189B5bC7741022    | 64        |
+| bscLINK:UST       | 0x43a67E6714f32F011d0A9b6dfdbE238545C2375d    | 65        |
+| bscLINK:FATE      | 0xF16F94fFA316B0C63F343430004cAbAE4F1e4510    | 66        |
+| bscLINK:1PAXG     | 0x3546b0db561CCe605A0EC525309c286CfCE8949c    | 67        |
+| bscLINK:xFATE     | 0x5b770b97F4b08eD81f511c844F533D29e332062e    | 68        |
+| bscLINK:WONE      | 0x55bFbAefEad3478E5A414D82b39E3326F8aBbE28    | 69        |
+| bscLINK:1DAI      | 0x5ca16FbDbCa1945F660692645D9670b7c55d6a19    | 70        |
 
 ## Testnet Deployed Contracts (unless otherwise noted below, all addresses are the same)
 
