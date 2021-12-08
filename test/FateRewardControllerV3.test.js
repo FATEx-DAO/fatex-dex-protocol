@@ -16,7 +16,7 @@ describe("FateRewardControllerV3", () => {
       await this.fateRewardControllerV3.connect(depositor).deposit(0, depositAmount)
       const afterBalance = await this.lp.balanceOf(depositor.address)
       expect(beforeBalance.sub(afterBalance)).to.be.equal(depositAmount)
-      
+
     }
 
     const doSomeDeposists = async () => {
@@ -34,7 +34,7 @@ describe("FateRewardControllerV3", () => {
       this.dev = this.signers[2]
       this.vault = this.signers[3]
       this.feeTo = this.signers[4]
-  
+
       this.LP = await ethers.getContractFactory("ERC20Mock")
       this.FateToken = await ethers.getContractFactory("FateToken")
       this.FateRewardControllerV2 = await ethers.getContractFactory("FateRewardController")
@@ -42,8 +42,8 @@ describe("FateRewardControllerV3", () => {
       this.RewardSchedule = await ethers.getContractFactory("RewardScheduleV3")
       this.MockLpTokenFactory = await ethers.getContractFactory("MockLpTokenFactory")
     })
-  
-    beforeEach(async () => { 
+
+    beforeEach(async () => {
       this.fateToken = await this.FateToken.deploy(this.alice.address, getBigNumber(1000))
       await this.fateToken.deployed()
 
@@ -84,7 +84,6 @@ describe("FateRewardControllerV3", () => {
 
       // add pool
       await this.fateRewardControllerV3.add(1, this.lp.address, true)
-      // await this.fateRewardControllerV3.setFatePoolIds([0], [true]);
 
       await this.lp.connect(this.alice).transfer(this.bob.address, getBigNumber(100))
       await this.lp.connect(this.bob).approve
@@ -96,7 +95,7 @@ describe("FateRewardControllerV3", () => {
         this.fateRewardControllerV3.address,
         await this.lp.balanceOf(this.dev.address) // getBigNumber(100)
       )
-      await this.lp.transfer(this.fateRewardControllerV3.address, getBigNumber(10)) 
+      await this.lp.transfer(this.fateRewardControllerV3.address, getBigNumber(10))
 
       // prepare vault
       await this.fateRewardControllerV3.setVault(this.vault.address)
@@ -111,11 +110,11 @@ describe("FateRewardControllerV3", () => {
       it("MembershipReward", async () => {
         // do some deposit actions
         await doSomeDeposists()
-  
+
         const bobUserPoints = await this.fateRewardControllerV3.userPoints(0, this.bob.address)
         const devUserPoints = await this.fateRewardControllerV3.userPoints(0, this.dev.address)
         const vaultUserPoints = await this.fateRewardControllerV3.userPoints(0, this.vault.address)
-  
+
         expect(bobUserPoints).to.above(0)
         expect(devUserPoints).to.above(0)
         expect(bobUserPoints).to.above(devUserPoints)

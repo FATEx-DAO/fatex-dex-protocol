@@ -19,8 +19,8 @@ module.exports = async function ({ ethers, deployments, getNamedAccounts, getCha
       fate.address,
       '0xfDdE60866508263e30C769e8592BB0f8C3274ba7', // rewardSchedule (should be replaced with mainnet addr)
       vault.address,
-      ['0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27'], // oldControllers (should be replaced with mainnet addr)
-      '0xB7734155287182814ac4263014807D2505C63A74', // mockLPFactory (should be replaced with mainnet addr)
+      ['0x04170495EA41288225025De3CDFE9A9799121861'], // oldControllers (should be replaced with mainnet addr)
+      '0xd9D9a75f0eFe0A2dD580f212005a8211CC8dF4FD', // mockLPFactory (should be replaced with mainnet addr)
       '0xabB6D4a1015e291b1bc71e7e56ff2c9204665b07' // vault (should be replaced with mainnet addr)
     ],
     log: true,
