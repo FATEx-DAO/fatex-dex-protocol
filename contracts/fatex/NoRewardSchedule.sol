@@ -96,23 +96,19 @@ contract RewardSchedule {
         return FATE_PER_BLOCK.length;
     }
 
-    /**
-     * @param index The week at which the amount of FATE per block should be rewarded. Index starts at 0, meaning index
-     *              1 is actually week 2. Index 12 is week 13.
-     */
-    function getFateAtIndex(uint index) public view returns (uint) {
+    function getFateAtIndex(uint) public pure returns (uint) {
         return 0;
     }
 
     /// @notice returns the average amount of FATE earned per block over any block period. If spanned over multiple
     /// weeks, a weighted average is calculated. Both _fromBlock and _toBlock are inclusive
     function getFatePerBlock(
-        uint _startBlock,
-        uint _fromBlock,
-        uint _toBlock
+        uint,
+        uint,
+        uint
     )
     external
-    view
+    pure
     returns (uint) {
         return 0;
     }

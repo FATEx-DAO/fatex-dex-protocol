@@ -153,8 +153,7 @@ module.exports = {
     },
     harmony_testnet: {
       url: "https://api.s0.b.hmny.io",
-      // accounts,
-      accounts: [process.env.PRIVATE_KEY],
+      accounts,
       chainId: 1666700000,
       live: true,
       saveDeployments: true,

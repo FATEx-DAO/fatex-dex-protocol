@@ -475,7 +475,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         MembershipInfo memory membership = userMembershipInfo[_pid][msg.sender];
         if (
             block.number <= emissionSchedule.epochEndBlock() &&
-            membership.firstDepositBlock == 0 // not recoreded (or deposited) yet
+            membership.firstDepositBlock == 0 // not recorded (or deposited) yet
         ) {
             userMembershipInfo[_pid][msg.sender] = MembershipInfo({
                 firstDepositBlock: block.number,
@@ -521,13 +521,22 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         emit Withdraw(msg.sender, _pid, withdrawAmount);
     }
 
+    function withdrawAll() public {
+        for (uint i = 0; i < poolInfo.length; i++) {
+            (uint amount,) = userInfo(i, msg.sender);
+            if (amount > 0) {
+                withdraw(i, amount);
+            }
+        }
+    }
+
     // Reduce LPWithdrawFee and record last withdraw block
     function _reduceWithdrawalForFeesAndUpdateMembershipInfo(
         uint256 _pid,
         address _account,
         uint256 _amount,
         bool _withdrawAll
-    ) internal returns(uint256) {
+    ) internal returns (uint256) {
         MembershipInfo memory membership = userMembershipInfo[_pid][_account];
         uint256 firstDepositBlock = membership.firstDepositBlock;
 
