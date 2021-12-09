@@ -13,7 +13,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     uint immutable public override epochStartBlock;
     uint immutable public override epochEndBlock;
 
-    uint constant public eopochPeriods = 8 weeks; // 8 weeks for epoch 2
+    uint constant public epochPeriods = 8 weeks; // 8 weeks for epoch 2
     uint constant public override lockedPercent = 0.92e18;
 
     /// @notice This is the emission schedule for each block for a given week. These numbers represent how much FATE is
@@ -21,7 +21,20 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     ///         Controller was 2021-08-26T19:43:45.000Z (UTC time). Meaning, week 2 started on 2021-09-02T19:43:45.000Z
     ///         (UTC time).
     uint[72] public FATE_PER_BLOCK = [
-        // eopch 1 (week1 ~ week13) is ended
+        // epoch 1 (week1 ~ week13) is ended
+        0.00e18,    // week 1
+        0.00e18,    // week 2
+        0.00e18,    // week 3
+        0.00e18,    // week 4
+        0.00e18,    // week 5
+        0.00e18,    // week 6
+        0.00e18,    // week 7
+        0.00e18,    // week 8
+        0.00e18,    // week 9
+        0.00e18,    // week 10
+        0.00e18,    // week 11
+        0.00e18,    // week 12
+        0.00e18,    // week 13
         36.00e18,   // week 14
         36.51e18,   // week 15
         37.02e18,   // week 16
@@ -95,7 +108,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
             "RewardScheduleV3::Contructor: invalid params"
         );
         epochStartBlock = _epochStartBlock;
-        epochEndBlock = _epochStartBlock + eopochPeriods;
+        epochEndBlock = _epochStartBlock + epochPeriods;
     }
 
     function rewardsNumberOfWeeks() external view returns (uint) {
@@ -110,7 +123,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     public
     view
     returns (uint, uint) {
-        if (index < 8) {
+        if (index >= 13 && index < 21) {
             // vesting occurs at an 92/8 for the first 8 weeks
             return (
                 FATE_PER_BLOCK[index] * lockedPercent / 1e18,
@@ -138,7 +151,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     override
     view
     returns (uint, uint) {
-        
+
         if (_startBlock > _toBlock || _fromBlock == _toBlock) {
             return (0, 0);
         }

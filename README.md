@@ -139,11 +139,11 @@ https://fatexdao.io
 | Name                      | Address                                           | Explorer                                                                        |
 |---------------------------|---------------------------------------------------|---------------------------------------------------------------------------------|
 | FateRewardControllerV2    | 0x61544e3aa27DcE173bDA940838CE04A1A1427de3        | https://explorer.pops.one/address/0x61544e3aa27DcE173bDA940838CE04A1A1427de3 |
-| FateRewardControllerV3    | 0xB5917b0c6EAFb9262470117A6ff77846D007309f        | https://explorer.pops.one/address/0xB5917b0c6EAFb9262470117A6ff77846D007309f |
+| FateRewardControllerV3    | 0x1c75b19951373bC6481ff59A5820D79206fA6E60        | https://explorer.pops.one/address/0x1c75b19951373bC6481ff59A5820D79206fA6E60 |
 | MockLpTokenFactory        | 0x8f3A0280Cb40E547fAEE3613fE3fA14b80Ac6c35        | https://explorer.pops.one/address/0x8f3A0280Cb40E547fAEE3613fE3fA14b80Ac6c35 |
 | Multi Call                | 0xE3CaC535fcb777A42Dc2C234E0a8884049A4264e        | https://explorer.pops.one/address/0xE3CaC535fcb777A42Dc2C234E0a8884049A4264e |
 | RewardScheduleV1          | 0xa7769eABE0212a43FE0067A95343105CbaEf5DB0        | https://explorer.pops.one/address/0xa7769eABE0212a43FE0067A95343105CbaEf5DB0 |
-| RewardScheduleV3          | 0xfc2029aE4E70c9668635A2602230131B1741047d        | https://explorer.pops.one/address/0xfc2029aE4E70c9668635A2602230131B1741047d |
+| RewardScheduleV3          | 0x3ACe48805B6baF9185833B611645a519CC8910A3        | https://explorer.pops.one/address/0x3ACe48805B6baF9185833B611645a519CC8910A3 |
 
 ## Docs
 

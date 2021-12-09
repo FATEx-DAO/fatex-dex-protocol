@@ -114,6 +114,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
                     accumulatedLockedFatePerShare: 0
                 })
             );
+            totalAllocPoint = totalAllocPoint.add(allocPoint);
         }
     }
 
@@ -325,7 +326,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     {
         PoolInfoV3 storage pool = poolInfo[_pid];
         IFateRewardControllerV3.UserInfo memory user = _getUserInfo(_pid, _user);
-        uint256 accumulatedFatePerShare = pool.accumulatedFatePerShare;
+        uint256 accumulatedLockedFatePerShare = pool.accumulatedLockedFatePerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
         if (block.number > pool.lastRewardBlock && lpSupply != 0) {
             (uint256 lockedFatePerBlock,) = emissionSchedule.getFatePerBlock(
@@ -336,16 +337,11 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             uint256 lockedFateReward = lockedFatePerBlock
                 .mul(pool.allocPoint)
                 .div(totalAllocPoint);
-            accumulatedFatePerShare = accumulatedFatePerShare
-                .add(lockedFateReward
-                .mul(1e12)
-                .div(lpSupply)
-            );
+            accumulatedLockedFatePerShare = accumulatedLockedFatePerShare.add(lockedFateReward.mul(1e12).div(lpSupply));
         }
-        return user.amount
-            .mul(accumulatedFatePerShare)
-            .div(1e12)
-            .sub(user.lockedRewardDebt);
+
+        uint lockedReward = user.amount.mul(accumulatedLockedFatePerShare).div(1e12).sub(user.lockedRewardDebt);
+        return lockedReward.sub(lockedReward.mul(getLockedRewardsFeePercent(_pid, _user)).div(1e18));
     }
 
     function allPendingUnlockedFate(
@@ -575,8 +571,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             .div(1e12)
             .sub(user.lockedRewardDebt);
 
-        // implement fee reduction for pendlingLocked
-        // = pendingLocked * (1e18 - fee) / 1e18 = pendingLocked - pendingLocked * fee / 1e18
+        // implement fee reduction for pendingLocked
         pendingLocked = pendingLocked.sub(pendingLocked.mul(getLockedRewardsFeePercent(_pid, _user)).div(1e18));
 
         // recorded locked rewards

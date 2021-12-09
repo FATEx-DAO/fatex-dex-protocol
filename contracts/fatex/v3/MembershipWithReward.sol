@@ -229,7 +229,7 @@ abstract contract MembershipWithReward is Ownable {
     function getLockedRewardsFeePercent(
         uint256 _pid,
         address _caller
-    ) public view returns(uint256) {
+    ) public view returns (uint256) {
         if (
             isExcludedAddress[_caller] ||
             block.number > emissionSchedule.epochEndBlock()
@@ -255,7 +255,7 @@ abstract contract MembershipWithReward is Ownable {
     function getLPWithdrawFeePercent(
         uint256 _pid,
         address _caller
-    ) public view returns(uint256) {
+    ) public view returns (uint256) {
         if (
             isExcludedAddress[_caller] ||
             block.number > emissionSchedule.epochEndBlock()
