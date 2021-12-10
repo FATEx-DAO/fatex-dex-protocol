@@ -60,7 +60,7 @@
     "prettier": "prettier --write test/**/*.{js,ts} && prettier --write contracts/**/*.sol",
     "lint": "yarn prettier && solhint -c .solhint.json contracts/**/*.sol",
     "prepublishOnly": "yarn run build && node scripts/prepublish.js",
-    "generate-locked-rewards-csv": "HARDHAT_NETWORK=harmony hardhat run scripts/locked-rewards-epoch-0.js"
+    "generate-locked-rewards-csv": "HARDHAT_NETWORK=harmony hardhat run scripts/calculate-locked-rewards-for-epoch.js"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",

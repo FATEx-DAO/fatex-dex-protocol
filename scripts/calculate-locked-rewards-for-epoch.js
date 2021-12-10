@@ -1,7 +1,10 @@
 const fetch = require('node-fetch');
 
+const blockNumber = 20368752
+const epoch = 0
+
 const csvWriter = require('csv-writer').createObjectCsvWriter({
-  path: 'scripts/epoch-0-rewards.csv',
+  path: `scripts/epoch-${epoch}-rewards.csv`,
   header: [
     { id: 'user', title: 'Wallet' },
     { id: 'amountFate', title: 'Fate_Rewards' },
@@ -11,12 +14,11 @@ const csvWriter = require('csv-writer').createObjectCsvWriter({
 const hardhat = require("hardhat");
 const ethers = hardhat.ethers;
 
-const blockNumber = 19798316
 const multiplierForEpoch = ethers.BigNumber.from('4')
 const divisorForEpoch = ethers.BigNumber.from('1')
 
 const gqlBody = (skip) => {
-  return `{"query":"{\\n  userEpoch0TotalLockedRewardByPools(first: 1000, skip: ${skip}, orderBy: user, orderDirection: asc, block: {number: ${blockNumber}}) {\\n    user\\n    poolId\\n    amountFate\\n  }\\n}","variables":null,"operationName":null}`
+  return `{"query":"{\\n  userEpochTotalLockedRewardByPools(first: 1000, skip: ${skip}, orderBy: user, orderDirection: asc, block: {number: ${blockNumber}}, where: {epoch: ${epoch}}) {\\n    user\\n    poolId\\n    amountFate\\n  }\\n}","variables":null,"operationName":null}`
 }
 
 async function main() {
@@ -36,7 +38,7 @@ async function main() {
       body: gqlBody(i * 1000),
       method: 'POST'
     }).then(response => response.json())
-      .then(json => json.data.userEpoch0TotalLockedRewardByPools)
+      .then(json => json.data.userEpochTotalLockedRewardByPools)
 
     if (result.length === 0) {
       break;
@@ -64,6 +66,7 @@ async function main() {
       pendingFateCalls.slice(i * chunkSize, (i * chunkSize) + chunkSize),
       { blockTag: blockNumber }
     )
+    console.log('got pending fate for chunk ', i + 1)
     const pendingFatesAtIndex = pendingFateResults[1].map(rawPendingFate => {
       return ethers.BigNumber.from(rawPendingFate).mul(multiplierForEpoch).div(divisorForEpoch)
     })
