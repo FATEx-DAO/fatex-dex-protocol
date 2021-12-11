@@ -39,6 +39,7 @@ https://fatexdao.io
 | RewardScheduleV19                 | 0xab2907833ff4fd60216aaf16012e9a3a71aff222        | https://explorer.harmony.one/address/0xab2907833ff4fd60216aaf16012e9a3a71aff222 |
 | RewardScheduleV20                 | 0x17093221925Ad9e4c69aB17D3f128458CeEC587D        | https://explorer.harmony.one/address/0x17093221925Ad9e4c69aB17D3f128458CeEC587D |
 | RewardScheduleV21                 | 0x7b2BDb8D186666C17Ae0A97Ce24D32EE3064F2bA        | https://explorer.harmony.one/address/0x7b2BDb8D186666C17Ae0A97Ce24D32EE3064F2bA |
+| RewardScheduleV22                 | 0x9b206ed533b576ac9e37c3f5b2699700edc54924        | https://explorer.harmony.one/address/0x9b206ed533b576ac9e37c3f5b2699700edc54924 |
 | AmmPoolFactory                    | 0xa4EF1da515096DB768Bc47DBC080888795643442        | https://explorer.harmony.one/address/0xa4EF1da515096DB768Bc47DBC080888795643442 |
 | AmmPoolRouter                     | 0x82145037096870BA3a5f7beE4C3602BD36e27Bff        | https://explorer.harmony.one/address/0x82145037096870BA3a5f7beE4C3602BD36e27Bff |
 | FGCD Vault                        | 0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44        | https://explorer.harmony.one/address/0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44 |
