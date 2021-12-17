@@ -108,7 +108,7 @@ contract FateRewardControllerV2 is IFateRewardController {
         uint256 _allocPoint,
         IERC20 _lpToken,
         bool _withUpdate
-    ) public onlyOwner {
+    ) public override onlyOwner {
         for (uint i = 0; i < poolInfo.length; i++) {
             require(
                 poolInfo[i].lpToken != _lpToken,
