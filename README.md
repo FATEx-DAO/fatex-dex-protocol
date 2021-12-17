@@ -135,6 +135,17 @@ https://fatexdao.io
 | bscLINK:xFATE     | 0x5b770b97F4b08eD81f511c844F533D29e332062e    | 68        |
 | bscLINK:WONE      | 0x55bFbAefEad3478E5A414D82b39E3326F8aBbE28    | 69        |
 | bscLINK:1DAI      | 0x5ca16FbDbCa1945F660692645D9670b7c55d6a19    | 70        |
+| WONE:1DAI         | 0xF1DF62AF26fbE4536ecA7cD9050503Bc064dbB0C    | 71        |
+| FTM:1USDC         | 0x91C0F15b3766723A3e1e31539c6F8e8F1541c884    | 72        |
+| AVAX:1USDC        | 0xaf3aeb17d43c3b4C0AaC7E49ACC69Ef780f528E2    | 73        |
+| bscBNB:1USDC      | 0x957672650c83baa91b14FCB28a38858d9f4E40a0    | 74        |
+| bscLINK:LINK      | 0x60DF3832FbA2190bF8419555211a78827Efb9Bcf    | 75        |
+| WMATIC:1USDC      | 0xc48e2cb14bc509ee3599a6116930977342426db1    | 76        |
+| bscADA:1USDC      | 0x0D7fDBBB006fa026B29a69F497284C6E078E7f84    | 77        |
+| FATE:bscADA       | 0xAc6a9Ee53D8d55850d3d687470c439ae19E2af35    | 78        |
+| bscADA:1PAXG      | 0xE346316ae354A6827C5f5aE3bfe9B892CbF81516    | 79        |
+| LUNA:UST          | 0xC4e9Bf328034dEf62be14E1e37A493DF5CFB000f    | 80        |
+| bscBNB:1DAI       | 0x571B472dE98937510ee46F2f6324dde293729323    | 81        |
 
 ## Testnet Deployed Contracts (unless otherwise noted below, all addresses are the same)
 
