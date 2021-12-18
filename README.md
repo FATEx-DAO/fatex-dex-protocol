@@ -146,6 +146,10 @@ https://fatexdao.io
 | bscADA:1PAXG      | 0xE346316ae354A6827C5f5aE3bfe9B892CbF81516    | 79        |
 | LUNA:UST          | 0xC4e9Bf328034dEf62be14E1e37A493DF5CFB000f    | 80        |
 | bscBNB:1DAI       | 0x571B472dE98937510ee46F2f6324dde293729323    | 81        |
+| bscETH:1ETH       | 0xCeA7633cE4d3B1AD7e95aF98c292A0FD9B00f2c8    | 82        |
+| bscMATIC:WMATIC   | 0x21154Ccd77EF03798Dc8080644B84E4241b9C6Fe    | 83        |
+| FTM:bscFTM        | 0x1c1e483a945D0ee6Fe69dE1d897Bcd47C6c26bd7    | 84        |
+| 1SUSHI:bscSUSHI   | 0x099929A75873b6abeac7B5304C3C390521924678    | 85        |
 
 ## Testnet Deployed Contracts (unless otherwise noted below, all addresses are the same)
 
