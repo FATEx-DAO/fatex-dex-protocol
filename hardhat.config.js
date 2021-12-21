@@ -87,7 +87,7 @@ module.exports = {
       // Reported to HardHat team and fix is incoming
       // forking: {
       //   enabled: process.env.FORKING === "true",
-      //   url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
+      //   url: `https://a.api.s0.t.hmny.io`,
       // },
       live: false,
       saveDeployments: true,
