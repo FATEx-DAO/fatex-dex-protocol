@@ -188,6 +188,51 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         uint256 _allocPoint,
         bool _withUpdate
     ) public onlyOwner {
+        _set(_pid, _allocPoint, _withUpdate);
+    }
+
+    // Update the given pool's FATE allocation point. Can only be called by the owner.
+    function setMany(
+        uint256[] calldata _pids,
+        uint256[] calldata _allocPoints
+    ) external onlyOwner {
+        require(
+            _pids.length == _allocPoints.length,
+            "setMany: invalid length"
+        );
+        for (uint i = 0; i < _pids.length; i++) {
+            _set(_pids[i], _allocPoints[i], i == _pids.length - 1);
+        }
+    }
+
+    // Update the given pool's FATE allocation point. Can only be called by the owner.
+    function setManyWith2dArray(
+        uint256[][] calldata _pidsAndAllocPoints
+    ) external onlyOwner {
+        uint _poolLength = poolLength();
+        for (uint i = 0; i < _pidsAndAllocPoints.length; i++) {
+            uint[] memory _pidAndAllocPoint = _pidsAndAllocPoints[i];
+            require(
+                _pidAndAllocPoint.length == 2,
+                "setManyWith2dArray: invalid length, expected 2"
+            );
+            require(
+                _pidAndAllocPoint[0] < _poolLength,
+                "setManyWith2dArray: invalid pid"
+            );
+            _set(
+                _pidAndAllocPoint[0],
+                _pidAndAllocPoint[1],
+                /* withUpdate */ i == _pidsAndAllocPoints.length - 1
+            );
+        }
+    }
+
+    function _set(
+        uint256 _pid,
+        uint256 _allocPoint,
+        bool _withUpdate
+    ) internal {
         if (_withUpdate) {
             massUpdatePools();
         }
