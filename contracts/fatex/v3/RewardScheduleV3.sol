@@ -12,7 +12,9 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
 
     uint immutable public override epochStartBlock;
     uint immutable public override epochEndBlock;
-    uint immutable public override lockedPercent;
+    
+    uint constant public epochPeriods = 8 weeks; // 8 weeks for epoch 2
+    uint constant public override lockedPercent = 0.92e18;
 
     /// @notice This is the emission schedule for each block for a given week. These numbers represent how much FATE is
     ///         rewarded per block. Each index represents a week. The starting day/week, according to the Reward
@@ -97,19 +99,9 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     // 30 blocks per minute, 60 minutes per hour, 24 hours per day, 7 days per week
     uint public constant BLOCKS_PER_WEEK = 30 * 60 * 24 * 7;
 
-    constructor(
-        uint _epochStartBlock,
-        uint _epochPeriods,
-        uint _lockedPercent
-    ) public {
-        require(
-            _lockedPercent < 1e18,
-            "RewardScheduleV3::Contructor: invalid params"
-        );
-
-        lockedPercent = _lockedPercent;
+    constructor(uint _epochStartBlock) public {
         epochStartBlock = _epochStartBlock;
-        epochEndBlock = _epochStartBlock + _epochPeriods;
+        epochEndBlock = _epochStartBlock + epochPeriods;
     }
 
     function rewardsNumberOfWeeks() external view returns (uint) {
@@ -198,7 +190,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
                 unlockedFatePerBlock + blocksAtIndex * unlockedFatePerBlock3
             );
         } else {
-            // indices are the same
+
             assert(fromIndex == toIndex);
             (uint lockedFatePerBlock, uint unlockedFatePerBlock) = getFateAtIndex(fromIndex);
             return (

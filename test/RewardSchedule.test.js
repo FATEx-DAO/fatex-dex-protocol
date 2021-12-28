@@ -1,12 +1,10 @@
 const { ethers } = require("hardhat")
 const { expect } = require("chai")
 
-const { getBigNumber } = require("./utilities")
-
 // yarn test test/RewardSchedule.test.js
-describe("RewardSchedule", () => {
-  const startBlock = 10000000
+describe.only("RewardSchedule", () => {
   const BLOCKS_PER_WEEK = 30 * 60 * 24 * 7
+  const startBlock = 10000000
 
   before(async () => {
     this.signers = await ethers.getSigners()
@@ -19,11 +17,8 @@ describe("RewardSchedule", () => {
   })
 
   beforeEach(async () => {
-    this.rewardSchedule = await this.RewardSchedule.deploy(
-      startBlock,
-      BLOCKS_PER_WEEK * 8, // 92% are locked
-      getBigNumber(8, 17)
-    )
+    console.log(0.92e18)
+    this.rewardSchedule = await this.RewardSchedule.deploy(startBlock)
     await this.rewardSchedule.deployed()
   })  
 
@@ -43,8 +38,8 @@ describe("RewardSchedule", () => {
     expect(await this.rewardSchedule.BLOCKS_PER_WEEK()).to.equal(BLOCKS_PER_WEEK.toString())
   })
 
-  it("should work for basic query", async () => {
-    const fatePerBlocks = await getFatePerBlock(startBlock, startBlock, startBlock + 100);
+  it.only("should work for basic query", async () => {
+    const fatePerBlocks = await getFatePerBlock(startBlock, startBlock, startBlock + (BLOCKS_PER_WEEK * 13));
     expect(fatePerBlocks[0].toString()).to.be.equal('3312000000000000000000'); // lockedRewards
     expect(fatePerBlocks[1].toString()).to.be.equal('288000000000000000000'); // unlockedRewards
   })
@@ -62,7 +57,6 @@ describe("RewardSchedule", () => {
     // (10,882,800 + 11,040,624 + 11,192,997) / (_toBlock / _fromBlock) * 0.2
 
     const fatePerBlocks = await getFatePerBlock(startBlock, startBlock + 100, startBlock + (BLOCKS_PER_WEEK * 3) - 50);
-
     expect(fatePerBlocks[0].toString()).to.be.equal('30467107320000000000000000'); // lockedRewards
     expect(fatePerBlocks[1].toString()).to.be.equal('2649313680000000000000000'); // unlockedRewards
   })
