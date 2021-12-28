@@ -21,7 +21,8 @@ describe("RewardSchedule", () => {
   beforeEach(async () => {
     this.rewardSchedule = await this.RewardSchedule.deploy(
       startBlock,
-      BLOCKS_PER_WEEK * 8  // 92% are locked
+      BLOCKS_PER_WEEK * 8, // 92% are locked
+      getBigNumber(8, 17)
     )
     await this.rewardSchedule.deployed()
   })  

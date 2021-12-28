@@ -12,9 +12,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
 
     uint immutable public override epochStartBlock;
     uint immutable public override epochEndBlock;
-
-    uint constant public epochPeriods = 8 weeks; // 8 weeks for epoch 2
-    uint constant public override lockedPercent = 0.92e18;
+    uint immutable public override lockedPercent;
 
     /// @notice This is the emission schedule for each block for a given week. These numbers represent how much FATE is
     ///         rewarded per block. Each index represents a week. The starting day/week, according to the Reward
@@ -101,14 +99,17 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
 
     constructor(
         uint _epochStartBlock,
+        uint _epochPeriods,
         uint _lockedPercent
     ) public {
         require(
             _lockedPercent < 1e18,
             "RewardScheduleV3::Contructor: invalid params"
         );
+
+        lockedPercent = _lockedPercent;
         epochStartBlock = _epochStartBlock;
-        epochEndBlock = _epochStartBlock + epochPeriods;
+        epochEndBlock = _epochStartBlock + _epochPeriods;
     }
 
     function rewardsNumberOfWeeks() external view returns (uint) {

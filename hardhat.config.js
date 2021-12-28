@@ -90,6 +90,9 @@ module.exports = {
       //   enabled: process.env.FORKING === "true",
       //   url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
       // },
+      // forking: {
+      //   url: "https://a.api.s0.t.hmny.io",
+      // },
       live: false,
       saveDeployments: true,
       tags: ["test", "local"],
