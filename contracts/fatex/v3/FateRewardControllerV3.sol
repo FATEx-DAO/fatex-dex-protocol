@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity 0.6.12;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -209,7 +210,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     function setManyWith2dArray(
         uint256[][] calldata _pidsAndAllocPoints
     ) external onlyOwner {
-        uint _poolLength = poolLength();
+        uint _poolLength = poolInfo.length;
         for (uint i = 0; i < _pidsAndAllocPoints.length; i++) {
             uint[] memory _pidAndAllocPoint = _pidsAndAllocPoints[i];
             require(
