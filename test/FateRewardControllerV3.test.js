@@ -44,65 +44,56 @@ describe("FateRewardControllerV3", () => {
     })
 
     beforeEach(async () => {
-      try {
-        this.fateToken = await this.FateToken.deploy(this.alice.address, getBigNumber(1000))
-        await this.fateToken.deployed()
-        await this.fateToken.connect(this.alice).transfer(this.bob.address, getBigNumber(100))
-        await this.fateToken.connect(this.alice).transfer(this.dev.address, getBigNumber(100))
-        this.lp = await this.LP.deploy('lp', 'LP', getBigNumber(1000))
-        await this.lp.deployed()
-        this.rewardSchedule = await this.RewardSchedule.deploy(
-          startBlock,
-          epoch_period_blocks,
-          getBigNumber(8, 17)
-        )
+      this.fateToken = await this.FateToken.deploy(this.alice.address, getBigNumber(1000))
+      await this.fateToken.deployed()
+      await this.fateToken.connect(this.alice).transfer(this.bob.address, getBigNumber(100))
+      await this.fateToken.connect(this.alice).transfer(this.dev.address, getBigNumber(100))
+      this.lp = await this.LP.deploy('lp', 'LP', getBigNumber(1000))
+      await this.lp.deployed()
+      this.rewardSchedule = await this.RewardSchedule.deploy(startBlock)
 
-        await this.rewardSchedule.deployed()
-        await advanceBlockTo(startBlock);
-        this.fateRewardControllerV2 = await this.FateRewardControllerV2.deploy(
-          this.fateToken.address,
-          this.rewardSchedule.address,
-          this.vault.address
-        )
-        await this.fateRewardControllerV2.deployed()
-        this.mockLpTokenFactory = await this.MockLpTokenFactory.deploy()
-        await this.mockLpTokenFactory.deployed()
-        this.fateRewardControllerV3 = await this.FateRewardControllerV3.deploy(
-          this.fateToken.address,
-          this.rewardSchedule.address,
-          this.vault.address,
-          [this.fateRewardControllerV2.address],
-          this.mockLpTokenFactory.address,
-          this.feeTo.address
-        )
-        await this.fateRewardControllerV3.deployed()
-  
-        // add pool
-        await this.fateRewardControllerV3.add(1, this.lp.address, true)
-  
-        await this.lp.connect(this.alice).transfer(this.bob.address, getBigNumber(100))
-        await this.lp.connect(this.bob).approve
-          (this.fateRewardControllerV3.address,
-          await this.lp.balanceOf(this.bob.address) // getBigNumber(100)
-        )
-        await this.lp.connect(this.alice).transfer(this.dev.address, getBigNumber(100))
-        await this.lp.connect(this.dev).approve(
-          this.fateRewardControllerV3.address,
-          await this.lp.balanceOf(this.dev.address) // getBigNumber(100)
-        )
-        await this.lp.transfer(this.fateRewardControllerV3.address, getBigNumber(10))
-  
-        // prepare vault
-        await this.fateRewardControllerV3.setVault(this.vault.address)
-        await this.fateToken.transfer(this.vault.address, getBigNumber(400))
-        await this.fateToken.connect(this.vault).approve(
-          this.fateRewardControllerV3.address,
-          await this.fateToken.balanceOf(this.vault.address) // getBigNumber(100)
-        )
-      } catch (e) {
-        console.log('INHO')
-        console.log(e)
-      }
+      await this.rewardSchedule.deployed()
+      await advanceBlockTo(startBlock);
+      this.fateRewardControllerV2 = await this.FateRewardControllerV2.deploy(
+        this.fateToken.address,
+        this.rewardSchedule.address,
+        this.vault.address
+      )
+      await this.fateRewardControllerV2.deployed()
+      this.mockLpTokenFactory = await this.MockLpTokenFactory.deploy()
+      await this.mockLpTokenFactory.deployed()
+      this.fateRewardControllerV3 = await this.FateRewardControllerV3.deploy(
+        this.fateToken.address,
+        this.rewardSchedule.address,
+        this.vault.address,
+        [this.fateRewardControllerV2.address],
+        this.mockLpTokenFactory.address,
+        this.feeTo.address
+      )
+      await this.fateRewardControllerV3.deployed()
+
+      // add pool
+      await this.fateRewardControllerV3.add(1, this.lp.address, true)
+
+      await this.lp.connect(this.alice).transfer(this.bob.address, getBigNumber(100))
+      await this.lp.connect(this.bob).approve
+        (this.fateRewardControllerV3.address,
+        await this.lp.balanceOf(this.bob.address) // getBigNumber(100)
+      )
+      await this.lp.connect(this.alice).transfer(this.dev.address, getBigNumber(100))
+      await this.lp.connect(this.dev).approve(
+        this.fateRewardControllerV3.address,
+        await this.lp.balanceOf(this.dev.address) // getBigNumber(100)
+      )
+      await this.lp.transfer(this.fateRewardControllerV3.address, getBigNumber(10))
+
+      // prepare vault
+      await this.fateRewardControllerV3.setVault(this.vault.address)
+      await this.fateToken.transfer(this.vault.address, getBigNumber(400))
+      await this.fateToken.connect(this.vault).approve(
+        this.fateRewardControllerV3.address,
+        await this.fateToken.balanceOf(this.vault.address) // getBigNumber(100)
+      )
     })
 
     describe("MembershipReward & WithdrawFees", async () => {
