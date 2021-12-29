@@ -12,7 +12,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
 
     uint immutable public override epochStartBlock;
     uint immutable public override epochEndBlock;
-
+    
     uint constant public epochPeriods = 8 weeks; // 8 weeks for epoch 2
     uint constant public override lockedPercent = 0.92e18;
 
@@ -99,14 +99,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     // 30 blocks per minute, 60 minutes per hour, 24 hours per day, 7 days per week
     uint public constant BLOCKS_PER_WEEK = 30 * 60 * 24 * 7;
 
-    constructor(
-        uint _epochStartBlock,
-        uint _lockedPercent
-    ) public {
-        require(
-            _lockedPercent < 1e18,
-            "RewardScheduleV3::Contructor: invalid params"
-        );
+    constructor(uint _epochStartBlock) public {
         epochStartBlock = _epochStartBlock;
         epochEndBlock = _epochStartBlock + epochPeriods;
     }
@@ -197,7 +190,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
                 unlockedFatePerBlock + blocksAtIndex * unlockedFatePerBlock3
             );
         } else {
-            // indices are the same
+
             assert(fromIndex == toIndex);
             (uint lockedFatePerBlock, uint unlockedFatePerBlock) = getFateAtIndex(fromIndex);
             return (

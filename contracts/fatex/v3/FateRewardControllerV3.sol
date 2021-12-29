@@ -125,7 +125,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         emit FateFeeToSet(fateFeeTo);
     }
 
-    function poolLength() external override view returns (uint256) {
+    function poolLength() public override view returns (uint256) {
         return poolInfo.length;
     }
 
