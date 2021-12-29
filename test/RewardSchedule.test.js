@@ -2,7 +2,7 @@ const { ethers } = require("hardhat")
 const { expect } = require("chai")
 
 // yarn test test/RewardSchedule.test.js
-describe.only("RewardSchedule", () => {
+describe("RewardSchedule", () => {
   const BLOCKS_PER_WEEK = 30 * 60 * 24 * 7
   const startBlock = 10000000
   const blocksAtEpoch2 = startBlock + BLOCKS_PER_WEEK * 13
