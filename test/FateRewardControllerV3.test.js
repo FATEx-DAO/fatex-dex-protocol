@@ -51,11 +51,7 @@ describe("FateRewardControllerV3", () => {
         await this.fateToken.connect(this.alice).transfer(this.dev.address, getBigNumber(100))
         this.lp = await this.LP.deploy('lp', 'LP', getBigNumber(1000))
         await this.lp.deployed()
-        this.rewardSchedule = await this.RewardSchedule.deploy(
-          startBlock,
-          epoch_period_blocks,
-          getBigNumber(8, 17)
-        )
+        this.rewardSchedule = await this.RewardSchedule.deploy(startBlock);
 
         await this.rewardSchedule.deployed()
         await advanceBlockTo(startBlock);
