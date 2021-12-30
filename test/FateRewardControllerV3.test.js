@@ -330,7 +330,7 @@ describe('FateRewardControllerV3', () => {
         const lastLP2 = await this.fateRewardControllerV3.poolInfo(length - 2)
         expect(lastLP2.lpToken).to.be.equal(testLP2.address)
         expect(lastLP1.lpToken).to.be.equal(testLP3.address)
-    
+        
       })
     })
 
@@ -393,5 +393,46 @@ describe('FateRewardControllerV3', () => {
       })
     })
 
-})
+    describe('migrate', async () => {
+      it('success cases:', async () => {
+        const testLP1 = await this.LP.deploy('testlp1', 'TestLP1', getBigNumber(1000))
+        await testLP1.deployed()
+        const length = await this.fateRewardControllerV3.poolLength()
+        await this.fateRewardControllerV3.setMigrator(this.bob.address)
+        await this.fateRewardControllerV3.connect(this.bob).migrate(testLP1.address)
+        const lastLP1 = await this.fateRewardControllerV3.poolInfo(length)
+        expect(lastLP1.lpToken).to.be.equal(testLP1.address)
+      })
+    })
 
+    describe('setEmissionSchedule', async () => {
+      it('reverted cases:', async () => {
+        // when trying to set with not-owner
+        await expect(
+          this.fateRewardControllerV3.connect(this.dev).setEmissionSchedule(this.rewardSchedule.address)
+        ).to.be.revertedWith('Ownable: caller is not the owner')
+      }),
+
+      it('success cases:', async () => {
+        await expect(this.fateRewardControllerV3.setEmissionSchedule(this.rewardSchedule.address))
+          .to.emit(this.fateRewardControllerV3, 'EmissionScheduleSet')
+          .withArgs(this.rewardSchedule.address)
+      })
+    })
+
+    describe('setVault', async () => {
+      it('reverted cases:', async () => {
+        // when trying to set with not-owner
+        await expect(
+          this.fateRewardControllerV3.connect(this.dev).setVault(this.vault.address)
+        ).to.be.revertedWith('Ownable: caller is not the owner')
+      }),
+
+      it('success cases:', async () => {
+        await expect(this.fateRewardControllerV3.setVault(this.vault.address))
+          .to.emit(this.fateRewardControllerV3, 'VaultSet')
+          .withArgs(this.vault.address)
+      })
+    })
+
+})

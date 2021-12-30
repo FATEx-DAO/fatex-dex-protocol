@@ -250,7 +250,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     }
 
     // Migrate lp token to another lp contract. Can be called by anyone. We trust that migrator contract is good.
-    function migrate(uint256 _pid) public override {
+    function migrateByPID(uint256 _pid) public override {
         require(address(migrator) != address(0), "migrate: no migrator");
         PoolInfoV3 storage pool = poolInfo[_pid];
         IERC20 lpToken = pool.lpToken;

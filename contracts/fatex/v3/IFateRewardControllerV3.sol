@@ -58,5 +58,5 @@ abstract contract IFateRewardControllerV3 is Ownable, IMigratorChef {
 
     function setMigrator(IMigratorChef _migrator) external virtual;
     function setVault(address _vault) external virtual;
-    function migrate(uint256 _pid) external virtual;
+    function migrateByPID(uint256 _pid) external virtual;
 }
