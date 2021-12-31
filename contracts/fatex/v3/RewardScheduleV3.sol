@@ -172,30 +172,24 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
         uint toIndex = (_toBlock - _startBlock) / BLOCKS_PER_WEEK;
 
         if (fromIndex < toIndex) {
-            uint blocksAtIndex = (BLOCKS_PER_WEEK - ((_fromBlock - _startBlock) % BLOCKS_PER_WEEK));
-            (uint lockedFatePerBlock, uint unlockedFatePerBlock) = getFateAtIndex(fromIndex);
-            lockedFatePerBlock = blocksAtIndex * lockedFatePerBlock;
-            unlockedFatePerBlock = blocksAtIndex * unlockedFatePerBlock;
+            (uint lockedFateAtIndex, uint unlockedFateAtIndex) = getFateAtIndex(fromIndex);
 
             for (uint i = fromIndex + 1; i < toIndex; i++) {
-                (uint lockedFatePerBlock2, uint unlockedFatePerBlock2) = getFateAtIndex(i);
-                lockedFatePerBlock += lockedFatePerBlock2 * BLOCKS_PER_WEEK;
-                unlockedFatePerBlock += unlockedFatePerBlock2 * BLOCKS_PER_WEEK;
+                (uint lockedFateAtIndex2, uint unlockedFateAtIndex2) = getFateAtIndex(i);
+                lockedFateAtIndex += lockedFateAtIndex2;
+                unlockedFateAtIndex += unlockedFateAtIndex2;
             }
-
-            blocksAtIndex = BLOCKS_PER_WEEK - ((_toBlock - _startBlock) % BLOCKS_PER_WEEK);
-            (uint lockedFatePerBlock3, uint unlockedFatePerBlock3) = getFateAtIndex(toIndex);
+            (uint lockedFateAtIndex3, uint unlockedFateAtIndex3) = getFateAtIndex(toIndex);
             return (
-                lockedFatePerBlock * blocksAtIndex + lockedFatePerBlock3,
-                unlockedFatePerBlock * blocksAtIndex + unlockedFatePerBlock3
-            );
+                (lockedFateAtIndex + lockedFateAtIndex3) / (_toBlock - _fromBlock),
+                (unlockedFateAtIndex + unlockedFateAtIndex3) / (_toBlock - _fromBlock));
         } else {
 
             assert(fromIndex == toIndex);
-            (uint lockedFatePerBlock, uint unlockedFatePerBlock) = getFateAtIndex(fromIndex);
+            (uint lockedFateAtIndex, uint unlockedFateAtIndex) = getFateAtIndex(fromIndex);
             return (
-                lockedFatePerBlock * (_toBlock - _fromBlock),
-                unlockedFatePerBlock * (_toBlock - _fromBlock)
+                lockedFateAtIndex / (_toBlock - _fromBlock),
+                unlockedFateAtIndex / (_toBlock - _fromBlock)
             );
         }
     }
