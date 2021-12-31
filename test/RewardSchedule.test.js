@@ -22,7 +22,7 @@ describe.only("RewardSchedule", () => {
     await this.rewardSchedule.deployed()
   })  
 
-  const getFatePerBlock = (
+  const getFatePerBlock = async (
     _startBlock,
     _fromBlock,
     _toBlock,
@@ -38,10 +38,10 @@ describe.only("RewardSchedule", () => {
     expect(await this.rewardSchedule.BLOCKS_PER_WEEK()).to.equal(BLOCKS_PER_WEEK.toString())
   })
 
-  it.only("should work for basic query", async () => {
+  it("should work for basic query", async () => {
     const fatePerBlocks = await getFatePerBlock(startBlock, startBlock, startBlock + (BLOCKS_PER_WEEK * 13));
-    expect(fatePerBlocks[0].toString()).to.be.equal('3312000000000000000000'); // lockedRewards
-    expect(fatePerBlocks[1].toString()).to.be.equal('288000000000000000000'); // unlockedRewards
+    expect(fatePerBlocks[0].toString()).to.be.equal('33120000000000000000'); // lockedRewards
+    expect(fatePerBlocks[1].toString()).to.be.equal('2880000000000000000'); // unlockedRewards
   })
 
   it("should work for basic query when _toBlock is before _startBlock", async () => {

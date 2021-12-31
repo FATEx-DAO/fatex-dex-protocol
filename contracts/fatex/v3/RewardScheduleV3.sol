@@ -133,6 +133,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
         return (block.number - _startBlock) / BLOCKS_PER_WEEK;
     }
 
+
     /// @notice returns the average amount of FATE earned per block over any block period. If spanned over multiple
     /// weeks, a weighted average is calculated. Both _fromBlock and _toBlock are inclusive
     function getFatePerBlock(
@@ -171,7 +172,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
         uint toIndex = (_toBlock - _startBlock) / BLOCKS_PER_WEEK;
 
         if (fromIndex < toIndex) {
-            uint blocksAtIndex = BLOCKS_PER_WEEK - ((_fromBlock - _startBlock) % BLOCKS_PER_WEEK);
+            uint blocksAtIndex = (BLOCKS_PER_WEEK - ((_fromBlock - _startBlock) % BLOCKS_PER_WEEK));
             (uint lockedFatePerBlock, uint unlockedFatePerBlock) = getFateAtIndex(fromIndex);
             lockedFatePerBlock = blocksAtIndex * lockedFatePerBlock;
             unlockedFatePerBlock = blocksAtIndex * unlockedFatePerBlock;
@@ -182,12 +183,11 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
                 unlockedFatePerBlock += unlockedFatePerBlock2 * BLOCKS_PER_WEEK;
             }
 
-            blocksAtIndex = (_toBlock - _startBlock) % BLOCKS_PER_WEEK;
+            blocksAtIndex = BLOCKS_PER_WEEK - ((_toBlock - _startBlock) % BLOCKS_PER_WEEK);
             (uint lockedFatePerBlock3, uint unlockedFatePerBlock3) = getFateAtIndex(toIndex);
-
             return (
-                lockedFatePerBlock + blocksAtIndex * lockedFatePerBlock3,
-                unlockedFatePerBlock + blocksAtIndex * unlockedFatePerBlock3
+                lockedFatePerBlock * blocksAtIndex + lockedFatePerBlock3,
+                unlockedFatePerBlock * blocksAtIndex + unlockedFatePerBlock3
             );
         } else {
 
