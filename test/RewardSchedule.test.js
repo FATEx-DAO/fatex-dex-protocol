@@ -39,6 +39,29 @@ describe.only("RewardSchedule", () => {
   })
 
   it("should work for basic query", async () => {
+
+    //_fromBlock = 13931200
+    //_toBlock = 14233600
+    //difference = BLOCKS_PER_WEEK = 302400
+    //(36.00e18(week 14) * (0.92e18/1e18) + 36.51e18(week 15) * (0.92e18/1e18)) / 302400
+    const fatePerBlocks = await getFatePerBlock(startBlock, startBlock + (BLOCKS_PER_WEEK * 13), startBlock + (BLOCKS_PER_WEEK * 14));
+    expect(fatePerBlocks[0].toString()).to.be.equal('220599206349206'); // lockedRewards
+    expect(fatePerBlocks[1].toString()).to.be.equal('19182539682539'); // unlockedRewards
+  })
+
+  it("should work for basic query if _fromBlock and _toBlock span the same week", async () => {
+
+    //_fromBlock = 13931200
+    //_toBlock = 14104000
+    //difference = BLOCKS_PER_WEEK = 172800
+    //36.00e18(week 14) * (0.92e18/1e18) / 172800 = 191666666666666
+    //36.00e18(week 14) * ((1e18 - 0.92e18)/1e18) / 172800 = 16666666666666
+    const fatePerBlocks = await getFatePerBlock(startBlock, startBlock + (BLOCKS_PER_WEEK * 13), startBlock + (BLOCKS_PER_WEEK * 13) + (30*60*24*4)); //4 days
+    expect(fatePerBlocks[0].toString()).to.be.equal('191666666666666'); // lockedRewards
+    expect(fatePerBlocks[1].toString()).to.be.equal('16666666666666'); // unlockedRewards
+  })
+
+  it("should work for basic query if start block and from block are the same", async () => {
     const fatePerBlocks = await getFatePerBlock(startBlock, startBlock, startBlock + (BLOCKS_PER_WEEK * 13));
     expect(fatePerBlocks[0].toString()).to.be.equal('8424908424908'); // lockedRewards
     expect(fatePerBlocks[1].toString()).to.be.equal('732600732600'); // unlockedRewards
