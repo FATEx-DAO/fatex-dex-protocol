@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-const blockNumber = 21036117
+const blockNumber = 21291342
 const epoch = 1
 
 const csvWriter = require('csv-writer').createObjectCsvWriter({
