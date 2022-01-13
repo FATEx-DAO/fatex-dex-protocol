@@ -100,7 +100,15 @@ describe("FateRewardControllerV3", () => {
         console.log(e)
       }
     })
-
+    describe("Deposit", async () => {
+      it("update userMembershipInfo", async () => {
+        await doSomeDeposists();
+        const userMembershipInfo = await this.fateRewardControllerV3.connect(this.dev)
+        .userMembershipInfo(0, this.dev.address)
+        const firstDepositBlock = userMembershipInfo.firstDepositBlock.toNumber();
+        expect(firstDepositBlock).to.above(startBlock);
+      })
+    })
     describe("MembershipReward & WithdrawFees", async () => {
       it("MembershipReward", async () => {
         // do some deposit actions
@@ -163,6 +171,12 @@ describe("FateRewardControllerV3", () => {
           this.dev.address
         )
         expect(afterDevPoints).to.above(beforeDevPoints)
+
+        //check if userMembershipInfo was updated
+        const userMembershipInfo = await this.fateRewardControllerV3.connect(this.dev)
+        .userMembershipInfo(0, this.dev.address)
+        const lastWithdrawBlock = userMembershipInfo.lastWithdrawBlock.toNumber();
+        expect(lastWithdrawBlock).to.above(startBlock);
       })
     })
 
@@ -229,6 +243,17 @@ describe("FateRewardControllerV3", () => {
           this.dev.address
         )
         expect(afterStatus).to.be.true
+      })
+    })
+
+    describe("pendingUnlockedFate", async () => {
+      it("Unlocked fate over time", async () => {
+        await doSomeDeposists();
+        await this.fateRewardControllerV3.connect(this.bob).pendingUnlockedFate(0, this.bob.address);
+        await advanceBlock();
+        await advanceBlock();
+        const bobsLockedRewardsAfter = await this.fateRewardControllerV3.connect(this.bob).pendingUnlockedFate(0, this.bob.address);
+        expect(bobsLockedRewardsAfter).to.be.equal(0);
       })
     })
 })
