@@ -152,6 +152,8 @@ describe("FateRewardControllerV3", () => {
         await this.fateRewardControllerV3.connect(this.dev).withdraw(
           0, getBigNumber(10)
         );
+        const UserMembershipInfo = await this.fateRewardControllerV3.userMembershipInfo(0, this.dev.address);
+        const firstWithdrawBlock = UserMembershipInfo.lastWithdrawBlock.toNumber();
         const beforeDevPoints = await this.fateRewardControllerV3.userPoints(
           0,
           this.dev.address
@@ -172,11 +174,16 @@ describe("FateRewardControllerV3", () => {
         )
         expect(afterDevPoints).to.above(beforeDevPoints)
 
+        //withdraw again
+        await this.fateRewardControllerV3.connect(this.dev).withdraw(
+          0, getBigNumber(1)
+        );
+
         //check if userMembershipInfo was updated
         const userMembershipInfo = await this.fateRewardControllerV3.connect(this.dev)
         .userMembershipInfo(0, this.dev.address)
         const lastWithdrawBlock = userMembershipInfo.lastWithdrawBlock.toNumber();
-        expect(lastWithdrawBlock).to.above(startBlock);
+        expect(lastWithdrawBlock).to.above(firstWithdrawBlock);
       })
     })
 
@@ -248,12 +255,29 @@ describe("FateRewardControllerV3", () => {
 
     describe("pendingUnlockedFate", async () => {
       it("Unlocked fate over time", async () => {
+        await this.fateRewardControllerV3.setLockedRewardsData(
+          [10,20], [getBigNumber(25, 16), getBigNumber(20, 16)]
+        );
         await doSomeDeposists();
-        await this.fateRewardControllerV3.connect(this.bob).pendingUnlockedFate(0, this.bob.address);
+        await this.fateRewardControllerV3.pendingUnlockedFate(0, this.bob.address);
         await advanceBlock();
+        //Should remain 0 due to the reward schedule
+        const pendingUnlockedFate = await this.fateRewardControllerV3.pendingUnlockedFate(0, this.bob.address);
+        expect(pendingUnlockedFate.toNumber()).to.be.equal(0);
+        
+      })
+    })
+    describe("pendingLockedFate", async () => {
+      it("Locked fate over time", async () => {
+        await this.fateRewardControllerV3.setLockedRewardsData(
+          [10,20], [getBigNumber(25, 16), getBigNumber(20, 16)]
+        );
+        await doSomeDeposists();
+        await this.fateRewardControllerV3.pendingLockedFate(0, this.bob.address);
         await advanceBlock();
-        const bobsLockedRewardsAfter = await this.fateRewardControllerV3.connect(this.bob).pendingUnlockedFate(0, this.bob.address);
-        expect(bobsLockedRewardsAfter).to.be.equal(0);
+        //Should remain 0 due to the reward schedule
+        const pendingLockedFate = await this.fateRewardControllerV3.pendingLockedFate(0, this.bob.address);
+        expect(pendingLockedFate.toNumber()).to.be.equal(0);
       })
     })
 })
