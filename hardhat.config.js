@@ -149,6 +149,7 @@ module.exports = {
       live: true,
       saveDeployments: true,
       tags: ["staging"],
+      timeout: 100000,
     },
     harmony_testnet: {
       url: "https://api.s0.b.hmny.io",
