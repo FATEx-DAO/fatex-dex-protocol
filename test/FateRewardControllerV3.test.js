@@ -10,6 +10,8 @@ const { BigNumber } = require('@ethersproject/bignumber')
 describe("FateRewardControllerV3", () => {
     const epoch_period_blocks = 30 * 60 * 24 * 7 * 8 // 8 weeks
     const startBlock = 10
+    const periodBlockAdjustment = 30 * 60 * 24 * 7 * 14 // 14 weeks
+    const adjustedStartBlock = startBlock - periodBlockAdjustment;
 
     const doDeposit = async (depositor, depositAmount) => {
       const beforeBalance = await this.lp.balanceOf(depositor.address)
@@ -72,7 +74,6 @@ describe("FateRewardControllerV3", () => {
           this.feeTo.address
         )
         await this.fateRewardControllerV3.deployed()
-  
         // add pool
         await this.fateRewardControllerV3.add(1, this.lp.address, true)
   
@@ -124,7 +125,7 @@ describe("FateRewardControllerV3", () => {
         expect(vaultUserPoints).to.be.equal(0)
       })
 
-      it("Withdraw", async () => {
+      it.only("Withdraw", async () => {
         await doSomeDeposists();
 
         const withdrawAmount = getBigNumber(1);
@@ -164,21 +165,31 @@ describe("FateRewardControllerV3", () => {
           this.dev.address
         )
         expect(beforeDevPoints).to.be.equal(afterDevPoints);
-
+        
+        await this.fateRewardControllerV3.setLPWithdrawData(
+          [10, 20],[getBigNumber(1,18), getBigNumber(98, 16)]
+        )
         // deposit again
-        await doDeposit(this.dev, getBigNumber(9))
-        await advanceBlock()
+        await doSomeDeposists()
+
         afterDevPoints = await this.fateRewardControllerV3.userPoints(
           0,
           this.dev.address
         )
         expect(afterDevPoints).to.above(beforeDevPoints)
+        const lpFeePercent = await this.fateRewardControllerV3.getLPWithdrawFeePercent(0, this.dev.address);
+        expect(lpFeePercent).to.be.equal(getBigNumber(1,18));
+        //const withdrawAmounts = getBigNumber(10).sub(getBigNumber(10).mul(lpFeePercent).div(1e18));
 
         //withdraw again
+        const devBalanceBeforeWithdraw = await this.lp.balanceOf(this.dev.address);
         await this.fateRewardControllerV3.connect(this.dev).withdraw(
-          0, getBigNumber(1)
+          0, getBigNumber(9)
         );
+        const expectedBalance = getBigNumber(9).sub((getBigNumber(9).mul(lpFeePercent)).div(getBigNumber(1,18)));
 
+        const devBalanceAfterWithdraw = await this.lp.balanceOf(this.dev.address);
+        expect(devBalanceAfterWithdraw.sub(devBalanceBeforeWithdraw)).to.equal(expectedBalance);
         //check if userMembershipInfo was updated
         const userMembershipInfo = await this.fateRewardControllerV3.connect(this.dev)
         .userMembershipInfo(0, this.dev.address)
