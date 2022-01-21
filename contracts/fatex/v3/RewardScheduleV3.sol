@@ -10,11 +10,11 @@ import "./IRewardScheduleV3.sol";
 contract RewardScheduleV3 is IRewardScheduleV3 {
     using SafeMathLocal for uint;
 
-    uint immutable public override epochStartBlock;
-    uint immutable public override epochEndBlock;
+    uint256 public override epochStartBlock;
+    uint256 immutable public override epochEndBlock;
     
-    uint constant public epochPeriods = 8 weeks; // 8 weeks for epoch 2
-    uint constant public override lockedPercent = 0.92e18;
+    uint256 constant public epochPeriods = 9 weeks; // 18 weeks for epoch 2
+    uint constant public override lockedPercent = 92;
 
     /// @notice This is the emission schedule for each block for a given week. These numbers represent how much FATE is
     ///         rewarded per block. Each index represents a week. The starting day/week, according to the Reward
@@ -98,10 +98,10 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
 
     // 30 blocks per minute, 60 minutes per hour, 24 hours per day, 7 days per week
     uint public constant BLOCKS_PER_WEEK = 30 * 60 * 24 * 7;
-
-    constructor(uint _epochStartBlock) public {
-        epochStartBlock = _epochStartBlock;
-        epochEndBlock = _epochStartBlock + epochPeriods;
+//    constructor(uint _epochStartBlock) public {
+    constructor() public {
+        epochStartBlock = block.number;
+        epochEndBlock = epochStartBlock + epochPeriods;
     }
 
     function rewardsNumberOfWeeks() external view returns (uint) {
@@ -119,8 +119,8 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
         if (index >= 13 && index < 21) {
             // vesting occurs at an 92/8 for the first 8 weeks
             return (
-                FATE_PER_BLOCK[index] * lockedPercent / 1e18,
-                FATE_PER_BLOCK[index] * (1e18 - lockedPercent) / 1e18
+                FATE_PER_BLOCK[index] * lockedPercent / 100,
+                FATE_PER_BLOCK[index] * (100 - lockedPercent) / 100
             );
         } else {
             return (0, 0);

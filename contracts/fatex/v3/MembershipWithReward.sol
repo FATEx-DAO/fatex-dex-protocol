@@ -10,8 +10,9 @@ import "../../libraries/RankedArray.sol";
 
 import "./IRewardScheduleV3.sol";
 import "./IFateRewardControllerV3.sol";
+import "./IMembershipWithReward.sol";
 
-abstract contract MembershipWithReward is Ownable {
+abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     using SafeMath for uint256;
 
     uint256 constant public POINTS_PER_BLOCK = 0.08e18;
@@ -27,7 +28,7 @@ abstract contract MembershipWithReward is Ownable {
     mapping(address => bool) public isExcludedAddress;
 
     // pid => address => membershipInfo
-    mapping(uint256 => mapping (address => MembershipInfo)) public userMembershipInfo;
+    mapping(uint256 => mapping (address => MembershipInfo)) public override userMembershipInfo;
 
     // pid ==> address ==> tracked points
     mapping(uint256 => mapping (address => uint256)) public trackedPoints;
@@ -61,28 +62,28 @@ abstract contract MembershipWithReward is Ownable {
         1555200
     ];
     uint256[] public lockedRewardsFeePercents = [
-        1e18,
-        0.98e18,
-        0.97e18,
-        0.9e18,
-        0.8e18,
-        0.88e18,
-        0.8e18,
-        0.72e18,
-        0.63e18,
-        0.58e18,
-        0.5e18,
-        0.45e18,
-        0.4e18,
-        0.35e18,
-        0.3e18,
-        0.25e18,
-        0.2e18,
-        0.15e18,
-        0.08e18,
-        0.036e18,
-        0.018e18,
-        0.008e18
+        10000,
+        9800,
+        9700,
+        9000,
+        8800,
+        8800,
+        8000,
+        7200,
+        6300,
+        5800,
+        5000,
+        4500,
+        4000,
+        3500,
+        3000,
+        2500,
+        2000,
+        1500,
+        800,
+        360,
+        180,
+        80
     ];
 
     /// @dev data for LPWithdrawFee
@@ -111,28 +112,29 @@ abstract contract MembershipWithReward is Ownable {
         1555200
     ];
     uint256[] public lpWithdrawFeePercent = [
-        0.88e18,
-        0.72e18,
-        0.36e18,
-        0.18e18,
-        0.0888e18,
-        0.036e18,
-        0.036e18,
-        0.036e18,
-        0.036e18,
-        0.036e18,
-        0.036e18,
-        0.018e18,
-        0.018e18,
-        0.018e18,
-        0.018e18,
-        0.018e18,
-        0.018e18,
-        0.018e18,
-        0e18,
-        0e18,
-        0e18,
-        0e18
+        10000,
+        8800,
+        7200,
+        3600,
+        1800,
+        888,
+        888,
+        888,
+        360,
+        360,
+        360,
+        360,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        88,
+        88,
+        18,
+        8
     ];
 
     event LockedRewardsDataSet(uint256[] _lockedRewardsPeriodBlocks, uint256[] _lockedRewardsFeePercents);
@@ -205,6 +207,11 @@ abstract contract MembershipWithReward is Ownable {
             revert("_getPercentFromBlocks: should have returned value");
         }
     }
+
+    function getBlockNumber() external view returns (uint256) {
+        return block.number;
+    }
+
 
     function _getBlocksOfPeriod(
         uint256 _pid,

@@ -6,7 +6,7 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-
+import "../../uniswap-v2/interfaces/IUniswapV2Router01.sol";
 import "../MockLpToken.sol";
 import "../IMockLpTokenFactory.sol";
 import "../IFateRewardController.sol";
@@ -21,8 +21,14 @@ import "./IFateRewardControllerV3.sol";
 // Have fun reading it. Hopefully it's bug-free. God bless.
 contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward {
     using SafeERC20 for IERC20;
-
+    address private constant UNISWAP_V2_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
+    address private constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+    uint256 private constant BASIS_POINTS_DIVISOR = 10000;
+    uint256 private constant MAX_FEE_BASIS_POINTS = 500; // 5%
     address public fateFeeTo;
+
+    // feeReserves tracks the amount of fees per token
+    mapping (address => uint256) public feeReserves;
 
     // Info of each user.
     struct UserInfoV3 {
@@ -102,7 +108,6 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         mockLpTokenFactory = _mockLpTokenFactory;
         startBlock = _oldControllers[0].startBlock();
         fateFeeTo = _fateFeeTo;
-
         // inset old controller's pooInfo
         for (uint i = 0; i < _oldControllers[0].poolLength(); i++) {
             (IERC20 lpToken, uint256 allocPoint, ,) = _oldControllers[0].poolInfo(i);
@@ -147,6 +152,15 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         bool _withUpdate
     ) public onlyOwner {
         _add(_allocPoint, _lpToken, _withUpdate);
+    }
+
+    function getPoolInfoId(address _lpToken) external view returns (uint256) {
+        for(uint i = 0; i < poolInfo.length; i++) {
+            if(address(poolInfo[i].lpToken) == _lpToken) {
+                return i + 1;
+            }
+        }
+        return 0;
     }
 
     function _add(
@@ -204,6 +218,51 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         for (uint i = 0; i < _pids.length; i++) {
             _set(_pids[i], _allocPoints[i], i == _pids.length - 1);
         }
+    }
+
+    function swap(
+        address _tokenIn,
+        address _tokenOut,
+        uint _amountIn,
+        uint _amountOutMin,
+        address _to
+    ) external {
+        IERC20(_tokenIn).transferFrom(msg.sender, address(this), _amountIn);
+        IERC20(_tokenIn).approve(UNISWAP_V2_ROUTER, _amountIn);
+
+        address[] memory path;
+        if (_tokenIn == WETH || _tokenOut == WETH) {
+            path = new address[](2);
+            path[0] = _tokenIn;
+            path[1] = _tokenOut;
+        } else {
+            path = new address[](3);
+            path[0] = _tokenIn;
+            path[1] = WETH;
+            path[2] = _tokenOut;
+        }
+
+        IUniswapV2Router01(UNISWAP_V2_ROUTER).swapExactTokensForTokens(
+            _amountIn,
+            _amountOutMin,
+            path,
+            _to,
+            block.timestamp
+        );
+    }
+
+
+    function _collectSwapFees(address _token, uint256 _amount, uint256 _feeBasisPoints) private returns (uint256) {
+        uint256 afterFeeAmount = _amount.mul(BASIS_POINTS_DIVISOR.sub(_feeBasisPoints)).div(BASIS_POINTS_DIVISOR);
+        uint256 feeAmount = _amount.sub(afterFeeAmount);
+        feeReserves[_token] = feeReserves[_token].add(feeAmount);
+//        emit CollectSwapFees(_token, tokenToUsdMin(_token, feeAmount), feeAmount);
+        return afterFeeAmount;
+    }
+
+    function getFeeReserves(address _token) external view returns (uint256)
+    {
+        return feeReserves[_token];
     }
 
     // Update the given pool's FATE allocation point. Can only be called by the owner.
@@ -288,7 +347,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         }
 
         // transfer all of the tokens from the previous controller to here
-        token.safeTransferFrom(msg.sender, address(this), token.balanceOf(msg.sender));
+        token.transferFrom(msg.sender, address(this), token.balanceOf(msg.sender));
 
         poolInfo.push(
             PoolInfoV3({
@@ -321,7 +380,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     function _getUserInfo(
         uint _pid,
         address _user
-    ) internal view returns (IFateRewardControllerV3.UserInfo memory) {
+    ) public view returns (IFateRewardControllerV3.UserInfo memory) {
         UserInfoV3 memory user = _userInfo[_pid][_user];
         return IFateRewardControllerV3.UserInfo(user.amount, user.rewardDebt, user.lockedRewardDebt);
     }
@@ -501,7 +560,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         if (user.amount > 0) {
             _claimRewards(_pid, msg.sender, user, pool);
         }
-        pool.lpToken.safeTransferFrom(
+        pool.lpToken.transferFrom(
             address(msg.sender),
             address(this),
             _amount
@@ -558,10 +617,11 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         // send Fee to FeeTokenConverterToFate
         if (_amount > withdrawAmount) {
             uint256 feeAmount = _amount.sub(withdrawAmount);
-            pool.lpToken.safeTransfer(fateFeeTo, feeAmount);
+            feeReserves[address(pool.lpToken)] = feeReserves[address(pool.lpToken)].add(feeAmount);
+            pool.lpToken.transfer(fateFeeTo, feeAmount);
         }
 
-        pool.lpToken.safeTransfer(msg.sender, withdrawAmount);
+        pool.lpToken.transfer(msg.sender, withdrawAmount);
         emit Withdraw(msg.sender, _pid, withdrawAmount);
     }
 
@@ -572,6 +632,19 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
                 withdraw(i, amount);
             }
         }
+    }
+
+    function reduceWithdrawalForFeesAndUpdateMembershipInfo(
+        uint256 _pid,
+        address _account,
+        uint256 _amount,
+        bool _withdrawAll
+    ) external view returns (uint256) {
+        MembershipInfo memory membership = userMembershipInfo[_pid][_account];
+        uint256 firstDepositBlock = membership.firstDepositBlock;
+
+        // minus LPWithdrawFee = amount * (1e18 - lpFee) / 1e18 = amount - amount * lpFee / 1e18
+        return _amount.sub(_amount.mul(getLPWithdrawFeePercent(_pid, _account)).div(10000));
     }
 
     // Reduce LPWithdrawFee and record last withdraw block
@@ -592,13 +665,14 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             firstDepositBlock = 0;
         }
 
+        uint256 lpWithdrawFee = _amount.sub(_amount.mul(getLPWithdrawFeePercent(_pid, _account)).div(10000));
         userMembershipInfo[_pid][_account] = MembershipInfo({
             firstDepositBlock: firstDepositBlock,
             lastWithdrawBlock: block.number
         });
 
         // minus LPWithdrawFee = amount * (1e18 - lpFee) / 1e18 = amount - amount * lpFee / 1e18
-        return _amount.sub(_amount.mul(getLPWithdrawFeePercent(_pid, _account)).div(1e18));
+        return lpWithdrawFee;
     }
 
     function _claimRewards(
@@ -653,7 +727,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     function emergencyWithdraw(uint256 _pid) public {
         PoolInfoV3 storage pool = poolInfo[_pid];
         IFateRewardControllerV3.UserInfo memory user = _getUserInfo(_pid, msg.sender);
-        pool.lpToken.safeTransfer(address(msg.sender), user.amount);
+        pool.lpToken.transfer(address(msg.sender), user.amount);
         emit EmergencyWithdraw(msg.sender, _pid, user.amount);
 
         _userInfo[_pid][msg.sender] = UserInfoV3({

@@ -32,7 +32,8 @@ module.exports = {
   },
   defaultNetwork: "hardhat",
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    // apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: process.env.BSCSCAN_API_KEY
   },
   gasReporter: {
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
@@ -105,6 +106,23 @@ module.exports = {
       saveDeployments: true,
       tags: ["staging"],
     },
+    testnet: {
+      url: `${process.env.BSC_TESTNET_URL}`,
+      chainId: 97,
+      gas: 8500000, // Gas sent with each transaction (default: ~6700000)
+      gasPrice: 20000000000, // 20 gwei (in wei) (default: 100 gwei)
+      value: 20000000000,
+      accounts: [`${process.env.MNEMONIC}`]
+    },
+    harmony_test: {
+      url: "https://api.s0.b.hmny.io",
+      chainId: 1666700000,
+      gas: 8500000, // Gas sent with each transaction (default: ~6700000)
+      gasPrice: 20000000000, // 20 gwei (in wei) (default: 100 gwei)
+      value: 20000000000,
+      accounts: [`${process.env.MNEMONIC}`]
+    },
+
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
       accounts,
