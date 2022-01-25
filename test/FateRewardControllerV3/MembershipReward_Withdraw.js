@@ -48,7 +48,7 @@ describe('FateRewardControllerV3.MembershipReward and Withdraw', () => {
             await fateToken.connect(this.alice).transfer(this.bob.address, expandDecimals(100))
             await fateToken.connect(this.alice).transfer(this.dev.address, expandDecimals(100))
             lpToken = await deployContract('ERC20Mock', ['lp', 'LP', expandDecimals(1000)])
-            rewardSchedule = await deployContract('RewardScheduleV3', [startBlock])
+            rewardSchedule = await deployContract('RewardScheduleV3', [])
             await advanceBlockTo(startBlock)
             fateRewardControllerV2 = await deployContract('FateRewardController',
                 [
@@ -109,6 +109,15 @@ describe('FateRewardControllerV3.MembershipReward and Withdraw', () => {
             expect(vaultUserPoints).to.be.equal(0)
         })
 
+        // TODO repeat these tests here that assert the two different kinds of fee percentages being applied properly
+        //  for different deposit times:
+        //  - lockedRewardsFeePercents[0] == 10000 && lpWithdrawFeePercent[0] == 10000
+        //  - lockedRewardsFeePercents[1] == 9800 && lpWithdrawFeePercent[1] == 8800
+        //  - lockedRewardsFeePercents[length - 2] == 180 && lpWithdrawFeePercent[length - 2] == 18
+        //  - lockedRewardsFeePercents[length - 1] == 80 && lpWithdrawFeePercent[length - 1] == 8
+        //  Make sure the tests are dynamic. Don't hardcode lockedRewardsFeePercents[0] as `10000`. Instead, call the
+        //  contract fateRewardControllerV3.lockedRewardsFeePercents(0) and initialize it that way in case the fees
+        //  change.
         it('Withdraw', async () => {
             await doSomeDeposists()
 
@@ -121,7 +130,7 @@ describe('FateRewardControllerV3.MembershipReward and Withdraw', () => {
             const receivedAmount = bobAfterLPAmount.sub(bobBeforeLPAmount)
 
             // check received amount after withdraw: withdrawAmount * (100 - lpWithdrawFee)
-            expect(receivedAmount).to.be.equal(withdrawAmount.mul(100 - 88).div(100))
+            expect(receivedAmount).to.be.eq(withdrawAmount.mul(100 - 88).div(100))
 
             // check fee is sent to fateFeeTo
             expect(await fateRewardControllerV3.fateFeeTo()).to.be.equal(this.feeTo.address)

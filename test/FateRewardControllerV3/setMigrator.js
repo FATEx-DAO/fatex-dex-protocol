@@ -32,7 +32,7 @@ describe('FateRewardControllerV3.setMigrator', () => {
             await fateToken.connect(this.alice).transfer(this.bob.address, expandDecimals(100))
             await fateToken.connect(this.alice).transfer(this.dev.address, expandDecimals(100))
             lpToken = await deployContract('ERC20Mock', ['lp', 'LP', expandDecimals(1000)])
-            rewardSchedule = await deployContract('RewardScheduleV3', [startBlock])
+            rewardSchedule = await deployContract('RewardScheduleV3', [])
             await advanceBlockTo(startBlock)
             fateRewardControllerV2 = await deployContract('FateRewardController',
                 [

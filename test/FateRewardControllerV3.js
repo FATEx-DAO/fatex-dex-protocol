@@ -50,7 +50,7 @@ describe('FateRewardControllerV3', () => {
             await fateToken.connect(this.alice).transfer(this.bob.address, expandDecimals(100))
             await fateToken.connect(this.alice).transfer(this.dev.address, expandDecimals(100))
             lpToken = await deployContract('ERC20Mock', ['lp', 'LP', expandDecimals(1000)])
-            rewardSchedule = await deployContract('RewardScheduleV3', [startBlock])
+            rewardSchedule = await deployContract('RewardScheduleV3', [])
             await advanceBlockTo(startBlock)
             fateRewardControllerV2 = await deployContract('FateRewardController',
                 [
@@ -123,7 +123,7 @@ describe('FateRewardControllerV3', () => {
             const receivedAmount = bobAfterLPAmount.sub(bobBeforeLPAmount)
 
             // check received amount after withdraw: withdrawAmount * (100 - lpWithdrawFee)
-            expect(receivedAmount).to.be.equal(withdrawAmount.mul(100 - 88).div(100))
+            expect(receivedAmount).to.be.eq(withdrawAmount.mul(100 - 88).div(100))
 
             // check fee is sent to fateFeeTo
             expect(await fateRewardControllerV3.fateFeeTo()).to.be.equal(this.feeTo.address)

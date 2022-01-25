@@ -112,7 +112,7 @@ module.exports = {
       gas: 8500000, // Gas sent with each transaction (default: ~6700000)
       gasPrice: 20000000000, // 20 gwei (in wei) (default: 100 gwei)
       value: 20000000000,
-      accounts: [`${process.env.MNEMONIC}`]
+      accounts
     },
     harmony_test: {
       url: "https://api.s0.b.hmny.io",
@@ -120,9 +120,8 @@ module.exports = {
       gas: 8500000, // Gas sent with each transaction (default: ~6700000)
       gasPrice: 20000000000, // 20 gwei (in wei) (default: 100 gwei)
       value: 20000000000,
-      accounts: [`${process.env.MNEMONIC}`]
+      accounts
     },
-
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
       accounts,
