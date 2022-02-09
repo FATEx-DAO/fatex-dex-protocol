@@ -1,12 +1,8 @@
-const { ethers, network } = require('hardhat')
+const { ethers } = require('hardhat')
 const { expect } = require('chai')
-const { solidity } = require("ethereum-waffle")
 const { deployContract } = require("./shared/fixtures")
-const { expandDecimals, reportGasUsed, gasUsed } = require("./shared/utilities")
-const { toChainlinkPrice } = require("./shared/chainlink")
-const { toUsd, toNormalizedPrice } = require("./shared/units")
+const { expandDecimals } = require("./shared/utilities")
 const { advanceBlock, advanceBlockTo } = require('./utilities/time')
-const { BigNumber } = require('@ethersproject/bignumber')
 
 // yarn test test/FateRewardControllerV3.test.js
 describe('FateRewardControllerV3', () => {

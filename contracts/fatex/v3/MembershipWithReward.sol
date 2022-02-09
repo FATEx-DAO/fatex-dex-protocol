@@ -112,7 +112,6 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
         1555200
     ];
     uint256[] public lpWithdrawFeePercent = [
-        10000,
         8800,
         7200,
         3600,

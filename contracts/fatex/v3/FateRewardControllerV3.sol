@@ -638,11 +638,8 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         uint256 _pid,
         address _account,
         uint256 _amount,
-        bool _withdrawAll
+        bool
     ) external view returns (uint256) {
-        MembershipInfo memory membership = userMembershipInfo[_pid][_account];
-        uint256 firstDepositBlock = membership.firstDepositBlock;
-
         // minus LPWithdrawFee = amount * (1e18 - lpFee) / 1e18 = amount - amount * lpFee / 1e18
         return _amount.sub(_amount.mul(getLPWithdrawFeePercent(_pid, _account)).div(10000));
     }

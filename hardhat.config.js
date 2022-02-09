@@ -165,6 +165,7 @@ module.exports = {
     harmony: {
       // url: "https://api.harmony.one",
       url: "https://a.api.s0.t.hmny.io",
+      hardfork: "london",
       accounts,
       chainId: 1666600000,
       live: true,

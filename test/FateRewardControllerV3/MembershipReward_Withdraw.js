@@ -1,9 +1,10 @@
-const { ethers, network } = require('hardhat')
+const { ethers } = require('hardhat')
 const { expect, use} = require('chai')
 const { solidity } = require("ethereum-waffle")
 const { deployContract } = require("../shared/fixtures")
-const { expandDecimals, reportGasUsed, gasUsed } = require("../shared/utilities")
+const { expandDecimals } = require("../shared/utilities")
 const { advanceBlock, advanceBlockTo } = require('../utilities/time')
+const { BigNumber } = require('ethers')
 
 use(solidity)
 
@@ -182,6 +183,33 @@ describe('FateRewardControllerV3.MembershipReward and Withdraw', () => {
                 this.dev.address
             )
             expect(devAfterInfo).to.be.equal(expandDecimals(0))
+        })
+
+        it('TrackedPoints', async () => {
+            let trackedPoints = await fateRewardControllerV3.trackedPoints(0, this.bob.address)
+            let expectTrackedPoints = 0;
+            expect(trackedPoints).to.be.eq(expectTrackedPoints)
+
+            // first withdrawAll after 5 blocks
+            await doSomeDeposists()
+            await fateRewardControllerV3.connect(this.bob).withdrawAll()
+            trackedPoints = await fateRewardControllerV3.trackedPoints(0, this.bob.address)
+            expectTrackedPoints = BigNumber.from(expectTrackedPoints).add(BigNumber.from(0.08e18.toString()).mul(5))
+            expect(trackedPoints).to.be.eq(expectTrackedPoints)
+
+            // second withdrawAll after 5 blocks
+            await doSomeDeposists()
+            await fateRewardControllerV3.connect(this.bob).withdrawAll()
+            trackedPoints = await fateRewardControllerV3.trackedPoints(0, this.bob.address)
+            expectTrackedPoints = BigNumber.from(expectTrackedPoints).add(BigNumber.from(0.08e18.toString()).mul(5))
+            expect(trackedPoints).to.be.eq(expectTrackedPoints)
+
+            // third withdrawAll after 5 blocks
+            await doSomeDeposists()
+            await fateRewardControllerV3.connect(this.bob).withdrawAll()
+            trackedPoints = await fateRewardControllerV3.trackedPoints(0, this.bob.address)
+            expectTrackedPoints = BigNumber.from(expectTrackedPoints).add(BigNumber.from(0.08e18.toString()).mul(5))
+            expect(trackedPoints).to.be.eq(expectTrackedPoints)
         })
     })
 })
