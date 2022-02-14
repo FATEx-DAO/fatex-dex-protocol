@@ -1,14 +1,13 @@
-const { ethers, network } = require('hardhat')
+const { ethers } = require('hardhat')
 const { expect, use} = require('chai')
 const { solidity } = require("ethereum-waffle")
 const { deployContract } = require("../shared/fixtures")
-const { expandDecimals, reportGasUsed, gasUsed } = require("../shared/utilities")
-const { advanceBlock, advanceBlockTo } = require('../utilities/time')
+const { expandDecimals } = require("../shared/utilities")
+const { advanceBlockTo } = require('../utilities/time')
 
 use(solidity)
 
 describe('FateRewardControllerV3.excluded Addresses', () => {
-    const epoch_period_blocks = 30 * 60 * 24 * 7 * 8 // 8 weeks
     const startBlock = 10
     let lpToken;
     let fateToken;

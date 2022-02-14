@@ -9,7 +9,6 @@ const { BigNumber } = require('ethers')
 use(solidity)
 
 describe('FateRewardControllerV3.Fate fees', () => {
-    const epoch_period_blocks = 30 * 60 * 24 * 7 * 8 // 8 weeks
     const startBlock = 10
     let lpToken;
     let fateToken;

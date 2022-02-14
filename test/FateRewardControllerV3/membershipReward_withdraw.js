@@ -9,7 +9,6 @@ const { BigNumber } = require('ethers')
 use(solidity)
 
 describe('FateRewardControllerV3.MembershipReward and Withdraw', () => {
-    const epoch_period_blocks = 30 * 60 * 24 * 7 * 8 // 8 weeks
     const points_per_block = BigNumber.from(0.08e18.toString())
     const startBlock = 10
     let lpToken;
