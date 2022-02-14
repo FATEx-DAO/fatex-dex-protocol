@@ -689,7 +689,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             .sub(user.lockedRewardDebt);
 
         // implement fee reduction for pendingLocked
-        pendingLocked = pendingLocked.sub(pendingLocked.mul(getLockedRewardsFeePercent(_pid, _user)).div(1e18));
+        pendingLocked = pendingLocked.sub(pendingLocked.mul(getLockedRewardsFeePercent(_pid, _user)).div(10000));
 
         // recorded locked rewards
         userLockedRewards[_pid][_user] = userLockedRewards[_pid][_user].add(pendingLocked);

@@ -42,7 +42,7 @@ module.exports = {
     excludeContracts: ["contracts/mocks/", "contracts/libraries/"],
   },
   mocha: {
-    timeout: 20000,
+    timeout: 10000000,
   },
   namedAccounts: {
     deployer: {
@@ -165,7 +165,6 @@ module.exports = {
     harmony: {
       // url: "https://api.harmony.one",
       url: "https://a.api.s0.t.hmny.io",
-      hardfork: "london",
       accounts,
       chainId: 1666600000,
       live: true,

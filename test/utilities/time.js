@@ -12,6 +12,12 @@ async function advanceBlockTo(blockNumber) {
   }
 }
 
+async function advanceBlockFor(blockNumber) {
+  for (let i = 0; i < blockNumber; i++) {
+    await advanceBlock()
+  }
+}
+
 async function increase(value) {
   await ethers.provider.send("evm_increaseTime", [value.toNumber()])
   await advanceBlock()
@@ -46,6 +52,7 @@ const duration = {
 module.exports = {
   advanceBlock,
   advanceBlockTo,
+  advanceBlockFor,
   duration,
   latest,
   increase,
