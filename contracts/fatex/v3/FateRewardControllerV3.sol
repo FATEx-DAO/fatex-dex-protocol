@@ -106,9 +106,9 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         vault = _vault;
         oldControllers = _oldControllers;
         mockLpTokenFactory = _mockLpTokenFactory;
-        startBlock = _oldControllers[0].startBlock();
+        startBlock = block.number;
         fateFeeTo = _fateFeeTo;
-        // inset old controller's pooInfo
+        // reset old controller's pooInfo
         for (uint i = 0; i < _oldControllers[0].poolLength(); i++) {
             (IERC20 lpToken, uint256 allocPoint, ,) = _oldControllers[0].poolInfo(i);
             poolInfo.push(
