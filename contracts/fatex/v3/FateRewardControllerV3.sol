@@ -576,14 +576,11 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
 
         // record deposit block
         MembershipInfo memory membership = userMembershipInfo[_pid][msg.sender];
-        if (
-            block.number <= emissionSchedule.epochEndBlock() &&
-            membership.firstDepositBlock == 0 // not recorded (or deposited) yet
-        ) {
+        if (membership.firstDepositBlock == 0) {
+            // The user has not recorded a deposit yet;
             userMembershipInfo[_pid][msg.sender] = MembershipInfo({
                 firstDepositBlock: block.number,
-                lastWithdrawBlock:
-                    membership.lastWithdrawBlock > 0 ? membership.lastWithdrawBlock : block.number
+                lastWithdrawBlock: block.number
             });
         }
 
@@ -637,14 +634,10 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     function reduceWithdrawalForFeesAndUpdateMembershipInfo(
         uint256 _pid,
         address _account,
-        uint256 _amount,
-        bool _withdrawAll
+        uint256 _amount
     ) external view returns (uint256) {
-        MembershipInfo memory membership = userMembershipInfo[_pid][_account];
-        uint256 firstDepositBlock = membership.firstDepositBlock;
-
-        // minus LPWithdrawFee = amount * (1e18 - lpFee) / 1e18 = amount - amount * lpFee / 1e18
-        return _amount.sub(_amount.mul(getLPWithdrawFeePercent(_pid, _account)).div(10000));
+        uint feeAmount = _amount.mul(getLPWithdrawFeePercent(_pid, _account)).div(10000);
+        return _amount.sub(feeAmount);
     }
 
     // Reduce LPWithdrawFee and record last withdraw block
@@ -654,22 +647,18 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         uint256 _amount,
         bool _withdrawAll
     ) internal returns (uint256) {
-        MembershipInfo memory membership = userMembershipInfo[_pid][_account];
-        uint256 firstDepositBlock = membership.firstDepositBlock;
-
         if (_withdrawAll) {
             // record points earned and do not earn any more
             trackedPoints[_pid][_account] = trackedPoints[_pid][_account]
                 .add(_getBlocksOfPeriod(_pid, _account, true).mul(POINTS_PER_BLOCK));
-
-            firstDepositBlock = 0;
         }
 
         uint256 lpWithdrawFee = _amount.sub(_amount.mul(getLPWithdrawFeePercent(_pid, _account)).div(10000));
-        userMembershipInfo[_pid][_account] = MembershipInfo({
-            firstDepositBlock: firstDepositBlock,
-            lastWithdrawBlock: block.number
-        });
+        userMembershipInfo[_pid][_account].lastWithdrawBlock = block.number;
+        if (_withdrawAll) {
+            // reset the deposit block
+            userMembershipInfo[_pid][_account].firstDepositBlock = 0;
+        }
 
         // minus LPWithdrawFee = amount * (1e18 - lpFee) / 1e18 = amount - amount * lpFee / 1e18
         return lpWithdrawFee;

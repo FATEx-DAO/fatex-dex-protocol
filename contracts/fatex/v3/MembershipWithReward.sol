@@ -218,14 +218,13 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
         address _user,
         bool _isDepositPeriod
     ) internal view returns (uint256) {
-        uint256 epochEndBlock = emissionSchedule.epochEndBlock();
-        uint256 endBlock = block.number > epochEndBlock ? epochEndBlock : block.number;
+        uint256 endBlock = block.number;
         uint256 startBlock = _isDepositPeriod ?
             userMembershipInfo[_pid][_user].firstDepositBlock : userMembershipInfo[_pid][_user].lastWithdrawBlock;
 
         uint256 blocks = 0;
         if (startBlock != 0 && endBlock >= startBlock) {
-            blocks = endBlock - startBlock ;
+            blocks = endBlock - startBlock;
         }
         return blocks;
     }
@@ -237,10 +236,7 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
         uint256 _pid,
         address _caller
     ) public view returns (uint256) {
-        if (
-            isExcludedAddress[_caller] ||
-            block.number > emissionSchedule.epochEndBlock()
-        ) {
+        if (isExcludedAddress[_caller]) {
             return 0;
         } else {
             return _getPercentFromBlocks(
@@ -263,10 +259,7 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
         uint256 _pid,
         address _caller
     ) public view returns (uint256) {
-        if (
-            isExcludedAddress[_caller] ||
-            block.number > emissionSchedule.epochEndBlock()
-        ) {
+        if (isExcludedAddress[_caller]) {
             return 0;
         } else {
             return _getPercentFromBlocks(
