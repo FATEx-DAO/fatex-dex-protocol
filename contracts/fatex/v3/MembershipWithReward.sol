@@ -234,15 +234,15 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     /// this fee does not work for excluded address and after epoch is ended
     function getLockedRewardsFeePercent(
         uint256 _pid,
-        address _caller
+        address _user
     ) public view returns (uint256) {
-        if (isExcludedAddress[_caller]) {
+        if (isExcludedAddress[_user]) {
             return 0;
         } else {
             return _getPercentFromBlocks(
                 _getBlocksOfPeriod(
                     _pid,
-                    _caller,
+                    _user,
                     true
                 ),
                 lockedRewardsPeriodBlocks,
@@ -257,15 +257,15 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     /// this fee does not work for excluded address and after epoch is ended
     function getLPWithdrawFeePercent(
         uint256 _pid,
-        address _caller
+        address _user
     ) public view returns (uint256) {
-        if (isExcludedAddress[_caller]) {
+        if (isExcludedAddress[_user]) {
             return 0;
         } else {
             return _getPercentFromBlocks(
                 _getBlocksOfPeriod(
                     _pid,
-                    _caller,
+                    _user,
                     false
                 ),
                 lpWithdrawPeriodBlocks,
