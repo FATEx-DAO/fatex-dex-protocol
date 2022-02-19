@@ -12,11 +12,11 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
 
     uint256 constant public epochPeriods = 9 weeks; // 18 weeks for epoch 2
 
-    /// @notice This is the emission schedule for each block for a given week. These numbers represent how much FATE is
-    ///         rewarded per block. Each index represents a week. The starting day/week, according to the Reward
+    /// @notice This is the emission schedule for each second for a given week. These numbers represent how much FATE is
+    ///         rewarded per second. Each index represents a week. The starting day/week, according to the Reward
     ///         Controller was 2021-08-26T19:43:45.000Z (UTC time). Meaning, week 2 started on 2021-09-02T19:43:45.000Z
     ///         (UTC time).
-    uint[72] public FATE_PER_BLOCK = [
+    uint[72] public FATE_PER_SECOND = [
         // epoch 1 (week1 ~ week13) is ended
         0.00e18,    // week 1
         0.00e18,    // week 2
@@ -92,14 +92,14 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
         0.00e18     // week 72
     ];
 
-    // 30 blocks per minute, 60 minutes per hour, 24 hours per day, 7 days per week
-    uint public constant BLOCKS_PER_WEEK = 30 * 60 * 24 * 7;
+    // 60 seconds per minute, 60 minutes per hour, 24 hours per day, 7 days per week
+    uint public constant SECONDS_PER_WEEK = 60 * 60 * 24 * 7;
 
     constructor() public {
     }
 
     function rewardsNumberOfWeeks() external view returns (uint) {
-        return FATE_PER_BLOCK.length;
+        return FATE_PER_SECOND.length;
     }
 
     function lockedPercent(uint index) public pure override returns (uint) {
@@ -111,7 +111,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     }
 
     /**
-     * @param index The week at which the amount of FATE per block should be rewarded. Index starts at 0, meaning index
+     * @param index The week at which the amount of FATE per second should be rewarded. Index starts at 0, meaning index
      *              1 is actually week 2. Index 12 is week 13.
      */
     function getFateAtIndex(uint index)
@@ -121,8 +121,8 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
         if (index >= 0 && index < 8) {
             // vesting occurs at an 92/8 for the first 8 weeks
             return (
-                FATE_PER_BLOCK[index] * lockedPercent(index) / 100,
-                FATE_PER_BLOCK[index] * (100 - lockedPercent(index)) / 100
+                FATE_PER_SECOND[index] * lockedPercent(index) / 100,
+                FATE_PER_SECOND[index] * (100 - lockedPercent(index)) / 100
             );
         } else {
             return (0, 0);
@@ -130,74 +130,74 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     }
 
     function calculateCurrentIndex(
-        uint _startBlock
+        uint _startTimestamp
     ) public override view returns (uint) {
-        return (block.number - _startBlock) / BLOCKS_PER_WEEK;
+        return (block.timestamp - _startTimestamp) / SECONDS_PER_WEEK;
     }
 
-    /// @notice returns the average amount of FATE earned per block over any block period. If spanned over multiple
-    /// weeks, a weighted average is calculated. Both _fromBlock and _toBlock are inclusive
-    function getFatePerBlock(
-        uint _startBlock,
-        uint _fromBlock,
-        uint _toBlock
+    /// @notice returns the average amount of FATE earned per second over any period. If spanned over multiple
+    /// weeks, a weighted average is calculated. Both _fromTimestamp and _toTimestamp are inclusive
+    function getFatePerSecond(
+        uint _startTimestamp,
+        uint _fromTimestamp,
+        uint _toTimestamp
     )
     external
     override
     view
     returns (uint, uint) {
 
-        if (_startBlock > _toBlock || _fromBlock == _toBlock) {
+        if (_startTimestamp > _toTimestamp || _fromTimestamp == _toTimestamp) {
             return (0, 0);
         }
-        if (_fromBlock < _startBlock) {
-            _fromBlock = _startBlock;
+        if (_fromTimestamp < _startTimestamp) {
+            _fromTimestamp = _startTimestamp;
         }
 
         require(
-            _fromBlock <= _toBlock,
-            "RewardScheduleV3::getFatePerBlock: INVALID_RANGE"
+            _fromTimestamp <= _toTimestamp,
+            "RewardScheduleV3::getFatePerSecond: INVALID_RANGE"
         );
 
-        uint endBlockExclusive = _startBlock + (FATE_PER_BLOCK.length * BLOCKS_PER_WEEK);
+        uint endTimestampExclusive = _startTimestamp + (FATE_PER_SECOND.length * SECONDS_PER_WEEK);
 
-        if (_fromBlock >= endBlockExclusive) {
+        if (_fromTimestamp >= endTimestampExclusive) {
             return (0, 0);
         }
 
-        if (_toBlock >= endBlockExclusive) {
-            _toBlock = endBlockExclusive - 1;
+        if (_toTimestamp >= endTimestampExclusive) {
+            _toTimestamp = endTimestampExclusive - 1;
         }
 
-        uint fromIndex = (_fromBlock - _startBlock) / BLOCKS_PER_WEEK;
-        uint toIndex = (_toBlock - _startBlock) / BLOCKS_PER_WEEK;
+        uint fromIndex = (_fromTimestamp - _startTimestamp) / SECONDS_PER_WEEK;
+        uint toIndex = (_toTimestamp - _startTimestamp) / SECONDS_PER_WEEK;
 
         if (fromIndex < toIndex) {
-            uint blocksAtIndex = BLOCKS_PER_WEEK - ((_fromBlock - _startBlock) % BLOCKS_PER_WEEK);
-            (uint lockedFatePerBlock, uint unlockedFatePerBlock) = getFateAtIndex(fromIndex);
-            lockedFatePerBlock = blocksAtIndex * lockedFatePerBlock;
-            unlockedFatePerBlock = blocksAtIndex * unlockedFatePerBlock;
+            uint secondsAtIndex = SECONDS_PER_WEEK - ((_fromTimestamp - _startTimestamp) % SECONDS_PER_WEEK);
+            (uint lockedFatePerSecond, uint unlockedFatePerSecond) = getFateAtIndex(fromIndex);
+            lockedFatePerSecond = secondsAtIndex * lockedFatePerSecond;
+            unlockedFatePerSecond = secondsAtIndex * unlockedFatePerSecond;
 
             for (uint i = fromIndex + 1; i < toIndex; i++) {
-                (uint lockedFatePerBlock2, uint unlockedFatePerBlock2) = getFateAtIndex(i);
-                lockedFatePerBlock += lockedFatePerBlock2 * BLOCKS_PER_WEEK;
-                unlockedFatePerBlock += unlockedFatePerBlock2 * BLOCKS_PER_WEEK;
+                (uint lockedFatePerSecond2, uint unlockedFatePerSecond2) = getFateAtIndex(i);
+                lockedFatePerSecond += lockedFatePerSecond2 * SECONDS_PER_WEEK;
+                unlockedFatePerSecond += unlockedFatePerSecond2 * SECONDS_PER_WEEK;
             }
 
-            blocksAtIndex = (_toBlock - _startBlock) % BLOCKS_PER_WEEK;
-            (uint lockedFatePerBlock3, uint unlockedFatePerBlock3) = getFateAtIndex(toIndex);
+            secondsAtIndex = (_toTimestamp - _startTimestamp) % SECONDS_PER_WEEK;
+            (uint lockedFatePerSecond3, uint unlockedFatePerSecond3) = getFateAtIndex(toIndex);
 
             return (
-                lockedFatePerBlock + blocksAtIndex * lockedFatePerBlock3,
-                unlockedFatePerBlock + blocksAtIndex * unlockedFatePerBlock3
+                lockedFatePerSecond + secondsAtIndex * lockedFatePerSecond3,
+                unlockedFatePerSecond + secondsAtIndex * unlockedFatePerSecond3
             );
         } else {
 
             assert(fromIndex == toIndex);
-            (uint lockedFatePerBlock, uint unlockedFatePerBlock) = getFateAtIndex(fromIndex);
+            (uint lockedFatePerSecond, uint unlockedFatePerSecond) = getFateAtIndex(fromIndex);
             return (
-                lockedFatePerBlock * (_toBlock - _fromBlock),
-                unlockedFatePerBlock * (_toBlock - _fromBlock)
+                lockedFatePerSecond * (_toTimestamp - _fromTimestamp),
+                unlockedFatePerSecond * (_toTimestamp - _fromTimestamp)
             );
         }
     }

@@ -4,18 +4,18 @@ pragma solidity 0.6.12;
 
 interface IRewardScheduleV3 {
 
-    function getFatePerBlock(
-        uint _startBlock,
-        uint _fromBlock,
-        uint _toBlock
+    function getFatePerSecond(
+        uint _startTimestamp,
+        uint _fromTimestamp,
+        uint _toTimestamp
     )
     external
     view
-    returns (uint lockedFatePerBlock, uint unlockedFatePerBlock);
+    returns (uint lockedFatePerSecond, uint unlockedFatePerSecond);
 
 
     function calculateCurrentIndex(
-        uint _startBlock
+        uint _startTimestamp
     )
     external
     view

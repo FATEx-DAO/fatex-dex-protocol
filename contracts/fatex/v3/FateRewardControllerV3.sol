@@ -43,7 +43,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         //   pending reward = (user.amount * pool.accumulatedFatePerShare) - user.rewardDebt
         //
         // Whenever a user deposits or withdraws LP tokens to a pool. Here's what happens:
-        //   1. The pool's `accumulatedFatePerShare` (and `lastRewardBlock`) gets updated.
+        //   1. The pool's `accumulatedFatePerShare` (and `lastRewardTimestamp`) gets updated.
         //   2. User receives the pending reward sent to his/her address.
         //   3. User's `amount` gets updated.
         //   4. User's `rewardDebt` gets updated.
@@ -67,8 +67,8 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     // Total allocation points. Must be the sum of all allocation points in all pools.
     uint256 public override totalAllocPoint = 0;
 
-    // The block number when FATE mining starts.
-    uint256 public override startBlock;
+    // The timestamp when FATE mining starts.
+    uint256 public override startTimestamp;
 
     IMockLpTokenFactory public mockLpTokenFactory;
 
@@ -106,7 +106,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         vault = _vault;
         oldControllers = _oldControllers;
         mockLpTokenFactory = _mockLpTokenFactory;
-        startBlock = block.number;
+        startTimestamp = block.timestamp;
         fateFeeTo = _fateFeeTo;
         // reset old controller's pooInfo
         for (uint i = 0; i < _oldControllers[0].poolLength(); i++) {
@@ -115,7 +115,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
                 PoolInfoV3({
                     lpToken: lpToken,
                     allocPoint: allocPoint,
-                    lastRewardBlock: startBlock,
+                    lastRewardTimestamp: startTimestamp,
                     accumulatedFatePerShare: 0,
                     accumulatedLockedFatePerShare: 0
                 })
@@ -183,13 +183,13 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             "add: invalid LP token"
         );
 
-        uint256 lastRewardBlock = block.number > startBlock ? block.number : startBlock;
+        uint256 lastRewardTimestamp = block.timestamp > startTimestamp ? block.timestamp : startTimestamp;
         totalAllocPoint = totalAllocPoint.add(_allocPoint);
         poolInfo.push(
             PoolInfoV3({
                 lpToken : _lpToken,
                 allocPoint : _allocPoint,
-                lastRewardBlock : lastRewardBlock,
+                lastRewardTimestamp : lastRewardTimestamp,
                 accumulatedFatePerShare : 0,
                 accumulatedLockedFatePerShare : 0
             })
@@ -336,11 +336,11 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
 
         IERC20 lpToken;
         uint256 allocPoint;
-        uint256 lastRewardBlock;
+        uint256 lastRewardTimestamp;
         uint256 accumulatedFatePerShare;
         uint oldPoolLength = oldController.poolLength();
         for (uint i = 0; i < oldPoolLength; i++) {
-            (lpToken, allocPoint, lastRewardBlock, accumulatedFatePerShare) = oldController.poolInfo(poolInfo.length);
+            (lpToken, allocPoint, lastRewardTimestamp, accumulatedFatePerShare) = oldController.poolInfo(poolInfo.length);
             if (address(lpToken) == address(token)) {
                 break;
             }
@@ -353,7 +353,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             PoolInfoV3({
                 lpToken : lpToken,
                 allocPoint : allocPoint,
-                lastRewardBlock : lastRewardBlock,
+                lastRewardTimestamp : lastRewardTimestamp,
                 accumulatedFatePerShare : accumulatedFatePerShare,
                 accumulatedLockedFatePerShare : 0
             })
@@ -399,13 +399,13 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         IFateRewardControllerV3.UserInfo memory user = _getUserInfo(_pid, _user);
         uint256 accumulatedFatePerShare = pool.accumulatedFatePerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
-        if (block.number > pool.lastRewardBlock && lpSupply != 0) {
-            (, uint256 unlockedFatePerBlock) = emissionSchedule.getFatePerBlock(
-                startBlock,
-                pool.lastRewardBlock,
-                block.number
+        if (block.timestamp > pool.lastRewardTimestamp && lpSupply != 0) {
+            (, uint256 unlockedFatePerSecond) = emissionSchedule.getFatePerSecond(
+                startTimestamp,
+                pool.lastRewardTimestamp,
+                block.timestamp
             ); // only unlocked Fates
-            uint256 unlockedFateReward = unlockedFatePerBlock
+            uint256 unlockedFateReward = unlockedFatePerSecond
                 .mul(pool.allocPoint)
                 .div(totalAllocPoint);
             accumulatedFatePerShare = accumulatedFatePerShare
@@ -433,13 +433,13 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         IFateRewardControllerV3.UserInfo memory user = _getUserInfo(_pid, _user);
         uint256 accumulatedLockedFatePerShare = pool.accumulatedLockedFatePerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
-        if (block.number > pool.lastRewardBlock && lpSupply != 0) {
-            (uint256 lockedFatePerBlock,) = emissionSchedule.getFatePerBlock(
-                startBlock,
-                pool.lastRewardBlock,
-                block.number
+        if (block.timestamp > pool.lastRewardTimestamp && lpSupply != 0) {
+            (uint256 lockedFatePerSecond,) = emissionSchedule.getFatePerSecond(
+                startTimestamp,
+                pool.lastRewardTimestamp,
+                block.timestamp
             ); // only locked Fates
-            uint256 lockedFateReward = lockedFatePerBlock
+            uint256 lockedFateReward = lockedFatePerSecond
                 .mul(pool.allocPoint)
                 .div(totalAllocPoint);
             accumulatedLockedFatePerShare = accumulatedLockedFatePerShare.add(lockedFateReward.mul(1e12).div(lpSupply));
@@ -502,41 +502,41 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         }
     }
 
-    function getNewRewardPerBlock(uint pid1) public view returns (uint) {
-        (, uint256 fatePerBlock) = emissionSchedule.getFatePerBlock(
-            startBlock,
-            block.number - 1,
-            block.number
+    function getNewRewardPerSecond(uint pid1) public view returns (uint) {
+        (, uint256 fatePerSecond) = emissionSchedule.getFatePerSecond(
+            startTimestamp,
+            block.timestamp - 1,
+            block.timestamp
         );
         if (pid1 == 0) {
-            return fatePerBlock;
+            return fatePerSecond;
         } else {
-            return fatePerBlock.mul(poolInfo[pid1 - 1].allocPoint).div(totalAllocPoint);
+            return fatePerSecond.mul(poolInfo[pid1 - 1].allocPoint).div(totalAllocPoint);
         }
     }
 
     // Update reward variables of the given pool to be up-to-date.
     function updatePool(uint256 _pid) public {
         PoolInfoV3 storage pool = poolInfo[_pid];
-        if (block.number <= pool.lastRewardBlock) {
+        if (block.timestamp <= pool.lastRewardTimestamp) {
             return;
         }
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
         if (lpSupply == 0) {
-            pool.lastRewardBlock = block.number;
+            pool.lastRewardTimestamp = block.timestamp;
             return;
         }
 
-        (uint256 lockedFatePerBlock, uint256 unlockedFatePerBlock) = emissionSchedule.getFatePerBlock(
-            startBlock,
-            pool.lastRewardBlock,
-            block.number
+        (uint256 lockedFatePerSecond, uint256 unlockedFatePerSecond) = emissionSchedule.getFatePerSecond(
+            startTimestamp,
+            pool.lastRewardTimestamp,
+            block.timestamp
         );
 
-        uint256 unlockedFateReward = unlockedFatePerBlock
+        uint256 unlockedFateReward = unlockedFatePerSecond
             .mul(pool.allocPoint)
             .div(totalAllocPoint);
-        uint256 lockedFateReward = lockedFatePerBlock
+        uint256 lockedFateReward = lockedFatePerSecond
             .mul(pool.allocPoint)
             .div(totalAllocPoint);
 
@@ -549,7 +549,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             pool.accumulatedLockedFatePerShare = pool.accumulatedLockedFatePerShare
                 .add(lockedFateReward.mul(1e12).div(lpSupply));
         }
-        pool.lastRewardBlock = block.number;
+        pool.lastRewardTimestamp = block.timestamp;
     }
 
     // Deposit LP tokens to MasterChef for FATE allocation.
@@ -574,13 +574,13 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             isUpdated : true
         });
 
-        // record deposit block
+        // record deposit timestamp
         MembershipInfo memory membership = userMembershipInfo[_pid][msg.sender];
-        if (membership.firstDepositBlock == 0) {
+        if (membership.firstDepositTimestamp == 0) {
             // The user has not recorded a deposit yet;
             userMembershipInfo[_pid][msg.sender] = MembershipInfo({
-                firstDepositBlock: block.number,
-                lastWithdrawBlock: block.number
+                firstDepositTimestamp: block.timestamp,
+                lastWithdrawTimestamp: block.timestamp
             });
         }
 
@@ -640,7 +640,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         return _amount.sub(feeAmount);
     }
 
-    // Reduce LPWithdrawFee and record last withdraw block
+    // Reduce LPWithdrawFee and record last withdraw timestamp
     function _reduceWithdrawalForFeesAndUpdateMembershipInfo(
         uint256 _pid,
         address _account,
@@ -650,14 +650,14 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         if (_withdrawAll) {
             // record points earned and do not earn any more
             trackedPoints[_pid][_account] = trackedPoints[_pid][_account]
-                .add(_getBlocksOfPeriod(_pid, _account, true).mul(POINTS_PER_BLOCK));
+                .add(_getTimestampsOfPeriod(_pid, _account, true).mul(POINTS_PER_SECOND));
         }
 
         uint256 lpWithdrawFee = _amount.sub(_amount.mul(getLPWithdrawFeePercent(_pid, _account)).div(10000));
-        userMembershipInfo[_pid][_account].lastWithdrawBlock = block.number;
+        userMembershipInfo[_pid][_account].lastWithdrawTimestamp = block.timestamp;
         if (_withdrawAll) {
-            // reset the deposit block
-            userMembershipInfo[_pid][_account].firstDepositBlock = 0;
+            // reset the deposit timestamp
+            userMembershipInfo[_pid][_account].firstDepositTimestamp = 0;
         }
 
         // minus LPWithdrawFee = amount * (1e18 - lpFee) / 1e18 = amount - amount * lpFee / 1e18
@@ -742,7 +742,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     )
     public
     onlyOwner {
-        // pro-rate the pools to the current block, before changing the schedule
+        // pro-rate the pools to the current timestamp, before changing the schedule
         massUpdatePools();
         emissionSchedule = _emissionSchedule;
         emit EmissionScheduleSet(address(_emissionSchedule));
@@ -754,7 +754,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     public
     override
     onlyOwner {
-        // pro-rate the pools to the current block, before changing the schedule
+        // pro-rate the pools to the current timestamp, before changing the schedule
         vault = _vault;
         emit VaultSet(_vault);
     }
@@ -764,8 +764,8 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         if (!isFatePool(_pid)) {
             return 0;
         } else {
-            return POINTS_PER_BLOCK
-                .mul(_getBlocksOfPeriod(_pid, _user, true))
+            return POINTS_PER_SECOND
+                .mul(_getTimestampsOfPeriod(_pid, _user, true))
                 .add(trackedPoints[_pid][_user]);
         }
     }

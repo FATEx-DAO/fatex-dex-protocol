@@ -15,14 +15,14 @@ import "./IMembershipWithReward.sol";
 abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     using SafeMath for uint256;
 
-    uint256 constant public POINTS_PER_BLOCK = 0.08e18;
+    uint256 constant public POINTS_PER_SECOND = 0.04e18;
 
-    // The emission scheduler that calculates fate per block over a given period
+    // The emission scheduler that calculates fate per second over a given period
     IRewardScheduleV3 public emissionSchedule;
 
     struct MembershipInfo {
-        uint256 firstDepositBlock; // set when first deposit
-        uint256 lastWithdrawBlock; // set when first deposit, updates whenever withdraws
+        uint256 firstDepositTimestamp; // set when first deposit
+        uint256 lastWithdrawTimestamp; // set when first deposit, updates whenever withdraws
     }
 
     mapping(address => bool) public isExcludedAddress;
@@ -37,29 +37,29 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     mapping(uint256 => mapping (address => uint256)) public userLockedRewards;
 
     /// @dev data for FateLockedRewardFee
-    uint256[] public lockedRewardsPeriodBlocks = [
-        30,
+    uint256[] public lockedRewardsPeriodTimestamps = [
         60,
         120,
-        3600,
-        86400,
+        240,
+        7200,
         172800,
-        259200,
         345600,
-        432000,
         518400,
-        604800,
         691200,
-        777600,
         864000,
-        950400,
         1036800,
-        1123200,
         1209600,
-        1296000,
         1382400,
-        1468800,
-        1555200
+        1555200,
+        1728000,
+        1900800,
+        2073600,
+        2246400,
+        2419200,
+        2592000,
+        2764800,
+        2937600,
+        3110400
     ];
     uint256[] public lockedRewardsFeePercents = [
         10000,
@@ -87,29 +87,29 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     ];
 
     /// @dev data for LPWithdrawFee
-    uint256[] public lpWithdrawPeriodBlocks = [
-        30,
+    uint256[] public lpWithdrawPeriodTimestamps = [
         60,
         120,
-        3600,
-        86400,
+        240,
+        7200,
         172800,
-        259200,
         345600,
-        432000,
         518400,
-        604800,
         691200,
-        777600,
         864000,
-        950400,
         1036800,
-        1123200,
         1209600,
-        1296000,
         1382400,
-        1468800,
-        1555200
+        1555200,
+        1728000,
+        1900800,
+        2073600,
+        2246400,
+        2419200,
+        2592000,
+        2764800,
+        2937600,
+        3110400
     ];
     uint256[] public lpWithdrawFeePercent = [
         10000,
@@ -137,39 +137,39 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
         8
     ];
 
-    event LockedRewardsDataSet(uint256[] _lockedRewardsPeriodBlocks, uint256[] _lockedRewardsFeePercents);
-    event LPWithdrawDataSet(uint256[] _lpWithdrawPeriodBlocks, uint256[] _lpWithdrawFeePercent);
+    event LockedRewardsDataSet(uint256[] _lockedRewardsPeriodTimestamps, uint256[] _lockedRewardsFeePercents);
+    event LPWithdrawDataSet(uint256[] _lpWithdrawPeriodTimestamps, uint256[] _lpWithdrawFeePercent);
     event ExcludedAddressSet(address _account, bool _status);
 
-    /// @dev set lockedRewardsPeriodBlocks & lockedRewardsFeePercents
+    /// @dev set lockedRewardsPeriodTimestamps & lockedRewardsFeePercents
     function setLockedRewardsData(
-        uint256[] memory _lockedRewardsPeriodBlocks,
+        uint256[] memory _lockedRewardsPeriodTimestamps,
         uint256[] memory _lockedRewardsFeePercents
     ) external onlyOwner {
         require(
-            _lockedRewardsPeriodBlocks.length > 0 &&
-            _lockedRewardsPeriodBlocks.length == _lockedRewardsFeePercents.length,
+            _lockedRewardsPeriodTimestamps.length > 0 &&
+            _lockedRewardsPeriodTimestamps.length == _lockedRewardsFeePercents.length,
             "setLockedRewardsData: invalid input data"
         );
-        lockedRewardsPeriodBlocks = _lockedRewardsPeriodBlocks;
+        lockedRewardsPeriodTimestamps = _lockedRewardsPeriodTimestamps;
         lockedRewardsFeePercents = _lockedRewardsFeePercents;
 
-        emit LockedRewardsDataSet(_lockedRewardsPeriodBlocks, _lockedRewardsFeePercents);
+        emit LockedRewardsDataSet(_lockedRewardsPeriodTimestamps, _lockedRewardsFeePercents);
     }
 
-    /// @dev set lpWithdrawPeriodBlocks & lpWithdrawFeePercent
+    /// @dev set lpWithdrawPeriodTimestamps & lpWithdrawFeePercent
     function setLPWithdrawData(
-        uint256[] memory _lpWithdrawPeriodBlocks,
+        uint256[] memory _lpWithdrawPeriodTimestamps,
         uint256[] memory _lpWithdrawFeePercent
     ) external onlyOwner {
         require(
-            _lpWithdrawPeriodBlocks.length == _lpWithdrawFeePercent.length,
+            _lpWithdrawPeriodTimestamps.length == _lpWithdrawFeePercent.length,
             "setLPWithdrawData: not same length"
         );
-        lpWithdrawPeriodBlocks = _lpWithdrawPeriodBlocks;
+        lpWithdrawPeriodTimestamps = _lpWithdrawPeriodTimestamps;
         lpWithdrawFeePercent = _lpWithdrawFeePercent;
 
-        emit LPWithdrawDataSet(_lpWithdrawPeriodBlocks, _lpWithdrawFeePercent);
+        emit LPWithdrawDataSet(_lpWithdrawPeriodTimestamps, _lpWithdrawFeePercent);
     }
 
     /// @dev set excluded addresses
@@ -186,47 +186,42 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     }
 
     /// @dev calculate index of LockedRewardFee data
-    function _getPercentFromBlocks(
-        uint256 periodBlocks,
-        uint256[] memory blocks,
+    function _getPercentFromTimestamp(
+        uint256 periodTimestamp,
+        uint256[] memory timestamps,
         uint256[] memory percents
     ) internal pure returns (uint256) {
-        if (periodBlocks < blocks[0]) {
+        if (periodTimestamp < timestamps[0]) {
             return percents[0];
-        } else if (periodBlocks > blocks[blocks.length - 1]) {
+        } else if (periodTimestamp > timestamps[timestamps.length - 1]) {
             return 0;
         } else {
-            for (uint i = 0; i < blocks.length - 1; i++) {
+            for (uint i = 0; i < timestamps.length - 1; i++) {
                 if (
-                    periodBlocks > blocks[i] &&
-                    periodBlocks <= blocks[i + 1]
+                    periodTimestamp > timestamps[i] &&
+                    periodTimestamp <= timestamps[i + 1]
                 ) {
                     return percents[i];
                 }
             }
-            revert("_getPercentFromBlocks: should have returned value");
+            revert("_getPercentFromTimestamp: should have returned value");
         }
     }
 
-    function getBlockNumber() external view returns (uint256) {
-        return block.number;
-    }
-
-
-    function _getBlocksOfPeriod(
+    function _getTimestampsOfPeriod(
         uint256 _pid,
         address _user,
         bool _isDepositPeriod
     ) internal view returns (uint256) {
-        uint256 endBlock = block.number;
-        uint256 startBlock = _isDepositPeriod ?
-            userMembershipInfo[_pid][_user].firstDepositBlock : userMembershipInfo[_pid][_user].lastWithdrawBlock;
+        uint256 endTimestamp = block.timestamp;
+        uint256 startTimestamp = _isDepositPeriod ?
+            userMembershipInfo[_pid][_user].firstDepositTimestamp : userMembershipInfo[_pid][_user].lastWithdrawTimestamp;
 
-        uint256 blocks = 0;
-        if (startBlock != 0 && endBlock >= startBlock) {
-            blocks = endBlock - startBlock;
+        uint256 duration = 0;
+        if (startTimestamp != 0 && endTimestamp >= startTimestamp) {
+            duration = endTimestamp - startTimestamp;
         }
-        return blocks;
+        return duration;
     }
 
     /// @dev calculate percent of lockedRewardFee based on their deposit period
@@ -239,13 +234,13 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
         if (isExcludedAddress[_user]) {
             return 0;
         } else {
-            return _getPercentFromBlocks(
-                _getBlocksOfPeriod(
+            return _getPercentFromTimestamp(
+                _getTimestampsOfPeriod(
                     _pid,
                     _user,
                     true
                 ),
-                lockedRewardsPeriodBlocks,
+                lockedRewardsPeriodTimestamps,
                 lockedRewardsFeePercents
             );
         }
@@ -262,13 +257,13 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
         if (isExcludedAddress[_user]) {
             return 0;
         } else {
-            return _getPercentFromBlocks(
-                _getBlocksOfPeriod(
+            return _getPercentFromTimestamp(
+                _getTimestampsOfPeriod(
                     _pid,
                     _user,
                     false
                 ),
-                lpWithdrawPeriodBlocks,
+                lpWithdrawPeriodTimestamps,
                 lpWithdrawFeePercent
             );
         }
