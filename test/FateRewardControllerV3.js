@@ -218,7 +218,7 @@ describe('FateRewardControllerV3', () => {
                 await fateRewardControllerV3.setLockedRewardsData(
                     [10, 20],[expandDecimals(1), expandDecimals(98, 16)]
                 )
-                const lockedRewardsPeriodBlock = await fateRewardControllerV3.lockedRewardsPeriodBlocks(0)
+                const lockedRewardsPeriodBlock = await fateRewardControllerV3.lockedRewardsPeriodTimestamps(0)
                 expect(lockedRewardsPeriodBlock).to.be.equal(10)
                 const lockedRewardsFeePercent = await fateRewardControllerV3.lockedRewardsFeePercents(0)
                 expect(lockedRewardsFeePercent).to.be.equal(expandDecimals(1))
