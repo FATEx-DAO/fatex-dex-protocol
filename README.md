@@ -8,7 +8,7 @@ https://fatexdao.io
 |--------------------------------|------------------------------------------------|-----------------------------------------------------------------------------------|
 | FateRewardControllerV1         | 0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27     | https://explorer.harmony.one/address/0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27   |
 | FateRewardControllerV2         | 0x04170495EA41288225025De3CDFE9A9799121861     | https://explorer.harmony.one/address/0x04170495EA41288225025De3CDFE9A9799121861   |
-| FateRewardControllerV2Reader   | 0x4A85626cE2154fB0Fb2b7B77dA9e09051bfB8d30     | https://explorer.harmony.one/address/0x4A85626cE2154fB0Fb2b7B77dA9e09051bfB8d30   |
+| FateRewardControllerV2Reader   | 0xc65635d2e9af15516aBe5B74D73e87db27730784     | https://explorer.harmony.one/address/0xc65635d2e9af15516aBe5B74D73e87db27730784   |
 | FateRewardVault                | 0x3170e252D06f01a846e92CB0139Cdb16c69E867d     | https://explorer.harmony.one/address/0x3170e252D06f01a846e92CB0139Cdb16c69E867d   |
 | FateToken                      | 0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC     | https://explorer.harmony.one/address/0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC   |
 | xFateToken                     | 0x6f4078cb47438157c914409d10358a0Cf4b06AB7     | https://explorer.harmony.one/address/0x6f4078cb47438157c914409d10358a0Cf4b06AB7   |

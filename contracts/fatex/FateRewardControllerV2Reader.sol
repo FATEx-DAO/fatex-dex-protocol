@@ -26,4 +26,13 @@ contract FateRewardControllerV2Reader {
         return controller.totalAllocPoint();
     }
 
+    function getAllPendingFate(address user) external view returns (uint) {
+        uint pendingFate = 0;
+        uint poolLength = controller.poolLength();
+        for (uint i = 0; i < poolLength; i++) {
+            pendingFate += controller.pendingFate(i, user);
+        }
+        return pendingFate;
+    }
+
 }
