@@ -1,7 +1,8 @@
 const fetch = require('node-fetch');
+const fs = require('fs');
+const csv = require('csv-parser');
 
-const blockNumber = 22855057
-const epoch = 1
+const blockNumber = 23579227
 
 const csvWriter = require('csv-writer').createObjectCsvWriter({
   path: `scripts/fate-balances-${blockNumber}.csv`,
@@ -11,12 +12,27 @@ const csvWriter = require('csv-writer').createObjectCsvWriter({
   ]
 });
 
-const hardhat = require("hardhat");
-const { BigNumber } = require("ethers");
+const hardhat = require('hardhat');
+const { BigNumber } = require('ethers');
 const ethers = hardhat.ethers;
 
 const gqlBody = (skip) => {
-  return `{"query":"{  userEpochTotalLockedRewards(first: 1000, skip: ${skip}, orderBy: user, orderDirection: asc, block: {number: ${blockNumber}}, where: {epoch: ${epoch}}) {    user    poolId    amountFate  }}","variables":null,"operationName":null}`
+  return `{"query":"{  userEpochTotalLockedRewards(first: 1000, skip: ${skip}, orderBy: user, orderDirection: asc, block: {number: ${blockNumber}}) {    user    amountFate  }}","variables":null,"operationName":null}`
+}
+
+async function readCsv(filename) {
+  const values = []
+  new Promise((resolve) => {
+    fs.createReadStream(filename)
+      .pipe(csv())
+      .on('data', function (row) {
+        console.log('row', row);
+        values.push(row);
+      })
+      .on('end', function () {
+        resolve(values);
+      })
+  })
 }
 
 async function main() {
@@ -30,13 +46,13 @@ async function main() {
   const fateGovToken = await ethers.getContractAt('VotingPowerToken', '0x72d2f2d57cc5d3e78c456616e1d17e73e8848c3a');
 
   const userAndEpochAndAmountFateAtIndex = {}
-  const userBalanceCalls = {}
+  const userBalanceCalls = []
   for (let i = 0; i < 100; i++) {
     const result = await fetch('https://graph.t.hmny.io/subgraphs/name/fatex-dao/fatex-dao-rewards', {
       body: gqlBody(i * 1000),
       method: 'POST'
     }).then(response => response.json())
-      .then(json => json.data.userEpochTotalLockedRewardByPools)
+      .then(json => json.data.userEpochTotalLockedRewards)
 
     if (result.length === 0) {
       break;
@@ -55,16 +71,16 @@ async function main() {
         user: item.user,
         amountFate: currentAmountFate.add(ethers.utils.parseUnits(item.amountFate, 18))
       }
-      userBalanceCalls[item.user] = {
+      userBalanceCalls.push({
         target: fateGovToken.address,
         callData: fateGovToken.interface.encodeFunctionData('balanceOf', [item.user]),
-        index: i,
-      }
+        user: item.user
+      })
     })
   }
 
   // Now batch the FateRewardController::pendingFate calls
-  const chunkSize = 500;
+  const chunkSize = 100;
   const numberOfChunks = Math.floor(userBalanceCalls.length / chunkSize) + 1
   let userBalances = []
   for (let i = 0; i < numberOfChunks; i++) {
@@ -81,7 +97,7 @@ async function main() {
 
   const totalLockedFatesByUser = {}
   userBalances.forEach((userBalance, index) => {
-    const userStruct = userAndEpochAndAmountFateAtIndex[index]
+    const userStruct = userAndEpochAndAmountFateAtIndex[userBalanceCalls[index].user]
     if (!totalLockedFatesByUser[userStruct.user]) {
       totalLockedFatesByUser[userStruct.user] = ethers.BigNumber.from('0');
     }
