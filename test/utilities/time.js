@@ -12,12 +12,15 @@ async function advanceBlockTo(blockNumber) {
   }
 }
 
-async function increase(value) {
+async function advanceTime(value) {
+  if (typeof value === 'number') {
+    value = ethers.BigNumber.from(value)
+  }
   await ethers.provider.send("evm_increaseTime", [value.toNumber()])
   await advanceBlock()
 }
 
-async function latest() {
+async function latestTimestamp() {
   const block = await ethers.provider.getBlock("latest")
   return BigNumber.from(block.timestamp)
 }
@@ -47,6 +50,6 @@ module.exports = {
   advanceBlock,
   advanceBlockTo,
   duration,
-  latest,
-  increase,
+  latestTimestamp,
+  advanceTime,
 }

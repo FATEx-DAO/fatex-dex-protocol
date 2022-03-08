@@ -47,7 +47,8 @@ describe('FateRewardControllerV3.migrate', () => {
                 this.vault.address,
                 [fateRewardControllerV2.address],
                 mockLpTokenFactory.address,
-                this.feeTo.address]
+                this.feeTo.address
+              ]
             )
 
             // add pool
@@ -80,14 +81,15 @@ describe('FateRewardControllerV3.migrate', () => {
 
     describe('migrate', async () => {
         it('success cases:', async () => {
-            const testLP1 = await deployContract('ERC20Mock', ['testlp1', 'TestLP1', expandDecimals(1000)])
             const length = await fateRewardControllerV3.poolLength()
-            await fateRewardControllerV3.setMigrator(this.bob.address)
-            // await fateRewardControllerV3.connect(this.bob).migrate(testLP1.address)
-            // TODO fix: this line causes a revert because there is no poolId at length. The last one is at length - 1.
-            //  But you must check length > 0!
-            const lastLP1 = await fateRewardControllerV3.poolInfo(length)
-            expect(lastLP1.lpToken).to.be.equal(testLP1.address)
+            const migrator = await deployContract('TestMigrator', [])
+            await fateRewardControllerV3.setMigrator(migrator.address)
+            for (let i = 0; i < length.toNumber(); i++) {
+                const lastLP = await fateRewardControllerV3.poolInfo(i)
+                await fateRewardControllerV3.migrateLpToken(i)
+                const newLP = await fateRewardControllerV3.poolInfo(i)
+                expect(lastLP.lpToken).to.not.equal(newLP.lpToken)
+            }
         })
     })
 })

@@ -18,7 +18,7 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     uint256 constant public POINTS_PER_SECOND = 0.04e18;
 
     // The emission scheduler that calculates fate per second over a given period
-    IRewardScheduleV3 public emissionSchedule;
+    IRewardScheduleV3 public rewardSchedule;
 
     struct MembershipInfo {
         uint256 firstDepositTimestamp; // set when first deposit
@@ -61,6 +61,7 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
         2937600,
         3110400
     ];
+
     uint256[] public lockedRewardsFeePercents = [
         10000,
         9800,
@@ -111,8 +112,8 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
         2937600,
         3110400
     ];
+
     uint256[] public lpWithdrawFeePercent = [
-        10000,
         8800,
         7200,
         3600,
@@ -201,14 +202,14 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
                     periodTimestamp > timestamps[i] &&
                     periodTimestamp <= timestamps[i + 1]
                 ) {
-                    return percents[i];
+                    return percents[i + 1];
                 }
             }
             revert("_getPercentFromTimestamp: should have returned value");
         }
     }
 
-    function _getTimestampsOfPeriod(
+    function _getDurationInPosition(
         uint256 _pid,
         address _user,
         bool _isDepositPeriod
@@ -235,10 +236,10 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
             return 0;
         } else {
             return _getPercentFromTimestamp(
-                _getTimestampsOfPeriod(
+                _getDurationInPosition(
                     _pid,
                     _user,
-                    true
+                    false
                 ),
                 lockedRewardsPeriodTimestamps,
                 lockedRewardsFeePercents
@@ -247,9 +248,9 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     }
 
     /// @dev calculate percent of lpWithdrawFee based on their deposit period
-    /// when users withdaw during epoch, this fee will be reduced from their withdrawAmount
+    /// when users withdraw during epoch, this fee will be reduced from their withdrawAmount
     /// this fee will be still stored on FateRewardControllerV3 contract
-    /// this fee does not work for excluded address and after epoch is ended
+    /// this fee does not work for excluded address
     function getLPWithdrawFeePercent(
         uint256 _pid,
         address _user
@@ -258,7 +259,7 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
             return 0;
         } else {
             return _getPercentFromTimestamp(
-                _getTimestampsOfPeriod(
+                _getDurationInPosition(
                     _pid,
                     _user,
                     false
