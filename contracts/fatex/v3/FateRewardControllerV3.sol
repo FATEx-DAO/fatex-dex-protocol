@@ -23,8 +23,6 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     using SafeERC20 for IERC20;
     address private constant UNISWAP_V2_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
     address private constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-    uint256 private constant BASIS_POINTS_DIVISOR = 10000;
-    uint256 private constant MAX_FEE_BASIS_POINTS = 500; // 5%
     address public fateFeeTo;
 
     // feeReserves tracks the amount of fees per token
@@ -83,11 +81,11 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
 
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
 
-    event EmissionScheduleSet(address indexed emissionSchedule);
+    event RewardScheduleSet(address indexed rewardSchedule);
 
     event MigratorSet(address indexed migrator);
 
-    event VaultSet(address indexed emissionSchedule);
+    event VaultSet(address indexed rewardSchedule);
 
     event PoolAdded(uint indexed pid, address indexed lpToken, uint allocPoint);
 
@@ -95,14 +93,14 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
 
     constructor(
         IERC20 _fate,
-        IRewardScheduleV3 _emissionSchedule,
+        IRewardScheduleV3 _rewardSchedule,
         address _vault,
         IFateRewardController[] memory _oldControllers,
         IMockLpTokenFactory _mockLpTokenFactory,
         address _fateFeeTo
     ) public {
         fate = _fate;
-        emissionSchedule = _emissionSchedule;
+        rewardSchedule = _rewardSchedule;
         vault = _vault;
         oldControllers = _oldControllers;
         mockLpTokenFactory = _mockLpTokenFactory;
@@ -251,15 +249,6 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         );
     }
 
-
-    function _collectSwapFees(address _token, uint256 _amount, uint256 _feeBasisPoints) private returns (uint256) {
-        uint256 afterFeeAmount = _amount.mul(BASIS_POINTS_DIVISOR.sub(_feeBasisPoints)).div(BASIS_POINTS_DIVISOR);
-        uint256 feeAmount = _amount.sub(afterFeeAmount);
-        feeReserves[_token] = feeReserves[_token].add(feeAmount);
-//        emit CollectSwapFees(_token, tokenToUsdMin(_token, feeAmount), feeAmount);
-        return afterFeeAmount;
-    }
-
     function getFeeReserves(address _token) external view returns (uint256)
     {
         return feeReserves[_token];
@@ -309,7 +298,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     }
 
     // Migrate lp token to another lp contract. Can be called by anyone. We trust that migrator contract is good.
-    function migrate(uint256 _pid) public override {
+    function migrateLpToken(uint256 _pid) public override {
         require(address(migrator) != address(0), "migrate: no migrator");
         PoolInfoV3 storage pool = poolInfo[_pid];
         IERC20 lpToken = pool.lpToken;
@@ -400,7 +389,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         uint256 accumulatedFatePerShare = pool.accumulatedFatePerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
         if (block.timestamp > pool.lastRewardTimestamp && lpSupply != 0) {
-            (, uint256 unlockedFatePerSecond) = emissionSchedule.getFatePerSecond(
+            (, uint256 unlockedFatePerSecond) = rewardSchedule.getFateForDuration(
                 startTimestamp,
                 pool.lastRewardTimestamp,
                 block.timestamp
@@ -434,7 +423,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         uint256 accumulatedLockedFatePerShare = pool.accumulatedLockedFatePerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
         if (block.timestamp > pool.lastRewardTimestamp && lpSupply != 0) {
-            (uint256 lockedFatePerSecond,) = emissionSchedule.getFatePerSecond(
+            (uint256 lockedFatePerSecond,) = rewardSchedule.getFateForDuration(
                 startTimestamp,
                 pool.lastRewardTimestamp,
                 block.timestamp
@@ -446,7 +435,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         }
 
         uint lockedReward = user.amount.mul(accumulatedLockedFatePerShare).div(1e12).sub(user.lockedRewardDebt);
-        return lockedReward.sub(lockedReward.mul(getLockedRewardsFeePercent(_pid, _user)).div(1e18));
+        return getEffectiveRewardAfterRewardFee(_pid, _user, lockedReward);
     }
 
     function allPendingUnlockedFate(
@@ -503,7 +492,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     }
 
     function getNewRewardPerSecond(uint pid1) public view returns (uint) {
-        (, uint256 fatePerSecond) = emissionSchedule.getFatePerSecond(
+        (, uint256 fatePerSecond) = rewardSchedule.getFateForDuration(
             startTimestamp,
             block.timestamp - 1,
             block.timestamp
@@ -527,7 +516,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             return;
         }
 
-        (uint256 lockedFatePerSecond, uint256 unlockedFatePerSecond) = emissionSchedule.getFatePerSecond(
+        (uint256 lockedFatePerSecond, uint256 unlockedFatePerSecond) = rewardSchedule.getFateForDuration(
             startTimestamp,
             pool.lastRewardTimestamp,
             block.timestamp
@@ -631,13 +620,21 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         }
     }
 
-    function reduceWithdrawalForFeesAndUpdateMembershipInfo(
+    function getEffectiveAmountAfterLpFee(
         uint256 _pid,
         address _account,
         uint256 _amount
-    ) external view returns (uint256) {
+    ) public view returns (uint256) {
         uint feeAmount = _amount.mul(getLPWithdrawFeePercent(_pid, _account)).div(10000);
         return _amount.sub(feeAmount);
+    }
+
+    function getEffectiveRewardAfterRewardFee(
+        uint256 _pid,
+        address _account,
+        uint256 _reward
+    ) public view returns (uint256) {
+        return _reward.sub(_reward.mul(getLockedRewardsFeePercent(_pid, _account)).div(10000));
     }
 
     // Reduce LPWithdrawFee and record last withdraw timestamp
@@ -650,18 +647,17 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         if (_withdrawAll) {
             // record points earned and do not earn any more
             trackedPoints[_pid][_account] = trackedPoints[_pid][_account]
-                .add(_getTimestampsOfPeriod(_pid, _account, true).mul(POINTS_PER_SECOND));
+                .add(_getDurationInPosition(_pid, _account, true).mul(POINTS_PER_SECOND));
         }
 
-        uint256 lpWithdrawFee = _amount.sub(_amount.mul(getLPWithdrawFeePercent(_pid, _account)).div(10000));
+        uint256 withdrawAmountAfterFee = getEffectiveAmountAfterLpFee(_pid, _account, _amount);
         userMembershipInfo[_pid][_account].lastWithdrawTimestamp = block.timestamp;
         if (_withdrawAll) {
             // reset the deposit timestamp
             userMembershipInfo[_pid][_account].firstDepositTimestamp = 0;
         }
 
-        // minus LPWithdrawFee = amount * (1e18 - lpFee) / 1e18 = amount - amount * lpFee / 1e18
-        return lpWithdrawFee;
+        return withdrawAmountAfterFee;
     }
 
     function _claimRewards(
@@ -680,8 +676,9 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             .div(1e12)
             .sub(user.lockedRewardDebt);
 
-        // implement fee reduction for pendingLocked
-        pendingLocked = pendingLocked.sub(pendingLocked.mul(getLockedRewardsFeePercent(_pid, _user)).div(1e18));
+        // implement fee reduction for rewards
+        pendingUnlocked = getEffectiveRewardAfterRewardFee(_pid, _user, pendingUnlocked);
+        pendingLocked = getEffectiveRewardAfterRewardFee(_pid, _user, pendingLocked);
 
         // recorded locked rewards
         userLockedRewards[_pid][_user] = userLockedRewards[_pid][_user].add(pendingLocked);
@@ -737,15 +734,15 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         }
     }
 
-    function setEmissionSchedule(
-        IRewardScheduleV3 _emissionSchedule
+    function setRewardSchedule(
+        IRewardScheduleV3 _rewardSchedule
     )
     public
     onlyOwner {
         // pro-rate the pools to the current timestamp, before changing the schedule
         massUpdatePools();
-        emissionSchedule = _emissionSchedule;
-        emit EmissionScheduleSet(address(_emissionSchedule));
+        rewardSchedule = _rewardSchedule;
+        emit RewardScheduleSet(address(_rewardSchedule));
     }
 
     function setVault(
@@ -760,14 +757,25 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     }
 
     /// @dev calculate Points earned by this user
-    function userPoints(uint256 _pid, address _user) external view returns (uint256){
+    function userPoints(uint256 _pid, address _user) public view returns (uint256){
         if (!isFatePool(_pid)) {
             return 0;
         } else {
             return POINTS_PER_SECOND
-                .mul(_getTimestampsOfPeriod(_pid, _user, true))
+                .mul(_getDurationInPosition(_pid, _user, true))
                 .add(trackedPoints[_pid][_user]);
         }
+    }
+
+    function allUserPoints(
+        address _user
+    ) public view returns (uint) {
+        uint length = poolLength();
+        uint points = 0;
+        for (uint i = 0; i < length; i++) {
+            points += userPoints(i, _user);
+        }
+        return points;
     }
 
     /// @dev check if pool is FatePool or not

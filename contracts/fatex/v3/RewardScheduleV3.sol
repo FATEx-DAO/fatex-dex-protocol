@@ -135,9 +135,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
         return (block.timestamp - _startTimestamp) / SECONDS_PER_WEEK;
     }
 
-    /// @notice returns the average amount of FATE earned per second over any period. If spanned over multiple
-    /// weeks, a weighted average is calculated. Both _fromTimestamp and _toTimestamp are inclusive
-    function getFatePerSecond(
+    function getFateForDuration(
         uint _startTimestamp,
         uint _fromTimestamp,
         uint _toTimestamp
