@@ -108,7 +108,7 @@ https://fatexdao.io
 | 1PAXG:1USDC       | 0x85e116AB5379027866a1E410D0b5bd05759Ad617    | 30        |
 | 1PAXG:1ETH        | 0x8938434ac9D7E879F8FBB9716E6A5076eF9c3b1b    | 31        |
 | 1PAXG:1WBTC       | 0xD5bA885cEaa5c5837D14Ee1314243D3a3B69f294    | 32        |
-| 1PAXG:WONE        | 0xD5bA885cEaa5c5837D14Ee1314243D3a3B69f294    | 33        |
+| 1PAXG:WONE        | 0x5b750847b2105818bB08c5bc501e05D2805CDc43    | 33        |
 | xFATE:1PAXG       | 0xFa1E034621FdCDCEEa4131C538bc896380aac69c    | 34        |
 | UST:1DAI          | 0x67DbfbAf9A78da465b24330869717F25BF241EC6    | 35        |
 | FATE:bscBNB       | 0xc720E4F91DB0FC02a762D7adFC57b560f931E59D    | 36        |
@@ -167,8 +167,11 @@ https://fatexdao.io
 | Name                      | Address                                           | Explorer                                                                        |
 |---------------------------|---------------------------------------------------|---------------------------------------------------------------------------------|
 | FateRewardControllerV2    | 0x61544e3aa27DcE173bDA940838CE04A1A1427de3        | https://explorer.pops.one/address/0x61544e3aa27DcE173bDA940838CE04A1A1427de3 |
-| RewardScheduleV1          | 0xa7769eABE0212a43FE0067A95343105CbaEf5DB0        | https://explorer.pops.one/address/0xa7769eABE0212a43FE0067A95343105CbaEf5DB0 |
+| FateRewardControllerV3    | 0x1c75b19951373bC6481ff59A5820D79206fA6E60        | https://explorer.pops.one/address/0x1c75b19951373bC6481ff59A5820D79206fA6E60 |
+| MockLpTokenFactory        | 0x8f3A0280Cb40E547fAEE3613fE3fA14b80Ac6c35        | https://explorer.pops.one/address/0x8f3A0280Cb40E547fAEE3613fE3fA14b80Ac6c35 |
 | Multi Call                | 0xE3CaC535fcb777A42Dc2C234E0a8884049A4264e        | https://explorer.pops.one/address/0xE3CaC535fcb777A42Dc2C234E0a8884049A4264e |
+| RewardScheduleV1          | 0xa7769eABE0212a43FE0067A95343105CbaEf5DB0        | https://explorer.pops.one/address/0xa7769eABE0212a43FE0067A95343105CbaEf5DB0 |
+| RewardScheduleV3          | 0x3ACe48805B6baF9185833B611645a519CC8910A3        | https://explorer.pops.one/address/0x3ACe48805B6baF9185833B611645a519CC8910A3 |
 
 ## Docs
 
@@ -181,3 +184,5 @@ https://fatexdao.io
 ## License
 
 MIT
+
+##########

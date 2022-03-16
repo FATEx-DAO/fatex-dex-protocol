@@ -32,7 +32,8 @@ module.exports = {
   },
   defaultNetwork: "hardhat",
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    // apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: process.env.BSCSCAN_API_KEY
   },
   gasReporter: {
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
@@ -47,6 +48,7 @@ module.exports = {
     deployer: {
       default: 0, // here this will by default take the first account as deployer
       1: 0, // similarly on mainnet it will take the first account as deployer. Note though that depending on how hardhat network are configured, the account 0 on one network can be different than on another
+      harmony_testnet: '0xabB6D4a1015e291b1bc71e7e56ff2c9204665b07'
     },
     alice: {
       default: 1,
@@ -89,6 +91,9 @@ module.exports = {
       //   enabled: process.env.FORKING === "true",
       //   url: `https://a.api.s0.t.hmny.io`,
       // },
+      // forking: {
+      //   url: "https://a.api.s0.t.hmny.io",
+      // },
       live: false,
       saveDeployments: true,
       tags: ["test", "local"],
@@ -100,6 +105,22 @@ module.exports = {
       live: true,
       saveDeployments: true,
       tags: ["staging"],
+    },
+    testnet: {
+      url: `${process.env.BSC_TESTNET_URL}`,
+      chainId: 97,
+      gas: 8500000, // Gas sent with each transaction (default: ~6700000)
+      gasPrice: 20000000000, // 20 gwei (in wei) (default: 100 gwei)
+      value: 20000000000,
+      accounts
+    },
+    harmony_test: {
+      url: "https://api.s0.b.hmny.io",
+      chainId: 1666700000,
+      gas: 8500000, // Gas sent with each transaction (default: ~6700000)
+      gasPrice: 20000000000, // 20 gwei (in wei) (default: 100 gwei)
+      value: 20000000000,
+      accounts
     },
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,

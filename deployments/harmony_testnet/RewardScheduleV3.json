@@ -1,0 +1,267 @@
+{
+  "address": "0xfDdE60866508263e30C769e8592BB0f8C3274ba7",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_epochStartBlock",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_lockedPercent",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "BLOCKS_PER_WEEK",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "FATE_PER_BLOCK",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_startBlock",
+          "type": "uint256"
+        }
+      ],
+      "name": "calculateCurrentIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "eopochPeriods",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "epochEndBlock",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "epochStartBlock",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getFateAtIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_startBlock",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_fromBlock",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_toBlock",
+          "type": "uint256"
+        }
+      ],
+      "name": "getFatePerBlock",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "lockedPercent",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "rewardsNumberOfWeeks",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xcdfbdfed8af6b192e89c3734c88db00f8b2760e0d4d021f91985b7aed61af148",
+  "receipt": {
+    "to": null,
+    "from": "0xabB6D4a1015e291b1bc71e7e56ff2c9204665b07",
+    "contractAddress": "0xfDdE60866508263e30C769e8592BB0f8C3274ba7",
+    "transactionIndex": 0,
+    "gasUsed": "532899",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x97ee135ad8260566696ff28c3b441298ca154ca5e3b0390f462549f7c0f895a1",
+    "transactionHash": "0xcdfbdfed8af6b192e89c3734c88db00f8b2760e0d4d021f91985b7aed61af148",
+    "logs": [],
+    "blockNumber": 18575771,
+    "cumulativeGasUsed": "532899",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    18575540,
+    "920000000000000000"
+  ],
+  "solcInputHash": "422e25500d14a46db85cada408dd301f",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_epochStartBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_lockedPercent\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"BLOCKS_PER_WEEK\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"FATE_PER_BLOCK\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_startBlock\",\"type\":\"uint256\"}],\"name\":\"calculateCurrentIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"eopochPeriods\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"epochEndBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"epochStartBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getFateAtIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_startBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_fromBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_toBlock\",\"type\":\"uint256\"}],\"name\":\"getFatePerBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lockedPercent\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardsNumberOfWeeks\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"getFateAtIndex(uint256)\":{\"params\":{\"index\":\"The week at which the amount of FATE per block should be rewarded. Index starts at 0, meaning index              1 is actually week 2. Index 12 is week 13.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"FATE_PER_BLOCK(uint256)\":{\"notice\":\"This is the emission schedule for each block for a given week. These numbers represent how much FATE is         rewarded per block. Each index represents a week. The starting day/week, according to the Reward         Controller was 2021-08-26T19:43:45.000Z (UTC time). Meaning, week 2 started on 2021-09-02T19:43:45.000Z         (UTC time).\"},\"getFatePerBlock(uint256,uint256,uint256)\":{\"notice\":\"returns the average amount of FATE earned per block over any block period. If spanned over multiple weeks, a weighted average is calculated. Both _fromBlock and _toBlock are inclusive\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/fatex/v3/RewardScheduleV3.sol\":\"RewardScheduleV3\"},\"evmVersion\":\"istanbul\",\"libraries\":{\"__CACHE_BREAKER__\":\"0x00000000d41867734bbee4c6863d9255b2b06ac1\"},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":10000},\"remappings\":[]},\"sources\":{\"contracts/fatex/v3/IRewardScheduleV3.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\ninterface IRewardScheduleV3 {\\n\\n    function getFatePerBlock(\\n        uint _startBlock,\\n        uint _fromBlock,\\n        uint _toBlock\\n    )\\n    external\\n    view\\n    returns (uint lockedFatePerBlock, uint unlockedFatePerBlock);\\n\\n\\n    function calculateCurrentIndex(\\n        uint _startBlock\\n    )\\n    external\\n    view\\n    returns (uint);\\n\\n    function epochStartBlock() external view returns (uint);\\n    function epochEndBlock() external view returns (uint);\\n    function lockedPercent() external view returns (uint);\\n}\\n\",\"keccak256\":\"0xab883bbce6fe82d32cf6f74fc370229a7fb68d9e5c684bac19fc0339b31a98d3\",\"license\":\"MIT\"},\"contracts/fatex/v3/RewardScheduleV3.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\n\\nimport \\\"../../utils/SafeMathLocal.sol\\\";\\n\\nimport \\\"./IRewardScheduleV3.sol\\\";\\n\\ncontract RewardScheduleV3 is IRewardScheduleV3 {\\n    using SafeMathLocal for uint;\\n\\n    uint immutable public override epochStartBlock;\\n    uint immutable public override epochEndBlock;\\n\\n    uint constant public eopochPeriods = 8 weeks; // 8 weeks for epoch 2\\n    uint constant public override lockedPercent = 0.92e18;\\n\\n    /// @notice This is the emission schedule for each block for a given week. These numbers represent how much FATE is\\n    ///         rewarded per block. Each index represents a week. The starting day/week, according to the Reward\\n    ///         Controller was 2021-08-26T19:43:45.000Z (UTC time). Meaning, week 2 started on 2021-09-02T19:43:45.000Z\\n    ///         (UTC time).\\n    uint[72] public FATE_PER_BLOCK = [\\n        // eopch 1 (week1 ~ week13) is ended\\n        36.00e18,   // week 14\\n        36.51e18,   // week 15\\n        37.02e18,   // week 16\\n        37.54e18,   // week 17\\n        38.06e18,   // week 18\\n        38.60e18,   // week 19\\n        39.14e18,   // week 20\\n        13.6187700022e18,   // week 21\\n        0.00e18,    // week 22\\n        0.00e18,    // week 23\\n        0.00e18,    // week 24\\n        0.00e18,    // week 25\\n        0.00e18,    // week 26\\n        0.00e18,    // week 27\\n        0.00e18,    // week 28\\n        0.00e18,    // week 29\\n        0.00e18,    // week 30\\n        0.00e18,    // week 31\\n        0.00e18,    // week 32\\n        0.00e18,    // week 33\\n        0.00e18,    // week 34\\n        0.00e18,    // week 35\\n        0.00e18,    // week 36\\n        0.00e18,    // week 37\\n        0.00e18,    // week 38\\n        0.00e18,    // week 39\\n        0.00e18,    // week 40\\n        0.00e18,    // week 41\\n        0.00e18,    // week 42\\n        0.00e18,    // week 43\\n        0.00e18,    // week 44\\n        0.00e18,    // week 45\\n        0.00e18,    // week 46\\n        0.00e18,    // week 47\\n        0.00e18,    // week 48\\n        0.00e18,    // week 49\\n        0.00e18,    // week 50\\n        0.00e18,    // week 51\\n        0.00e18,    // week 52\\n        0.00e18,    // week 53\\n        0.00e18,    // week 54\\n        0.00e18,    // week 55\\n        0.00e18,    // week 56\\n        0.00e18,    // week 57\\n        0.00e18,    // week 58\\n        0.00e18,    // week 59\\n        0.00e18,    // week 60\\n        0.00e18,    // week 61\\n        0.00e18,    // week 62\\n        0.00e18,    // week 63\\n        0.00e18,    // week 64\\n        0.00e18,    // week 65\\n        0.00e18,    // week 66\\n        0.00e18,    // week 67\\n        0.00e18,    // week 68\\n        0.00e18,    // week 69\\n        0.00e18,    // week 70\\n        0.00e18,    // week 71\\n        0.00e18     // week 72\\n    ];\\n\\n    // 30 blocks per minute, 60 minutes per hour, 24 hours per day, 7 days per week\\n    uint public constant BLOCKS_PER_WEEK = 30 * 60 * 24 * 7;\\n\\n    constructor(\\n        uint _epochStartBlock,\\n        uint _lockedPercent\\n    ) public {\\n        require(\\n            _lockedPercent < 1e18,\\n            \\\"RewardScheduleV3::Contructor: invalid params\\\"\\n        );\\n        epochStartBlock = _epochStartBlock;\\n        epochEndBlock = _epochStartBlock + eopochPeriods;\\n    }\\n\\n    function rewardsNumberOfWeeks() external view returns (uint) {\\n        return FATE_PER_BLOCK.length;\\n    }\\n\\n    /**\\n     * @param index The week at which the amount of FATE per block should be rewarded. Index starts at 0, meaning index\\n     *              1 is actually week 2. Index 12 is week 13.\\n     */\\n    function getFateAtIndex(uint index)\\n    public\\n    view\\n    returns (uint, uint) {\\n        if (index < 8) {\\n            // vesting occurs at an 92/8 for the first 8 weeks\\n            return (\\n                FATE_PER_BLOCK[index] * lockedPercent / 1e18,\\n                FATE_PER_BLOCK[index] * (1e18 - lockedPercent) / 1e18\\n            );\\n        } else {\\n            return (0, 0);\\n        }\\n    }\\n\\n    function calculateCurrentIndex(\\n        uint _startBlock\\n    ) public override view returns (uint) {\\n        return (block.number - _startBlock) / BLOCKS_PER_WEEK;\\n    }\\n\\n    /// @notice returns the average amount of FATE earned per block over any block period. If spanned over multiple\\n    /// weeks, a weighted average is calculated. Both _fromBlock and _toBlock are inclusive\\n    function getFatePerBlock(\\n        uint _startBlock,\\n        uint _fromBlock,\\n        uint _toBlock\\n    )\\n    external\\n    override\\n    view\\n    returns (uint, uint) {\\n        \\n        if (_startBlock > _toBlock || _fromBlock == _toBlock) {\\n            return (0, 0);\\n        }\\n        if (_fromBlock < _startBlock) {\\n            _fromBlock = _startBlock;\\n        }\\n\\n        require(\\n            _fromBlock <= _toBlock,\\n            \\\"RewardScheduleV3::getFatePerBlock: INVALID_RANGE\\\"\\n        );\\n\\n        uint endBlockExclusive = _startBlock + (FATE_PER_BLOCK.length * BLOCKS_PER_WEEK);\\n\\n        if (_fromBlock >= endBlockExclusive) {\\n            return (0, 0);\\n        }\\n\\n        if (_toBlock >= endBlockExclusive) {\\n            _toBlock = endBlockExclusive - 1;\\n        }\\n\\n        uint fromIndex = (_fromBlock - _startBlock) / BLOCKS_PER_WEEK;\\n        uint toIndex = (_toBlock - _startBlock) / BLOCKS_PER_WEEK;\\n\\n        if (fromIndex < toIndex) {\\n            uint blocksAtIndex = BLOCKS_PER_WEEK - ((_fromBlock - _startBlock) % BLOCKS_PER_WEEK);\\n            (uint lockedFatePerBlock, uint unlockedFatePerBlock) = getFateAtIndex(fromIndex);\\n            lockedFatePerBlock = blocksAtIndex * lockedFatePerBlock;\\n            unlockedFatePerBlock = blocksAtIndex * unlockedFatePerBlock;\\n\\n            for (uint i = fromIndex + 1; i < toIndex; i++) {\\n                (uint lockedFatePerBlock2, uint unlockedFatePerBlock2) = getFateAtIndex(i);\\n                lockedFatePerBlock += lockedFatePerBlock2 * BLOCKS_PER_WEEK;\\n                unlockedFatePerBlock += unlockedFatePerBlock2 * BLOCKS_PER_WEEK;\\n            }\\n\\n            blocksAtIndex = (_toBlock - _startBlock) % BLOCKS_PER_WEEK;\\n            (uint lockedFatePerBlock3, uint unlockedFatePerBlock3) = getFateAtIndex(toIndex);\\n\\n            return (\\n                lockedFatePerBlock + blocksAtIndex * lockedFatePerBlock3,\\n                unlockedFatePerBlock + blocksAtIndex * unlockedFatePerBlock3\\n            );\\n        } else {\\n            // indices are the same\\n            assert(fromIndex == toIndex);\\n            (uint lockedFatePerBlock, uint unlockedFatePerBlock) = getFateAtIndex(fromIndex);\\n            return (\\n                lockedFatePerBlock * (_toBlock - _fromBlock),\\n                unlockedFatePerBlock * (_toBlock - _fromBlock)\\n            );\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x001e2f595759ee3b6c238898b590a9a8f3927cc773b961e9c6c1112d30364517\",\"license\":\"MIT\"},\"contracts/utils/SafeMathLocal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity >=0.6.0 <0.8.0;\\n\\n/**\\n * @dev Wrappers over Solidity's arithmetic operations with added overflow\\n * checks.\\n *\\n * Arithmetic operations in Solidity wrap on overflow. This can easily result\\n * in bugs, because programmers usually assume that an overflow raises an\\n * error, which is the standard behavior in high level programming languages.\\n * `SafeMath` restores this intuition by reverting the transaction when an\\n * operation overflows.\\n *\\n * Using this library instead of the unchecked operations eliminates an entire\\n * class of bugs, so it's recommended to use it always.\\n */\\nlibrary SafeMathLocal {\\n    /**\\n     * @dev Returns the addition of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        uint256 c = a + b;\\n        if (c < a) return (false, 0);\\n        return (true, c);\\n    }\\n\\n    /**\\n     * @dev Returns the substraction of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        if (b > a) return (false, 0);\\n        return (true, a - b);\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        // Gas optimization: this is cheaper than requiring 'a' not being zero, but the\\n        // benefit is lost if 'b' is also tested.\\n        // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\\n        if (a == 0) return (true, 0);\\n        uint256 c = a * b;\\n        if (c / a != b) return (false, 0);\\n        return (true, c);\\n    }\\n\\n    /**\\n     * @dev Returns the division of two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        if (b == 0) return (false, 0);\\n        return (true, a / b);\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        if (b == 0) return (false, 0);\\n        return (true, a % b);\\n    }\\n\\n    /**\\n     * @dev Returns the addition of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `+` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Addition cannot overflow.\\n     */\\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\\n        uint256 c = a + b;\\n        require(c >= a, \\\"SafeMath: addition overflow\\\");\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting on\\n     * overflow (when the result is negative).\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\\n        require(b <= a, \\\"SafeMath: subtraction overflow\\\");\\n        return a - b;\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `*` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Multiplication cannot overflow.\\n     */\\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\\n        if (a == 0) return 0;\\n        uint256 c = a * b;\\n        require(c / a == b, \\\"SafeMath: multiplication overflow\\\");\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\\n        require(b > 0, \\\"SafeMath: division by zero\\\");\\n        return a / b;\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting when dividing by zero.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b) internal pure returns (uint256) {\\n        require(b > 0, \\\"SafeMath: modulo by zero\\\");\\n        return a % b;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on\\n     * overflow (when the result is negative).\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {trySub}.\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b <= a, errorMessage);\\n        return a - b;\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting with custom message on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {tryDiv}.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b > 0, errorMessage);\\n        return a / b;\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting with custom message when dividing by zero.\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {tryMod}.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b > 0, errorMessage);\\n        return a % b;\\n    }\\n}\\n\",\"keccak256\":\"0x2ac5de71508edc0118dd228ca5c1d3b275ce5f5ccfbd06d5f52f59a2dcf12fd9\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x6108206040526801f399b1438a10000060c09081526801faad938fcd83000060e052680201c175dc10f6000061010052680208f8df1ac42a000061012052680210304859775e000061014052680217aebf7d0a1400006101605268021f2d36a09cca00006101805267bcff972962e076006101a05260006101c08190526101e08190526102008190526102208190526102408190526102608190526102808190526102a08190526102c08190526102e08190526103008190526103208190526103408190526103608190526103808190526103a08190526103c08190526103e08190526104008190526104208190526104408190526104608190526104808190526104a08190526104c08190526104e08190526105008190526105208190526105408190526105608190526105808190526105a08190526105c08190526105e08190526106008190526106208190526106408190526106608190526106808190526106a08190526106c08190526106e08190526107008190526107208190526107408190526107608190526107808190526107a08190526107c08190526107e08190526108008190526101b391603b610245565b503480156101c057600080fd5b5060405161077b38038061077b833981810160405260408110156101e357600080fd5b508051602090910151670de0b6b3a764000081106102325760405162461bcd60e51b815260040180806020018281038252602c81526020018061074f602c913960400191505060405180910390fd5b5060808190526249d4000160a0526102a3565b826048810192821561027e579160200282015b8281111561027e57825182906001600160481b0316905591602001919060010190610258565b5061028a92915061028e565b5090565b5b8082111561028a576000815560010161028f565b60805160a0516104896102c6600039806101df5250806101a052506104896000f3fe608060405234801561001057600080fd5b50600436106100be5760003560e01c8063c0f34ddc11610076578063f679998c1161005b578063f679998c14610150578063fb4c0e491461016d578063fc47e20914610196576100be565b8063c0f34ddc14610140578063db81dfcc14610148576100be565b806344ea9de5116100a757806344ea9de5146100e55780634e3b8480146101025780639d33918e1461010a576100be565b80633ed55b7b146100c3578063422955a2146100dd575b600080fd5b6100cb61019e565b60408051918252519081900360200190f35b6100cb6101c2565b6100cb600480360360208110156100fb57600080fd5b50356101c9565b6100cb6101dd565b6101276004803603602081101561012057600080fd5b5035610201565b6040805192835260208301919091528051918290030190f35b6100cb610276565b6100cb61027b565b6100cb6004803603602081101561016657600080fd5b5035610287565b6101276004803603606081101561018357600080fd5b508035906020810135906040013561029e565b6100cb61041c565b7f000000000000000000000000000000000000000000000000000000000000000081565b6249d40081565b600081604881106101d657fe5b0154905081565b7f000000000000000000000000000000000000000000000000000000000000000081565b600080600883101561026a57670de0b6b3a7640000670cc47f20295c00006000856048811061022c57fe5b0154028161023657fe5b04670de0b6b3a764000067011c37937e0800006000866048811061025657fe5b0154028161026057fe5b0491509150610271565b5060009050805b915091565b604890565b670cc47f20295c000081565b600062049d408243038161029757fe5b0492915050565b600080828511806102ae57508284145b156102be57506000905080610414565b848410156102ca578493505b82841115610323576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260308152602001806104246030913960400191505060405180910390fd5b63014c3a00850180851061033e576000809250925050610414565b80841061034c576001810393505b62049d408686038190049087860304808210156103e95762049d40888803819006900360008061037b85610201565b908402925083029050600185015b848110156103b95760008061039d83610201565b62049d4091820296909601950293909301925050600101610389565b5062049d408b8a030692506000806103d086610201565b9086029490940199505050910201935061041492505050565b8082146103f257fe5b6000806103fe84610201565b8a8a039182029850029550610414945050505050565b935093915050565b62049d408156fe5265776172645363686564756c6556333a3a67657446617465506572426c6f636b3a20494e56414c49445f52414e4745a26469706673582212206b3d7d52969a559a439d30d14649a99e45a8f083066fffd506d0b9ecbc99aa0964736f6c634300060c00335265776172645363686564756c6556333a3a436f6e74727563746f723a20696e76616c696420706172616d73",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100be5760003560e01c8063c0f34ddc11610076578063f679998c1161005b578063f679998c14610150578063fb4c0e491461016d578063fc47e20914610196576100be565b8063c0f34ddc14610140578063db81dfcc14610148576100be565b806344ea9de5116100a757806344ea9de5146100e55780634e3b8480146101025780639d33918e1461010a576100be565b80633ed55b7b146100c3578063422955a2146100dd575b600080fd5b6100cb61019e565b60408051918252519081900360200190f35b6100cb6101c2565b6100cb600480360360208110156100fb57600080fd5b50356101c9565b6100cb6101dd565b6101276004803603602081101561012057600080fd5b5035610201565b6040805192835260208301919091528051918290030190f35b6100cb610276565b6100cb61027b565b6100cb6004803603602081101561016657600080fd5b5035610287565b6101276004803603606081101561018357600080fd5b508035906020810135906040013561029e565b6100cb61041c565b7f000000000000000000000000000000000000000000000000000000000000000081565b6249d40081565b600081604881106101d657fe5b0154905081565b7f000000000000000000000000000000000000000000000000000000000000000081565b600080600883101561026a57670de0b6b3a7640000670cc47f20295c00006000856048811061022c57fe5b0154028161023657fe5b04670de0b6b3a764000067011c37937e0800006000866048811061025657fe5b0154028161026057fe5b0491509150610271565b5060009050805b915091565b604890565b670cc47f20295c000081565b600062049d408243038161029757fe5b0492915050565b600080828511806102ae57508284145b156102be57506000905080610414565b848410156102ca578493505b82841115610323576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260308152602001806104246030913960400191505060405180910390fd5b63014c3a00850180851061033e576000809250925050610414565b80841061034c576001810393505b62049d408686038190049087860304808210156103e95762049d40888803819006900360008061037b85610201565b908402925083029050600185015b848110156103b95760008061039d83610201565b62049d4091820296909601950293909301925050600101610389565b5062049d408b8a030692506000806103d086610201565b9086029490940199505050910201935061041492505050565b8082146103f257fe5b6000806103fe84610201565b8a8a039182029850029550610414945050505050565b935093915050565b62049d408156fe5265776172645363686564756c6556333a3a67657446617465506572426c6f636b3a20494e56414c49445f52414e4745a26469706673582212206b3d7d52969a559a439d30d14649a99e45a8f083066fffd506d0b9ecbc99aa0964736f6c634300060c0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "getFateAtIndex(uint256)": {
+        "params": {
+          "index": "The week at which the amount of FATE per block should be rewarded. Index starts at 0, meaning index              1 is actually week 2. Index 12 is week 13."
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "FATE_PER_BLOCK(uint256)": {
+        "notice": "This is the emission schedule for each block for a given week. These numbers represent how much FATE is         rewarded per block. Each index represents a week. The starting day/week, according to the Reward         Controller was 2021-08-26T19:43:45.000Z (UTC time). Meaning, week 2 started on 2021-09-02T19:43:45.000Z         (UTC time)."
+      },
+      "getFatePerBlock(uint256,uint256,uint256)": {
+        "notice": "returns the average amount of FATE earned per block over any block period. If spanned over multiple weeks, a weighted average is calculated. Both _fromBlock and _toBlock are inclusive"
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 15157,
+        "contract": "contracts/fatex/v3/RewardScheduleV3.sol:RewardScheduleV3",
+        "label": "FATE_PER_BLOCK",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_array(t_uint256)72_storage"
+      }
+    ],
+    "types": {
+      "t_array(t_uint256)72_storage": {
+        "base": "t_uint256",
+        "encoding": "inplace",
+        "label": "uint256[72]",
+        "numberOfBytes": "2304"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

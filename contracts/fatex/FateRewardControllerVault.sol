@@ -52,5 +52,4 @@ contract FateRewardControllerVault is Ownable {
             IERC20(fate).safeApprove(controller, uint(- 1));
         }
     }
-
 }
