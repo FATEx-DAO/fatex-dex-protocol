@@ -4,11 +4,12 @@ https://fatexdao.io
 
 ## Deployed Contracts
 
-| Name                              | Address                                           | Explorer                                                                        |
-|-----------------------------------|---------------------------------------------------|---------------------------------------------------------------------------------|
-| FateRewardControllerV1            | 0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27        | https://explorer.harmony.one/address/0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27 |
-| FateRewardControllerV2            | 0x04170495EA41288225025De3CDFE9A9799121861        | https://explorer.harmony.one/address/0x04170495EA41288225025De3CDFE9A9799121861 |
-| FateRewardVault                   | 0x3170e252D06f01a846e92CB0139Cdb16c69E867d        | https://explorer.harmony.one/address/0x3170e252D06f01a846e92CB0139Cdb16c69E867d |
+| Name                           | Address                                        | Explorer                                                                          |
+|--------------------------------|------------------------------------------------|-----------------------------------------------------------------------------------|
+| FateRewardControllerV1         | 0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27     | https://explorer.harmony.one/address/0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27   |
+| FateRewardControllerV2         | 0x04170495EA41288225025De3CDFE9A9799121861     | https://explorer.harmony.one/address/0x04170495EA41288225025De3CDFE9A9799121861   |
+| FateRewardControllerV2Reader   | 0xc65635d2e9af15516aBe5B74D73e87db27730784     | https://explorer.harmony.one/address/0xc65635d2e9af15516aBe5B74D73e87db27730784   |
+|FateRewardVault                   | 0x3170e252D06f01a846e92CB0139Cdb16c69E867d        | https://explorer.harmony.one/address/0x3170e252D06f01a846e92CB0139Cdb16c69E867d |
 | FateToken                         | 0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC        | https://explorer.harmony.one/address/0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC |
 | xFateToken                        | 0x6f4078cb47438157c914409d10358a0Cf4b06AB7        | https://explorer.harmony.one/address/0x6f4078cb47438157c914409d10358a0Cf4b06AB7 |
 | FeeTokenConverterToFate           | 0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1        | https://explorer.harmony.one/address/0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1 |
@@ -37,27 +38,38 @@ https://fatexdao.io
 | RewardScheduleV17                 | 0x70113ed062aeD0E23302D05Ac64A420b626f16e5        | https://explorer.harmony.one/address/0x70113ed062aeD0E23302D05Ac64A420b626f16e5 |
 | RewardScheduleV18                 | 0x04170495EA41288225025De3CDFE9A9799121861        | https://explorer.harmony.one/address/0x04170495EA41288225025De3CDFE9A9799121861 |
 | RewardScheduleV19                 | 0xab2907833ff4fd60216aaf16012e9a3a71aff222        | https://explorer.harmony.one/address/0xab2907833ff4fd60216aaf16012e9a3a71aff222 |
-| RewardScheduleV20                 | 0x17093221925Ad9e4c69aB17D3f128458CeEC587D        | https://explorer.harmony.one/address/0x17093221925Ad9e4c69aB17D3f128458CeEC587D |
-| AmmPoolFactory                    | 0xa4EF1da515096DB768Bc47DBC080888795643442        | https://explorer.harmony.one/address/0xa4EF1da515096DB768Bc47DBC080888795643442 |
-| AmmPoolRouter                     | 0x82145037096870BA3a5f7beE4C3602BD36e27Bff        | https://explorer.harmony.one/address/0x82145037096870BA3a5f7beE4C3602BD36e27Bff |
-| FGCD Vault                        | 0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44        | https://explorer.harmony.one/address/0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44 |
-| ~~Legal Vault~~                   | ~~0x5828930EF8e1Dc22360785c330aBe62BDa4B67E6~~    |https://explorer.harmony.one/address/0x5828930EF8e1Dc22360785c330aBe62BDa4B67E6~~|
-| Legal Vault V2                    | 0xc7d76DA3F4Da35Bd85de3042CDD8c59dC8dc6226        | https://explorer.harmony.one/address/0xc7d76DA3F4Da35Bd85de3042CDD8c59dC8dc6226 |
-| Community Vault                   | 0x21edECa351858756B89E0865fFdbD51Deae41bCD        | https://explorer.harmony.one/address/0x21edECa351858756B89E0865fFdbD51Deae41bCD |
-| Growth Vault                      | 0xA402084A04c222e25ae5748CFB12C76445a2a709        | https://explorer.harmony.one/address/0xA402084A04c222e25ae5748CFB12C76445a2a709 |
-| Presale Vault                     | 0xe5bA0b2f098cB2f2efA986bF605Bd6DBc8acD7D6        | https://explorer.harmony.one/address/0xe5bA0b2f098cB2f2efA986bF605Bd6DBc8acD7D6 |
-| Founder Vault                     | 0x5b351d270216848026DB6ac9fafBf4d422d5Ca43        | https://explorer.harmony.one/address/0x5b351d270216848026DB6ac9fafBf4d422d5Ca43 |
-| Advisor Vault                     | 0xFe2976Fc317667743d72D232DCEdd4E250170f1B        | https://explorer.harmony.one/address/0xFe2976Fc317667743d72D232DCEdd4E250170f1B |
-| Advisor Vault                     | 0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34        | https://explorer.harmony.one/address/0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34 |
-| Team Vault                        | 0xFD266a3D4DA9d185A0491f71cE61C5a22014d874        | https://explorer.harmony.one/address/0xFD266a3D4DA9d185A0491f71cE61C5a22014d874 |
-| Admin Multisig                    | 0x4853365bc81f8270d902076892e13f27c27e7266        | https://explorer.harmony.one/address/0x4853365bc81f8270d902076892e13f27c27e7266 |
-| ~~Snapshot Voting Token~~         | 0x24478D53D3306081Ed88334319C9d0AfddC279bB        | https://explorer.harmony.one/address/0x24478D53D3306081Ed88334319C9d0AfddC279bB |
-| ~~Snapshot Voting Token V2~~      | 0x43d2Cbe53793DA86FC676A4a69741b1e63AC8b2C        | https://explorer.harmony.one/address/0x43d2Cbe53793DA86FC676A4a69741b1e63AC8b2C |
-| Snapshot Voting Token V3          | 0x72d2f2d57CC5D3e78c456616E1d17e73e8848c3A        | https://explorer.harmony.one/address/0x72d2f2d57CC5D3e78c456616E1d17e73e8848c3A |
-| Multi Call                        | 0x41Fec4E5De930d8a618900973f0A678114C27361        | https://explorer.harmony.one/address/0x41Fec4E5De930d8a618900973f0A678114C27361 |
-| MockLpTokenFactory                | 0xd9D9a75f0eFe0A2dD580f212005a8211CC8dF4FD        | https://explorer.harmony.one/address/0xd9D9a75f0eFe0A2dD580f212005a8211CC8dF4FD |
-| FateRewardControllerUpgraderV1    | 0xbF5423B7035e4305608490F6925169998644c422        | https://explorer.harmony.one/address/0xbF5423B7035e4305608490F6925169998644c422 |
-| FateRewardControllerAssetAdder    | 0x878F1b45C0Fd91b324E45A2294E9B9a27d748605        | https://explorer.harmony.one/address/0x878F1b45C0Fd91b324E45A2294E9B9a27d748605 |
+| RewardScheduleV20                 | 0x17093221925Ad9e4c69aB17D3f128458CeEC587D        | https://explorer.harmony.one/address/0x17093221925Ad9e4c69aB17D3f128458CeEC587D || RewardScheduleV21              | 0x7b2BDb8D186666C17Ae0A97Ce24D32EE3064F2bA     | https://explorer.harmony.one/address/0x7b2BDb8D186666C17Ae0A97Ce24D32EE3064F2bA   |
+| RewardScheduleV22              | 0x9b206ed533b576ac9e37c3f5b2699700edc54924     | https://explorer.harmony.one/address/0x9b206ed533b576ac9e37c3f5b2699700edc54924   |   
+| RewardScheduleV23              | 0x49f4b695567ee9ab0ff72555b4a38355853983cd     | https://explorer.harmony.one/address/0x49f4b695567ee9ab0ff72555b4a38355853983cd   |
+| RewardScheduleV24              | 0xd8AB2e9B9bCc7c61B4537C88d79A551968a2e09d     | https://explorer.harmony.one/address/0xd8AB2e9B9bCc7c61B4537C88d79A551968a2e09d   |
+| RewardScheduleV25              | 0x797146533e63671fd9424d514bff2afc42ef5fe9     | https://explorer.harmony.one/address/0x797146533e63671fd9424d514bff2afc42ef5fe9   | 
+| RewardScheduleV26              | 0x5c82f8427350ffae84aa4835ec3c1cc5401cdcc9     | https://explorer.harmony.one/address/0x5c82f8427350ffae84aa4835ec3c1cc5401cdcc9   | 
+| RewardScheduleV27              | 0xb41290769d8e462870c17e2a41d5228cd1b5ccd5     | https://explorer.harmony.one/address/0xb41290769d8e462870c17e2a41d5228cd1b5ccd5   |
+| RewardScheduleV28              | 0x6d6a55832f792172b16b8f1d98ecc57d76eee6a5     | https://explorer.harmony.one/address/0x6d6a55832f792172b16b8f1d98ecc57d76eee6a5   |
+| RewardScheduleV29              | 0xbd74a40a3229810177238e18a76deabb8207ea4c     | https://explorer.harmony.one/address/0xbd74a40a3229810177238e18a76deabb8207ea4c   |
+| RewardScheduleV30              | 0xC54b302B5De6E698bA0C46432FF2588EF04B1F75     | https://explorer.harmony.one/address/0xC54b302B5De6E698bA0C46432FF2588EF04B1F75   |
+| RewardScheduleV31              | 0xc6EDFf9AD1FE25d7450Ddd686E2704767488962C     | https://explorer.harmony.one/address/0xc6EDFf9AD1FE25d7450Ddd686E2704767488962C   |         
+| RewardScheduleV32              | 0xc9370f340213a9586559e2b7063d01e212acf70b     | https://explorer.harmony.one/address/0xc9370f340213a9586559e2b7063d01e212acf70b   |         
+| AmmPoolFactory                 | 0xa4EF1da515096DB768Bc47DBC080888795643442     | https://explorer.harmony.one/address/0xa4EF1da515096DB768Bc47DBC080888795643442   |
+| AmmPoolRouter                  | 0x82145037096870BA3a5f7beE4C3602BD36e27Bff     | https://explorer.harmony.one/address/0x82145037096870BA3a5f7beE4C3602BD36e27Bff   |
+| FGCD Vault                     | 0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44     | https://explorer.harmony.one/address/0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44   |
+| ~~Legal Vault~~                | ~~0x5828930EF8e1Dc22360785c330aBe62BDa4B67E6~~ | https://explorer.harmony.one/address/0x5828930EF8e1Dc22360785c330aBe62BDa4B67E6~~ |
+| Legal Vault V2                 | 0xc7d76DA3F4Da35Bd85de3042CDD8c59dC8dc6226     | https://explorer.harmony.one/address/0xc7d76DA3F4Da35Bd85de3042CDD8c59dC8dc6226   |
+| Community Vault                | 0x21edECa351858756B89E0865fFdbD51Deae41bCD     | https://explorer.harmony.one/address/0x21edECa351858756B89E0865fFdbD51Deae41bCD   |
+| Growth Vault                   | 0xA402084A04c222e25ae5748CFB12C76445a2a709     | https://explorer.harmony.one/address/0xA402084A04c222e25ae5748CFB12C76445a2a709   |
+| Presale Vault                  | 0xe5bA0b2f098cB2f2efA986bF605Bd6DBc8acD7D6     | https://explorer.harmony.one/address/0xe5bA0b2f098cB2f2efA986bF605Bd6DBc8acD7D6   |
+| Founder Vault                  | 0x5b351d270216848026DB6ac9fafBf4d422d5Ca43     | https://explorer.harmony.one/address/0x5b351d270216848026DB6ac9fafBf4d422d5Ca43   |
+| Advisor Vault                  | 0xFe2976Fc317667743d72D232DCEdd4E250170f1B     | https://explorer.harmony.one/address/0xFe2976Fc317667743d72D232DCEdd4E250170f1B   |
+| Advisor Vault                  | 0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34     | https://explorer.harmony.one/address/0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34   |
+| Team Vault                     | 0xFD266a3D4DA9d185A0491f71cE61C5a22014d874     | https://explorer.harmony.one/address/0xFD266a3D4DA9d185A0491f71cE61C5a22014d874   |
+| Admin Multisig                 | 0x4853365bc81f8270d902076892e13f27c27e7266     | https://explorer.harmony.one/address/0x4853365bc81f8270d902076892e13f27c27e7266   |
+| ~~Snapshot Voting Token~~      | 0x24478D53D3306081Ed88334319C9d0AfddC279bB     | https://explorer.harmony.one/address/0x24478D53D3306081Ed88334319C9d0AfddC279bB   |
+| ~~Snapshot Voting Token V2~~   | 0x43d2Cbe53793DA86FC676A4a69741b1e63AC8b2C     | https://explorer.harmony.one/address/0x43d2Cbe53793DA86FC676A4a69741b1e63AC8b2C   |
+| Snapshot Voting Token V3       | 0x72d2f2d57CC5D3e78c456616E1d17e73e8848c3A     | https://explorer.harmony.one/address/0x72d2f2d57CC5D3e78c456616E1d17e73e8848c3A   |
+| Multi Call                     | 0x41Fec4E5De930d8a618900973f0A678114C27361     | https://explorer.harmony.one/address/0x41Fec4E5De930d8a618900973f0A678114C27361   |
+| MockLpTokenFactory             | 0xd9D9a75f0eFe0A2dD580f212005a8211CC8dF4FD     | https://explorer.harmony.one/address/0xd9D9a75f0eFe0A2dD580f212005a8211CC8dF4FD   |
+| FateRewardControllerUpgraderV1 | 0xbF5423B7035e4305608490F6925169998644c422     | https://explorer.harmony.one/address/0xbF5423B7035e4305608490F6925169998644c422   |
+| FateRewardControllerAssetAdder | 0x878F1b45C0Fd91b324E45A2294E9B9a27d748605     | https://explorer.harmony.one/address/0x878F1b45C0Fd91b324E45A2294E9B9a27d748605   |
 
 ## Staking Pools (with IDs for FateRewardController)
 
@@ -133,6 +145,21 @@ https://fatexdao.io
 | bscLINK:xFATE     | 0x5b770b97F4b08eD81f511c844F533D29e332062e    | 68        |
 | bscLINK:WONE      | 0x55bFbAefEad3478E5A414D82b39E3326F8aBbE28    | 69        |
 | bscLINK:1DAI      | 0x5ca16FbDbCa1945F660692645D9670b7c55d6a19    | 70        |
+| WONE:1DAI         | 0xF1DF62AF26fbE4536ecA7cD9050503Bc064dbB0C    | 71        |
+| FTM:1USDC         | 0x91C0F15b3766723A3e1e31539c6F8e8F1541c884    | 72        |
+| AVAX:1USDC        | 0xaf3aeb17d43c3b4C0AaC7E49ACC69Ef780f528E2    | 73        |
+| bscBNB:1USDC      | 0x957672650c83baa91b14FCB28a38858d9f4E40a0    | 74        |
+| bscLINK:LINK      | 0x60DF3832FbA2190bF8419555211a78827Efb9Bcf    | 75        |
+| WMATIC:1USDC      | 0xc48e2cb14bc509ee3599a6116930977342426db1    | 76        |
+| bscADA:1USDC      | 0x0D7fDBBB006fa026B29a69F497284C6E078E7f84    | 77        |
+| FATE:bscADA       | 0xAc6a9Ee53D8d55850d3d687470c439ae19E2af35    | 78        |
+| bscADA:1PAXG      | 0xE346316ae354A6827C5f5aE3bfe9B892CbF81516    | 79        |
+| LUNA:UST          | 0xC4e9Bf328034dEf62be14E1e37A493DF5CFB000f    | 80        |
+| bscBNB:1DAI       | 0x571B472dE98937510ee46F2f6324dde293729323    | 81        |
+| bscETH:1ETH       | 0xCeA7633cE4d3B1AD7e95aF98c292A0FD9B00f2c8    | 82        |
+| bscMATIC:WMATIC   | 0x21154Ccd77EF03798Dc8080644B84E4241b9C6Fe    | 83        |
+| FTM:bscFTM        | 0x1c1e483a945D0ee6Fe69dE1d897Bcd47C6c26bd7    | 84        |
+| 1SUSHI:bscSUSHI   | 0x099929A75873b6abeac7B5304C3C390521924678    | 85        |
 
 ## Testnet Deployed Contracts (unless otherwise noted below, all addresses are the same)
 

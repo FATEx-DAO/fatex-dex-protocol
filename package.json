@@ -60,7 +60,8 @@
     "prettier": "prettier --write test/**/*.{js,ts} && prettier --write contracts/**/*.sol",
     "lint": "yarn prettier && solhint -c .solhint.json contracts/**/*.sol",
     "prepublishOnly": "yarn run build && node scripts/prepublish.js",
-    "generate-locked-rewards-csv": "HARDHAT_NETWORK=harmony hardhat run scripts/calculate-locked-rewards-for-epoch.js"
+    "generate-locked-rewards-csv": "HARDHAT_NETWORK=harmony hardhat run scripts/calculate-locked-rewards-for-epoch.js",
+    "generate-fate-balances-csv": "HARDHAT_NETWORK=harmony hardhat run scripts/calculate-fate-balance-at-block-height.js"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",
@@ -92,5 +93,7 @@
     "ts-generator": "^0.1.1",
     "typechain": "^4.0.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "csv-parser": "^3.0.0"
+  }
 }

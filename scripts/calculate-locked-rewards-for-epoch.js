@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
-const blockNumber = 20368752
-const epoch = 0
+const blockNumber = 23579227
+const epoch = 1
 
 const csvWriter = require('csv-writer').createObjectCsvWriter({
   path: `scripts/epoch-${epoch}-rewards.csv`,
@@ -14,11 +14,11 @@ const csvWriter = require('csv-writer').createObjectCsvWriter({
 const hardhat = require("hardhat");
 const ethers = hardhat.ethers;
 
-const multiplierForEpoch = ethers.BigNumber.from('4')
-const divisorForEpoch = ethers.BigNumber.from('1')
+const multiplierForEpoch = ethers.BigNumber.from('115')
+const divisorForEpoch = ethers.BigNumber.from('10')
 
 const gqlBody = (skip) => {
-  return `{"query":"{\\n  userEpochTotalLockedRewardByPools(first: 1000, skip: ${skip}, orderBy: user, orderDirection: asc, block: {number: ${blockNumber}}, where: {epoch: ${epoch}}) {\\n    user\\n    poolId\\n    amountFate\\n  }\\n}","variables":null,"operationName":null}`
+  return `{"query":"{  userEpochTotalLockedRewardByPools(first: 1000, skip: ${skip}, orderBy: user, orderDirection: asc, block: {number: ${blockNumber}}, where: {epoch: ${epoch}}) {    user    poolId    amountFate  }}","variables":null,"operationName":null}`
 }
 
 async function main() {

@@ -19,25 +19,25 @@ contract RewardSchedule {
     38.06e18,           // week 5
     38.60e18,           // week 6
     39.14e18,           // week 7
-    13.6187700022e18,   // week 8
-    13.6187700022e18,   // week 9
-    13.6187700022e18,   // week 10
-    13.6187700022e18,   // week 11
-    13.6187700022e18,   // week 12
-    13.6187700022e18,   // week 13
-    72.00e18,           // week 14
+    18.18181818e18,     // week 8
+    18.18181818e18,     // week 9
+    18.18181818e18,     // week 10
+    18.18181818e18,     // week 11
+    18.18181818e18,     // week 12
+    18.18181818e18,     // week 13
+    18.18181818e18,           // week 14
     0.00e18,            // week 15
     0.00e18,            // week 16
     0.00e18,            // week 17
-    0.00e18,            // week 18
-    0.00e18,            // week 19
-    0.00e18,            // week 20
-    0.00e18,            // week 21
-    0.00e18,            // week 22
-    0.00e18,            // week 23
-    0.00e18,            // week 24
-    0.00e18,            // week 25
-    0.00e18,            // week 26
+    8.8888888e18,            // week 18
+    8.8888888e18,            // week 19
+    8.8888888e18,            // week 20
+    8.8888888e18,            // week 21
+    8.8888888e18,            // week 22
+    8.8888888e18,            // week 23
+    8.8888888e18,            // week 24
+    8.8888888e18,            // week 25
+    8.8888888e18,            // week 26
     0.00e18,            // week 27
     0.00e18,            // week 28
     0.00e18,            // week 29
@@ -102,8 +102,11 @@ contract RewardSchedule {
      */
     function getFateAtIndex(uint index) public view returns (uint) {
         if (index < 13) {
-            // vesting occurs at an 80/20 rate for the first 13 weeks
+            // vesting occurs at an 80 / 20 rate for the first 13 weeks
             return FATE_PER_BLOCK[index] * 2 / 10;
+        } else if (index < 29) {
+            // vesting occurs at an 92 / 8 rate for the next 16 weeks
+            return FATE_PER_BLOCK[index] * 8 / 100;
         } else {
             return FATE_PER_BLOCK[index];
         }
