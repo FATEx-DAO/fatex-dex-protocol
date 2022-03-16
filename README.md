@@ -9,36 +9,37 @@ https://fatexdao.io
 | FateRewardControllerV1         | 0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27     | https://explorer.harmony.one/address/0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27   |
 | FateRewardControllerV2         | 0x04170495EA41288225025De3CDFE9A9799121861     | https://explorer.harmony.one/address/0x04170495EA41288225025De3CDFE9A9799121861   |
 | FateRewardControllerV2Reader   | 0xc65635d2e9af15516aBe5B74D73e87db27730784     | https://explorer.harmony.one/address/0xc65635d2e9af15516aBe5B74D73e87db27730784   |
-|FateRewardVault                   | 0x3170e252D06f01a846e92CB0139Cdb16c69E867d        | https://explorer.harmony.one/address/0x3170e252D06f01a846e92CB0139Cdb16c69E867d |
-| FateToken                         | 0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC        | https://explorer.harmony.one/address/0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC |
-| xFateToken                        | 0x6f4078cb47438157c914409d10358a0Cf4b06AB7        | https://explorer.harmony.one/address/0x6f4078cb47438157c914409d10358a0Cf4b06AB7 |
-| FeeTokenConverterToFate           | 0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1        | https://explorer.harmony.one/address/0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1 |
-| GovernorAlpha                     | 0xF6e6e7Bd8a051cA0466c7B06Bcb789A789E1f1bc        | https://explorer.harmony.one/address/0xF6e6e7Bd8a051cA0466c7B06Bcb789A789E1f1bc |
-| GovernorTimelock                  | 0xd0a439bbe1a18d634e87c77d18c3e93953e44d22        | https://explorer.harmony.one/address/0xd0a439bbe1a18d634e87c77d18c3e93953e44d22 |
-| DeFi Kingdoms Migrator            | 0x3ACe48805B6baF9185833B611645a519CC8910A3        | https://explorer.harmony.one/address/0x3ACe48805B6baF9185833B611645a519CC8910A3 |
-| FuzzSwap Migrator                 | 0x5AA4cD364c87Ffa363bF82E3489f72E39E024abC        | https://explorer.harmony.one/address/0x5AA4cD364c87Ffa363bF82E3489f72E39E024abC |
-| SushiSwap Migrator                | 0x4FA5f948785510035B8316Dab2FA67e31ce278F7        | https://explorer.harmony.one/address/0x4FA5f948785510035B8316Dab2FA67e31ce278F7 |
-| ViperSwap Migrator                | 0xd50D8901aB7F455494cE50eb7665DFB263B0a962        | https://explorer.harmony.one/address/0xd50D8901aB7F455494cE50eb7665DFB263B0a962 |
-| RewardScheduleV1                  | 0xE8738CC824731e791DB589Db79dA77703e64212e        | https://explorer.harmony.one/address/0xE8738CC824731e791DB589Db79dA77703e64212e |
-| RewardScheduleV2                  | 0x6e3bb09772531daca2380c302a97b9220bf65baf        | https://explorer.harmony.one/address/0x6e3bb09772531daca2380c302a97b9220bf65baf |
-| RewardScheduleV3                  | 0x8335BB2067E5C634bDAfd0D8fE29F610124fE05a        | https://explorer.harmony.one/address/0x8335BB2067E5C634bDAfd0D8fE29F610124fE05a |
-| RewardScheduleV4                  | 0x89DeAdd1f22Ff066bEdF513B7D4BAbeB0619058C        | https://explorer.harmony.one/address/0x89DeAdd1f22Ff066bEdF513B7D4BAbeB0619058C |
-| RewardScheduleV5                  | 0xa8B65Ce92b0Fe602741D674984B3fDE147e4F8a0        | https://explorer.harmony.one/address/0xa8B65Ce92b0Fe602741D674984B3fDE147e4F8a0 |
-| RewardScheduleV6                  | 0xBa4f12315d4E11762b22Dc80aCFED160737E310e        | https://explorer.harmony.one/address/0xBa4f12315d4E11762b22Dc80aCFED160737E310e |
-| RewardScheduleV7                  | 0x94465616815a01146c26e60Cf326Ff3F0e1ddd91        | https://explorer.harmony.one/address/0x94465616815a01146c26e60Cf326Ff3F0e1ddd91 |
-| RewardScheduleV8                  | 0xfAF6A7DB0477419EF511250F89c4B3A9Ff6b5AA6        | https://explorer.harmony.one/address/0xfAF6A7DB0477419EF511250F89c4B3A9Ff6b5AA6 |
-| RewardScheduleV9                  | 0x794f1dDb896b961111Ff616d2e3EDfD0a8B66ed0        | https://explorer.harmony.one/address/0x794f1dDb896b961111Ff616d2e3EDfD0a8B66ed0 |
-| RewardScheduleV10                 | 0x4E8CEeADE608fB173E23ce83116867c088cCD5fe        | https://explorer.harmony.one/address/0x4E8CEeADE608fB173E23ce83116867c088cCD5fe |
-| RewardScheduleV11                 | 0xF213b86aDe268A10A006feAFAF8F5c3635723119        | https://explorer.harmony.one/address/0xF213b86aDe268A10A006feAFAF8F5c3635723119 |
-| RewardScheduleV12                 | 0xDE9e8070Fd3A67cCaAa0E2b3F9e8E228462F2912        | https://explorer.harmony.one/address/0xDE9e8070Fd3A67cCaAa0E2b3F9e8E228462F2912 |
-| RewardScheduleV13                 | 0x41c3f5a5b69c21e6332b416e71f67b156222da87        | https://explorer.harmony.one/address/0x41c3f5a5b69c21e6332b416e71f67b156222da87 |
-| RewardScheduleV14                 | 0x5DD5e8bA7e68f60f09349617EDBd5D842899FfC7        | https://explorer.harmony.one/address/0x5DD5e8bA7e68f60f09349617EDBd5D842899FfC7 |
-| RewardScheduleV15                 | 0x54026eea0799e52B2ac57c2C63F5AB1D652f88c0        | https://explorer.harmony.one/address/0x54026eea0799e52B2ac57c2C63F5AB1D652f88c0 |
-| RewardScheduleV16                 | 0x36da7c3ba699dde119be1f794a410b86419fa465        | https://explorer.harmony.one/address/0x36da7c3ba699dde119be1f794a410b86419fa465 |
-| RewardScheduleV17                 | 0x70113ed062aeD0E23302D05Ac64A420b626f16e5        | https://explorer.harmony.one/address/0x70113ed062aeD0E23302D05Ac64A420b626f16e5 |
-| RewardScheduleV18                 | 0x04170495EA41288225025De3CDFE9A9799121861        | https://explorer.harmony.one/address/0x04170495EA41288225025De3CDFE9A9799121861 |
-| RewardScheduleV19                 | 0xab2907833ff4fd60216aaf16012e9a3a71aff222        | https://explorer.harmony.one/address/0xab2907833ff4fd60216aaf16012e9a3a71aff222 |
-| RewardScheduleV20                 | 0x17093221925Ad9e4c69aB17D3f128458CeEC587D        | https://explorer.harmony.one/address/0x17093221925Ad9e4c69aB17D3f128458CeEC587D || RewardScheduleV21              | 0x7b2BDb8D186666C17Ae0A97Ce24D32EE3064F2bA     | https://explorer.harmony.one/address/0x7b2BDb8D186666C17Ae0A97Ce24D32EE3064F2bA   |
+| FateRewardVault                | 0x3170e252D06f01a846e92CB0139Cdb16c69E867d     | https://explorer.harmony.one/address/0x3170e252D06f01a846e92CB0139Cdb16c69E867d   |
+| FateToken                      | 0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC     | https://explorer.harmony.one/address/0xB2e2650DFdb7b2DEc4a4455a375ffBfD926cE5FC   |
+| xFateToken                     | 0x6f4078cb47438157c914409d10358a0Cf4b06AB7     | https://explorer.harmony.one/address/0x6f4078cb47438157c914409d10358a0Cf4b06AB7   |
+| FeeTokenConverterToFate        | 0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1     | https://explorer.harmony.one/address/0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1   |
+| GovernorAlpha                  | 0xF6e6e7Bd8a051cA0466c7B06Bcb789A789E1f1bc     | https://explorer.harmony.one/address/0xF6e6e7Bd8a051cA0466c7B06Bcb789A789E1f1bc   |
+| GovernorTimelock               | 0xd0a439bbe1a18d634e87c77d18c3e93953e44d22     | https://explorer.harmony.one/address/0xd0a439bbe1a18d634e87c77d18c3e93953e44d22   |
+| DeFi Kingdoms Migrator         | 0x3ACe48805B6baF9185833B611645a519CC8910A3     | https://explorer.harmony.one/address/0x3ACe48805B6baF9185833B611645a519CC8910A3   |
+| FuzzSwap Migrator              | 0x5AA4cD364c87Ffa363bF82E3489f72E39E024abC     | https://explorer.harmony.one/address/0x5AA4cD364c87Ffa363bF82E3489f72E39E024abC   |
+| SushiSwap Migrator             | 0x4FA5f948785510035B8316Dab2FA67e31ce278F7     | https://explorer.harmony.one/address/0x4FA5f948785510035B8316Dab2FA67e31ce278F7   |
+| ViperSwap Migrator             | 0xd50D8901aB7F455494cE50eb7665DFB263B0a962     | https://explorer.harmony.one/address/0xd50D8901aB7F455494cE50eb7665DFB263B0a962   |
+| RewardScheduleV1               | 0xE8738CC824731e791DB589Db79dA77703e64212e     | https://explorer.harmony.one/address/0xE8738CC824731e791DB589Db79dA77703e64212e   |
+| RewardScheduleV2               | 0x6e3bb09772531daca2380c302a97b9220bf65baf     | https://explorer.harmony.one/address/0x6e3bb09772531daca2380c302a97b9220bf65baf   |
+| RewardScheduleV3               | 0x8335BB2067E5C634bDAfd0D8fE29F610124fE05a     | https://explorer.harmony.one/address/0x8335BB2067E5C634bDAfd0D8fE29F610124fE05a   |
+| RewardScheduleV4               | 0x89DeAdd1f22Ff066bEdF513B7D4BAbeB0619058C     | https://explorer.harmony.one/address/0x89DeAdd1f22Ff066bEdF513B7D4BAbeB0619058C   |
+| RewardScheduleV5               | 0xa8B65Ce92b0Fe602741D674984B3fDE147e4F8a0     | https://explorer.harmony.one/address/0xa8B65Ce92b0Fe602741D674984B3fDE147e4F8a0   |
+| RewardScheduleV6               | 0xBa4f12315d4E11762b22Dc80aCFED160737E310e     | https://explorer.harmony.one/address/0xBa4f12315d4E11762b22Dc80aCFED160737E310e   |
+| RewardScheduleV7               | 0x94465616815a01146c26e60Cf326Ff3F0e1ddd91     | https://explorer.harmony.one/address/0x94465616815a01146c26e60Cf326Ff3F0e1ddd91   |
+| RewardScheduleV8               | 0xfAF6A7DB0477419EF511250F89c4B3A9Ff6b5AA6     | https://explorer.harmony.one/address/0xfAF6A7DB0477419EF511250F89c4B3A9Ff6b5AA6   |
+| RewardScheduleV9               | 0x794f1dDb896b961111Ff616d2e3EDfD0a8B66ed0     | https://explorer.harmony.one/address/0x794f1dDb896b961111Ff616d2e3EDfD0a8B66ed0   |
+| RewardScheduleV10              | 0x4E8CEeADE608fB173E23ce83116867c088cCD5fe     | https://explorer.harmony.one/address/0x4E8CEeADE608fB173E23ce83116867c088cCD5fe   |
+| RewardScheduleV11              | 0xF213b86aDe268A10A006feAFAF8F5c3635723119     | https://explorer.harmony.one/address/0xF213b86aDe268A10A006feAFAF8F5c3635723119   |
+| RewardScheduleV12              | 0xDE9e8070Fd3A67cCaAa0E2b3F9e8E228462F2912     | https://explorer.harmony.one/address/0xDE9e8070Fd3A67cCaAa0E2b3F9e8E228462F2912   |
+| RewardScheduleV13              | 0x41c3f5a5b69c21e6332b416e71f67b156222da87     | https://explorer.harmony.one/address/0x41c3f5a5b69c21e6332b416e71f67b156222da87   |
+| RewardScheduleV14              | 0x5DD5e8bA7e68f60f09349617EDBd5D842899FfC7     | https://explorer.harmony.one/address/0x5DD5e8bA7e68f60f09349617EDBd5D842899FfC7   |
+| RewardScheduleV15              | 0x54026eea0799e52B2ac57c2C63F5AB1D652f88c0     | https://explorer.harmony.one/address/0x54026eea0799e52B2ac57c2C63F5AB1D652f88c0   |
+| RewardScheduleV16              | 0x36da7c3ba699dde119be1f794a410b86419fa465     | https://explorer.harmony.one/address/0x36da7c3ba699dde119be1f794a410b86419fa465   |
+| RewardScheduleV17              | 0x70113ed062aeD0E23302D05Ac64A420b626f16e5     | https://explorer.harmony.one/address/0x70113ed062aeD0E23302D05Ac64A420b626f16e5   |
+| RewardScheduleV18              | 0x04170495EA41288225025De3CDFE9A9799121861     | https://explorer.harmony.one/address/0x04170495EA41288225025De3CDFE9A9799121861   |
+| RewardScheduleV19              | 0xab2907833ff4fd60216aaf16012e9a3a71aff222     | https://explorer.harmony.one/address/0xab2907833ff4fd60216aaf16012e9a3a71aff222   |
+| RewardScheduleV20              | 0x17093221925Ad9e4c69aB17D3f128458CeEC587D     | https://explorer.harmony.one/address/0x17093221925Ad9e4c69aB17D3f128458CeEC587D   |
+| RewardScheduleV21              | 0x7b2BDb8D186666C17Ae0A97Ce24D32EE3064F2bA     | https://explorer.harmony.one/address/0x7b2BDb8D186666C17Ae0A97Ce24D32EE3064F2bA   |
 | RewardScheduleV22              | 0x9b206ed533b576ac9e37c3f5b2699700edc54924     | https://explorer.harmony.one/address/0x9b206ed533b576ac9e37c3f5b2699700edc54924   |   
 | RewardScheduleV23              | 0x49f4b695567ee9ab0ff72555b4a38355853983cd     | https://explorer.harmony.one/address/0x49f4b695567ee9ab0ff72555b4a38355853983cd   |
 | RewardScheduleV24              | 0xd8AB2e9B9bCc7c61B4537C88d79A551968a2e09d     | https://explorer.harmony.one/address/0xd8AB2e9B9bCc7c61B4537C88d79A551968a2e09d   |
@@ -107,7 +108,7 @@ https://fatexdao.io
 | 1PAXG:1USDC       | 0x85e116AB5379027866a1E410D0b5bd05759Ad617    | 30        |
 | 1PAXG:1ETH        | 0x8938434ac9D7E879F8FBB9716E6A5076eF9c3b1b    | 31        |
 | 1PAXG:1WBTC       | 0xD5bA885cEaa5c5837D14Ee1314243D3a3B69f294    | 32        |
-| 1PAXG:WONE        | 0xD5bA885cEaa5c5837D14Ee1314243D3a3B69f294    | 33        |
+| 1PAXG:WONE        | 0x5b750847b2105818bB08c5bc501e05D2805CDc43    | 33        |
 | xFATE:1PAXG       | 0xFa1E034621FdCDCEEa4131C538bc896380aac69c    | 34        |
 | UST:1DAI          | 0x67DbfbAf9A78da465b24330869717F25BF241EC6    | 35        |
 | FATE:bscBNB       | 0xc720E4F91DB0FC02a762D7adFC57b560f931E59D    | 36        |
