@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "../../libraries/RankedArray.sol";
 
-import "./IRewardScheduleV3.sol";
 import "./IFateRewardControllerV3.sol";
 import "./IMembershipWithReward.sol";
 
@@ -16,9 +15,6 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     using SafeMath for uint256;
 
     uint256 constant public POINTS_PER_SECOND = 0.04e18;
-
-    // The emission scheduler that calculates fate per second over a given period
-    IRewardScheduleV3 public rewardSchedule;
 
     struct MembershipInfo {
         uint256 firstDepositTimestamp; // set when first deposit
