@@ -40,7 +40,7 @@ https://fatexdao.io
 | RewardScheduleV19              | 0xab2907833ff4fd60216aaf16012e9a3a71aff222     | https://explorer.harmony.one/address/0xab2907833ff4fd60216aaf16012e9a3a71aff222   |
 | RewardScheduleV20              | 0x17093221925Ad9e4c69aB17D3f128458CeEC587D     | https://explorer.harmony.one/address/0x17093221925Ad9e4c69aB17D3f128458CeEC587D   |
 | RewardScheduleV21              | 0x7b2BDb8D186666C17Ae0A97Ce24D32EE3064F2bA     | https://explorer.harmony.one/address/0x7b2BDb8D186666C17Ae0A97Ce24D32EE3064F2bA   |
-| RewardScheduleV22              | 0x9b206ed533b576ac9e37c3f5b2699700edc54924     | https://explorer.harmony.one/address/0x9b206ed533b576ac9e37c3f5b2699700edc54924   |   
+| RewardScheduleV22              | 0x9b206ed533b576ac9e37c3f5b2699700edc54924     | https://explorer.harmony.one/address/0x9b206ed533b576ac9e37c3f5b2699700edc54924   | 
 | RewardScheduleV23              | 0x49f4b695567ee9ab0ff72555b4a38355853983cd     | https://explorer.harmony.one/address/0x49f4b695567ee9ab0ff72555b4a38355853983cd   |
 | RewardScheduleV24              | 0xd8AB2e9B9bCc7c61B4537C88d79A551968a2e09d     | https://explorer.harmony.one/address/0xd8AB2e9B9bCc7c61B4537C88d79A551968a2e09d   |
 | RewardScheduleV25              | 0x797146533e63671fd9424d514bff2afc42ef5fe9     | https://explorer.harmony.one/address/0x797146533e63671fd9424d514bff2afc42ef5fe9   | 
