@@ -16,7 +16,7 @@ contract XFateToken is FateToken {
     constructor(FateToken _fate) FateToken(msg.sender, 0) public {
         fate = _fate;
 
-        name = "xFATExDAO";
+        name = "xFATExFI";
         symbol = "xFATE";
     }
 

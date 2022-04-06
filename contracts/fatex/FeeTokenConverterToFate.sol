@@ -10,6 +10,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "../uniswap-v2/interfaces/IUniswapV2Factory.sol";
 import "../uniswap-v2/interfaces/IUniswapV2Pair.sol";
 import "../uniswap-v2/interfaces/IUniswapV2ERC20.sol";
+import "./XFateToken.sol";
 
 // This contract handles giving rewards to xFATE holders by trading tokens collected from fees for FATE.
 
@@ -151,6 +152,21 @@ contract FeeTokenConverterToFate is Ownable {
         uint256 amount0,
         uint256 amount1
     ) internal returns (uint256 fateOut) {
+        if (token0 == xFATE) {
+            uint newAmount0 = amount0.mul(IERC20(fate).balanceOf(xFATE)).div(IERC20(xFATE).totalSupply());
+            XFateToken(xFATE).leave(amount0);
+
+            token0 = fate;
+            amount0 = newAmount0;
+        }
+        if (token1 == xFATE) {
+            uint newAmount1 = amount1.mul(IERC20(fate).balanceOf(xFATE)).div(IERC20(xFATE).totalSupply());
+            XFateToken(xFATE).leave(amount1);
+
+            token1 = fate;
+            amount1 = newAmount1;
+        }
+
         // Interactions
         if (token0 == token1) {
             uint256 amount = amount0.add(amount1);

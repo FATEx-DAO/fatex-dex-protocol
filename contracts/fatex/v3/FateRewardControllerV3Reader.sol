@@ -11,7 +11,7 @@ import "./IFateRewardControllerV3.sol";
 // distributed and the community can show to govern itself.
 //
 // Have fun reading it. Hopefully it's bug-free. God bless.
-contract FateRewardControllerV2Reader {
+contract FateRewardControllerV3Reader {
     using SafeMath for uint256;
 
     IFateRewardControllerV3 controller;

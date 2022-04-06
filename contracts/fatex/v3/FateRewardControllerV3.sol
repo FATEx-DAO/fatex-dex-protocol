@@ -107,19 +107,22 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         mockLpTokenFactory = _mockLpTokenFactory;
         startTimestamp = block.timestamp;
         fateFeeTo = _fateFeeTo;
-        // reset old controller's pooInfo
-        for (uint i = 0; i < _oldControllers[0].poolLength(); i++) {
-            (IERC20 lpToken, uint256 allocPoint, ,) = _oldControllers[0].poolInfo(i);
-            poolInfo.push(
-                PoolInfoV3({
-                    lpToken: lpToken,
-                    allocPoint: allocPoint,
-                    lastRewardTimestamp: startTimestamp,
-                    accumulatedFatePerShare: 0,
-                    accumulatedLockedFatePerShare: 0
+
+        if (_oldControllers.length > 0) {
+            // reset old controller's pooInfo
+            for (uint i = 0; i < _oldControllers[0].poolLength(); i++) {
+                (IERC20 lpToken, uint256 allocPoint, ,) = _oldControllers[0].poolInfo(i);
+                poolInfo.push(
+                    PoolInfoV3({
+                lpToken: lpToken,
+                allocPoint: allocPoint,
+                lastRewardTimestamp: startTimestamp,
+                accumulatedFatePerShare: 0,
+                accumulatedLockedFatePerShare: 0
                 })
-            );
-            totalAllocPoint = totalAllocPoint.add(allocPoint);
+                );
+                totalAllocPoint = totalAllocPoint.add(allocPoint);
+            }
         }
     }
 
