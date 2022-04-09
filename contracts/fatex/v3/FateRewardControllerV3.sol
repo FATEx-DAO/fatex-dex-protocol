@@ -105,7 +105,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         vault = _vault;
         oldControllers = _oldControllers;
         mockLpTokenFactory = _mockLpTokenFactory;
-        startTimestamp = block.timestamp;
+        startTimestamp = 0;
         fateFeeTo = _fateFeeTo;
 
         if (_oldControllers.length > 0) {
@@ -114,16 +114,21 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
                 (IERC20 lpToken, uint256 allocPoint, ,) = _oldControllers[0].poolInfo(i);
                 poolInfo.push(
                     PoolInfoV3({
-                lpToken: lpToken,
-                allocPoint: allocPoint,
-                lastRewardTimestamp: startTimestamp,
-                accumulatedFatePerShare: 0,
-                accumulatedLockedFatePerShare: 0
-                })
+                        lpToken: lpToken,
+                        allocPoint: allocPoint,
+                        lastRewardTimestamp: startTimestamp,
+                        accumulatedFatePerShare: 0,
+                        accumulatedLockedFatePerShare: 0
+                    })
                 );
                 totalAllocPoint = totalAllocPoint.add(allocPoint);
             }
         }
+    }
+
+    function setStartTimestamp(uint256 _startTimestamp) external onlyOwner {
+        require(startTimestamp == 0, "setStartTimestamp: already initialized");
+        startTimestamp = _startTimestamp;
     }
 
     function setFateFeeTo(address _fateFeeTo) external onlyOwner {
