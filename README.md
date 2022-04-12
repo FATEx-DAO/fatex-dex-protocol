@@ -16,7 +16,7 @@ https://fatexfi.io
 | RewardControllerV3             | 0x515b52c9b7Ae148aeA0C8a820c9c8b4A000775f3 | https://polygonscan.com/address/0x515b52c9b7Ae148aeA0C8a820c9c8b4A000775f3 |
 | RewardControllerV3Reader       | 0xE9f2764060d7bAcBdc792d5616E885D5c0a6c595 | https://polygonscan.com/address/0xE9f2764060d7bAcBdc792d5616E885D5c0a6c595 |
 | RewardControllerVault          | 0x7aB7B87B4a90042f655CAe53cA984305EBb17a18 | https://polygonscan.com/address/0x7aB7B87B4a90042f655CAe53cA984305EBb17a18 |
-| RewardScheduleV1               | 0x9c28c198226917964d07322150EfB585A137352F | https://polygonscan.com/address/0x9c28c198226917964d07322150EfB585A137352F |
+| RewardScheduleV1               | 0xEFF37E21Bc0a66B41f877f171393282DaCA908e5 | https://polygonscan.com/address/0xEFF37E21Bc0a66B41f877f171393282DaCA908e5 |
 | Vault - Community              | 0xa608dE0761eb27878423d74cD78a2A731695cac4 | https://polygonscan.com/address/0xa608dE0761eb27878423d74cD78a2A731695cac4 |
 | Vault - FGCD                   | 0x0619f9A8961b1B57b602B5BA6214c2dF5695582d | https://polygonscan.com/address/0x0619f9A8961b1B57b602B5BA6214c2dF5695582d |
 | Vault - Growth                 | 0x4BC7080cd426ca067B5658d2a8d261Cf7D5b5622 | https://polygonscan.com/address/0x4BC7080cd426ca067B5658d2a8d261Cf7D5b5622 |
