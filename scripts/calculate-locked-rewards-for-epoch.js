@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-const blockNumber = 23579227
+const blockNumber = 25198540
 const epoch = 1
 
 const csvWriter = require('csv-writer').createObjectCsvWriter({
@@ -22,7 +22,7 @@ const gqlBody = (skip) => {
 }
 
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
+  // Hardhat always runs the `compile` task when running scripts with its command
   // line interface.
   if (hardhat.network.config.chainId !== 1666600000) {
     throw new Error('Invalid chainId, found ' + hardhat.network.config.chainId);
