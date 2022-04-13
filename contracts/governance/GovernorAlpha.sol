@@ -9,7 +9,7 @@ contract GovernorAlpha {
     using SafeMath for *;
 
     /// @notice The name of this contract
-    string public constant name = "FATExDAO Governor Alpha";
+    string public constant name = "FATExFI Governor Alpha";
 
     // Note the quorumVotes and proposalThreshold are meant to deal with the circulating supply being lower in the
     // first phase of the project. Later, this contract should be upgraded to raise these two variables appropriately.
