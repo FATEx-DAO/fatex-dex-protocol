@@ -27,10 +27,10 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     mapping(uint256 => mapping (address => MembershipInfo)) public override userMembershipInfo;
 
     // pid ==> address ==> tracked points
-    mapping(uint256 => mapping (address => uint256)) public trackedPoints;
+    mapping(uint256 => mapping (address => uint256)) public override trackedPoints;
 
     /// @dev pid => user address => lockedRewards
-    mapping(uint256 => mapping (address => uint256)) public userLockedRewards;
+    mapping(uint256 => mapping (address => uint256)) public override userLockedRewards;
 
     /// @dev data for FateLockedRewardFee
     uint256[] public lockedRewardsPeriodTimestamps = [

@@ -14,7 +14,7 @@ https://fatexfi.io
 | MultiSig Wallet                | 0xa6c43222D3fCdf85D31838D3ca62ae5a6E1B16Df | https://polygonscan.com/address/0xa6c43222D3fCdf85D31838D3ca62ae5a6E1B16Df |
 | OldFateMerkleDistributor       | 0x0000000000000000000000000000000000000000 | https://polygonscan.com/address/0x0000000000000000000000000000000000000000 |
 | RewardControllerV3             | 0x515b52c9b7Ae148aeA0C8a820c9c8b4A000775f3 | https://polygonscan.com/address/0x515b52c9b7Ae148aeA0C8a820c9c8b4A000775f3 |
-| RewardControllerV3Reader       | 0xE9f2764060d7bAcBdc792d5616E885D5c0a6c595 | https://polygonscan.com/address/0xE9f2764060d7bAcBdc792d5616E885D5c0a6c595 |
+| RewardControllerV3Reader       | 0x7c1063D7ed2ddc05D2F4216421683a2768090Cd1 | https://polygonscan.com/address/0x7c1063D7ed2ddc05D2F4216421683a2768090Cd1 |
 | RewardControllerVault          | 0x7aB7B87B4a90042f655CAe53cA984305EBb17a18 | https://polygonscan.com/address/0x7aB7B87B4a90042f655CAe53cA984305EBb17a18 |
 | RewardScheduleV1               | 0xEFF37E21Bc0a66B41f877f171393282DaCA908e5 | https://polygonscan.com/address/0xEFF37E21Bc0a66B41f877f171393282DaCA908e5 |
 | Vault - Community              | 0xa608dE0761eb27878423d74cD78a2A731695cac4 | https://polygonscan.com/address/0xa608dE0761eb27878423d74cD78a2A731695cac4 |

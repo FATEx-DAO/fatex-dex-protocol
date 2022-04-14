@@ -47,4 +47,15 @@ contract FateRewardControllerV3Reader {
             .mul(allocPoint)
             .div(_totalAllocPoint);
     }
+
+    function allLockedFate(
+        uint256 _pid,
+        address _user
+    )
+    external
+    view
+    returns (uint256)
+    {
+        return controller.pendingLockedFate(_pid, _user).add(controller.userLockedRewards(_pid, _user));
+    }
 }
