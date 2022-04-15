@@ -1,4 +1,4 @@
-# FATExDEX
+# FATExDAO - FATExFi
 
 https://fatexdao.io
 
