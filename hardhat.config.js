@@ -1,5 +1,5 @@
 // hardhat.config.js
-require("dotenv/config")
+require("dotenv").config()
 require("@nomiclabs/hardhat-etherscan")
 require("@nomiclabs/hardhat-solhint")
 require("@tenderly/hardhat-tenderly")
