@@ -9,6 +9,7 @@ import "./IMembershipWithReward.sol";
 import "../IMigratorChef.sol";
 import "./IRewardScheduleV3.sol";
 
+
 abstract contract IFateRewardControllerV3 is Ownable, IMigratorChef, IMembershipWithReward {
 
     // Info of each user.

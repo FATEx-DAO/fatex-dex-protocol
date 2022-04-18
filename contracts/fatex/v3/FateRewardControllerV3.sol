@@ -6,7 +6,6 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "../../uniswap-v2/interfaces/IUniswapV2Router01.sol";
 import "../MockLpToken.sol";
 import "../IMockLpTokenFactory.sol";
 import "../IFateRewardController.sol";
@@ -71,6 +70,8 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
 
     IMockLpTokenFactory public mockLpTokenFactory;
 
+    bool public allowEmergencyWithdrawal;
+
     // address of FeeTokenConverterToFate contract
     event FateFeeToSet(address _fateFeeTo);
 
@@ -79,6 +80,8 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
 
     event ClaimRewards(address indexed user, uint256 indexed pid, uint256 amount);
+
+    event EmergencyWithdrawalAllowedSet(bool allowEmergencyWithdrawal);
 
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
 
@@ -98,14 +101,20 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         address _vault,
         IFateRewardController[] memory _oldControllers,
         IMockLpTokenFactory _mockLpTokenFactory,
+        uint256 _startTimestamp,
         address _fateFeeTo
     ) public {
+        require(
+            _startTimestamp > 0,
+            "_startTimestamp must not be 0"
+        );
+
         fate = _fate;
         rewardSchedule = _rewardSchedule;
         vault = _vault;
         oldControllers = _oldControllers;
         mockLpTokenFactory = _mockLpTokenFactory;
-        startTimestamp = 0;
+        startTimestamp = _startTimestamp;
         fateFeeTo = _fateFeeTo;
 
         if (_oldControllers.length > 0) {
@@ -116,7 +125,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
                     PoolInfoV3({
                         lpToken: lpToken,
                         allocPoint: allocPoint,
-                        lastRewardTimestamp: startTimestamp,
+                        lastRewardTimestamp: _startTimestamp,
                         accumulatedFatePerShare: 0,
                         accumulatedLockedFatePerShare: 0
                     })
@@ -127,8 +136,11 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     }
 
     function setStartTimestamp(uint256 _startTimestamp) external onlyOwner {
-        require(startTimestamp == 0, "setStartTimestamp: already initialized");
+        require(startTimestamp == uint(-1), "setStartTimestamp: already initialized");
         startTimestamp = _startTimestamp;
+        for (uint i = 0; i < poolInfo.length; i++) {
+            poolInfo[i].lastRewardTimestamp = _startTimestamp;
+        }
     }
 
     function setFateFeeTo(address _fateFeeTo) external onlyOwner {
@@ -366,7 +378,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         IFateRewardControllerV3.UserInfo memory user = _getUserInfo(_pid, _user);
         uint256 accumulatedFatePerShare = pool.accumulatedFatePerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
-        if (block.timestamp > pool.lastRewardTimestamp && lpSupply != 0) {
+        if (block.timestamp > pool.lastRewardTimestamp && lpSupply != 0 && totalAllocPoint != 0) {
             (, uint256 unlockedFatePerSecond) = rewardSchedule.getFateForDuration(
                 startTimestamp,
                 pool.lastRewardTimestamp,
@@ -376,10 +388,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
                 .mul(pool.allocPoint)
                 .div(totalAllocPoint);
             accumulatedFatePerShare = accumulatedFatePerShare
-                .add(unlockedFateReward
-                .mul(1e12)
-                .div(lpSupply)
-            );
+                .add(unlockedFateReward.mul(1e12).div(lpSupply));
         }
         return user.amount
             .mul(accumulatedFatePerShare)
@@ -400,7 +409,7 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         IFateRewardControllerV3.UserInfo memory user = _getUserInfo(_pid, _user);
         uint256 accumulatedLockedFatePerShare = pool.accumulatedLockedFatePerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
-        if (block.timestamp > pool.lastRewardTimestamp && lpSupply != 0) {
+        if (block.timestamp > pool.lastRewardTimestamp && lpSupply != 0 && totalAllocPoint != 0) {
             (uint256 lockedFatePerSecond,) = rewardSchedule.getFateForDuration(
                 startTimestamp,
                 pool.lastRewardTimestamp,
@@ -477,8 +486,10 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         );
         if (pid1 == 0) {
             return fatePerSecond;
-        } else {
+        } else if (totalAllocPoint != 0) {
             return fatePerSecond.mul(poolInfo[pid1 - 1].allocPoint).div(totalAllocPoint);
+        } else {
+            return 0;
         }
     }
 
@@ -500,21 +511,25 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
             block.timestamp
         );
 
-        uint256 unlockedFateReward = unlockedFatePerSecond
-            .mul(pool.allocPoint)
-            .div(totalAllocPoint);
-        uint256 lockedFateReward = lockedFatePerSecond
-            .mul(pool.allocPoint)
-            .div(totalAllocPoint);
+        uint256 unlockedFateReward = totalAllocPoint != 0
+            ? unlockedFatePerSecond.mul(pool.allocPoint).div(totalAllocPoint)
+            : 0;
+        uint256 lockedFateReward = totalAllocPoint != 0
+            ? lockedFatePerSecond.mul(pool.allocPoint).div(totalAllocPoint)
+            : 0;
 
         if (unlockedFateReward > 0) {
             fate.transferFrom(vault, address(this), unlockedFateReward);
-            pool.accumulatedFatePerShare = pool.accumulatedFatePerShare
-                .add(unlockedFateReward.mul(1e12).div(lpSupply));
+            if (lpSupply != 0) {
+                pool.accumulatedFatePerShare = pool.accumulatedFatePerShare
+                    .add(unlockedFateReward.mul(1e12).div(lpSupply));
+            }
         }
         if (lockedFateReward > 0) {
-            pool.accumulatedLockedFatePerShare = pool.accumulatedLockedFatePerShare
-                .add(lockedFateReward.mul(1e12).div(lpSupply));
+            if (lpSupply != 0) {
+                pool.accumulatedLockedFatePerShare = pool.accumulatedLockedFatePerShare
+                    .add(lockedFateReward.mul(1e12).div(lpSupply));
+            }
         }
         pool.lastRewardTimestamp = block.timestamp;
     }
@@ -687,8 +702,18 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         }
     }
 
+    function setAllowEmergencyWithdrawal(bool _allowEmergencyWithdrawal) public onlyOwner {
+        allowEmergencyWithdrawal = _allowEmergencyWithdrawal;
+        emit EmergencyWithdrawalAllowedSet(_allowEmergencyWithdrawal);
+    }
+
     // Withdraw without caring about rewards. EMERGENCY ONLY.
     function emergencyWithdraw(uint256 _pid) public {
+        require(
+            allowEmergencyWithdrawal,
+            "emergency withdrawal not enabled"
+        );
+
         PoolInfoV3 storage pool = poolInfo[_pid];
         IFateRewardControllerV3.UserInfo memory user = _getUserInfo(_pid, msg.sender);
         pool.lpToken.transfer(address(msg.sender), user.amount);

@@ -9,8 +9,6 @@ import "./IRewardScheduleV3.sol";
 contract RewardScheduleV3 is IRewardScheduleV3 {
     using SafeMathLocal for uint;
 
-    uint256 constant public epochPeriods = 9 weeks; // 18 weeks for epoch 2
-
     /// @notice This is the emission schedule for each second for a given week. These numbers represent how much FATE is
     ///         rewarded per second. Each index represents a week. The starting day/week, according to the Reward
     ///         Controller was XYZ (UTC time). Meaning, week 2 (index 1, since indices start at 0) starts on
@@ -130,6 +128,10 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     function calculateCurrentIndex(
         uint _startTimestamp
     ) public override view returns (uint) {
+        if (_startTimestamp > block.timestamp) {
+            return 0;
+        }
+
         return (block.timestamp - _startTimestamp) / SECONDS_PER_WEEK;
     }
 
