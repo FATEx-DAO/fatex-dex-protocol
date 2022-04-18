@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "../../libraries/RankedArray.sol";
 
-import "./IRewardScheduleV3.sol";
 import "./IFateRewardControllerV3.sol";
 import "./IMembershipWithReward.sol";
 
@@ -16,9 +15,6 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     using SafeMath for uint256;
 
     uint256 constant public POINTS_PER_SECOND = 0.04e18;
-
-    // The emission scheduler that calculates fate per second over a given period
-    IRewardScheduleV3 public rewardSchedule;
 
     struct MembershipInfo {
         uint256 firstDepositTimestamp; // set when first deposit
@@ -31,10 +27,10 @@ abstract contract MembershipWithReward is Ownable, IMembershipWithReward {
     mapping(uint256 => mapping (address => MembershipInfo)) public override userMembershipInfo;
 
     // pid ==> address ==> tracked points
-    mapping(uint256 => mapping (address => uint256)) public trackedPoints;
+    mapping(uint256 => mapping (address => uint256)) public override trackedPoints;
 
     /// @dev pid => user address => lockedRewards
-    mapping(uint256 => mapping (address => uint256)) public userLockedRewards;
+    mapping(uint256 => mapping (address => uint256)) public override userLockedRewards;
 
     /// @dev data for FateLockedRewardFee
     uint256[] public lockedRewardsPeriodTimestamps = [

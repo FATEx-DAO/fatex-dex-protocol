@@ -2,7 +2,7 @@
 
 
 pragma solidity =0.6.12;
-pragma experimental ABIEncoderV2;
+
 
 contract FateToken {
 
@@ -76,7 +76,7 @@ contract FateToken {
         balances[account_] = uint96(totalSupply);
         emit Transfer(address(0), account_, totalSupply);
 
-        name = "FATExDAO";
+        name = "FATExFI"; // 888888888000000000000000000
         symbol = "FATE";
     }
 

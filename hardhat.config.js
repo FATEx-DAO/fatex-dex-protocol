@@ -32,8 +32,9 @@ module.exports = {
   },
   defaultNetwork: "hardhat",
   etherscan: {
-    // apiKey: process.env.ETHERSCAN_API_KEY,
-    apiKey: process.env.BSCSCAN_API_KEY
+    apiKey: {
+      polygon: process.env.POLYGONSCAN_API_KEY
+    }
   },
   gasReporter: {
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
@@ -176,6 +177,22 @@ module.exports = {
       url: "https://api.s0.b.hmny.io",
       accounts,
       chainId: 1666700000,
+      live: true,
+      saveDeployments: true,
+      tags: ["staging"],
+    },
+    polygon: {
+      url: "https://matic-mainnet-full-rpc.bwarelabs.com",
+      accounts,
+      chainId: 137,
+      live: true,
+      saveDeployments: true,
+      timeout: 100000,
+    },
+    polygon_testnet: {
+      url: "https://matic-testnet-archive-rpc.bwarelabs.com",
+      accounts,
+      chainId: 80001,
       live: true,
       saveDeployments: true,
       tags: ["staging"],

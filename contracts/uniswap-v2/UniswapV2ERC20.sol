@@ -7,8 +7,8 @@ import "./libraries/SafeMath.sol";
 contract UniswapV2ERC20 {
     using SafeMathUniswap for uint256;
 
-    string public constant name = "FATExDAO LP Token";
-    string public constant symbol = "FATEx-LP";
+    string public constant name = "FATExFI LP Token";
+    string public constant symbol = "FATExFI-LP";
     uint8 public constant decimals = 18;
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;

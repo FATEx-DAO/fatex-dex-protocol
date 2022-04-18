@@ -11,8 +11,9 @@ import "../MockLpToken.sol";
 import "../IMockLpTokenFactory.sol";
 import "../IFateRewardController.sol";
 
-import "./MembershipWithReward.sol";
+import "./IRewardScheduleV3.sol";
 import "./IFateRewardControllerV3.sol";
+import "./MembershipWithReward.sol";
 
 // Note that it's ownable and the owner wields tremendous power. The ownership
 // will be transferred to a governance smart contract once FATE is sufficiently
@@ -21,8 +22,6 @@ import "./IFateRewardControllerV3.sol";
 // Have fun reading it. Hopefully it's bug-free. God bless.
 contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward {
     using SafeERC20 for IERC20;
-    address private constant UNISWAP_V2_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
-    address private constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     address public fateFeeTo;
 
     // feeReserves tracks the amount of fees per token
@@ -48,6 +47,8 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
     }
 
     IERC20 public override fate;
+
+    IRewardScheduleV3 public override rewardSchedule;
 
     address public override vault;
 
@@ -104,22 +105,30 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         vault = _vault;
         oldControllers = _oldControllers;
         mockLpTokenFactory = _mockLpTokenFactory;
-        startTimestamp = block.timestamp;
+        startTimestamp = 0;
         fateFeeTo = _fateFeeTo;
-        // reset old controller's pooInfo
-        for (uint i = 0; i < _oldControllers[0].poolLength(); i++) {
-            (IERC20 lpToken, uint256 allocPoint, ,) = _oldControllers[0].poolInfo(i);
-            poolInfo.push(
-                PoolInfoV3({
-                    lpToken: lpToken,
-                    allocPoint: allocPoint,
-                    lastRewardTimestamp: startTimestamp,
-                    accumulatedFatePerShare: 0,
-                    accumulatedLockedFatePerShare: 0
-                })
-            );
-            totalAllocPoint = totalAllocPoint.add(allocPoint);
+
+        if (_oldControllers.length > 0) {
+            // reset old controller's pooInfo
+            for (uint i = 0; i < _oldControllers[0].poolLength(); i++) {
+                (IERC20 lpToken, uint256 allocPoint, ,) = _oldControllers[0].poolInfo(i);
+                poolInfo.push(
+                    PoolInfoV3({
+                        lpToken: lpToken,
+                        allocPoint: allocPoint,
+                        lastRewardTimestamp: startTimestamp,
+                        accumulatedFatePerShare: 0,
+                        accumulatedLockedFatePerShare: 0
+                    })
+                );
+                totalAllocPoint = totalAllocPoint.add(allocPoint);
+            }
         }
+    }
+
+    function setStartTimestamp(uint256 _startTimestamp) external onlyOwner {
+        require(startTimestamp == 0, "setStartTimestamp: already initialized");
+        startTimestamp = _startTimestamp;
     }
 
     function setFateFeeTo(address _fateFeeTo) external onlyOwner {
@@ -216,37 +225,6 @@ contract FateRewardControllerV3 is IFateRewardControllerV3, MembershipWithReward
         for (uint i = 0; i < _pids.length; i++) {
             _set(_pids[i], _allocPoints[i], i == _pids.length - 1);
         }
-    }
-
-    function swap(
-        address _tokenIn,
-        address _tokenOut,
-        uint _amountIn,
-        uint _amountOutMin,
-        address _to
-    ) external {
-        IERC20(_tokenIn).transferFrom(msg.sender, address(this), _amountIn);
-        IERC20(_tokenIn).approve(UNISWAP_V2_ROUTER, _amountIn);
-
-        address[] memory path;
-        if (_tokenIn == WETH || _tokenOut == WETH) {
-            path = new address[](2);
-            path[0] = _tokenIn;
-            path[1] = _tokenOut;
-        } else {
-            path = new address[](3);
-            path[0] = _tokenIn;
-            path[1] = WETH;
-            path[2] = _tokenOut;
-        }
-
-        IUniswapV2Router01(UNISWAP_V2_ROUTER).swapExactTokensForTokens(
-            _amountIn,
-            _amountOutMin,
-            path,
-            _to,
-            block.timestamp
-        );
     }
 
     function getFeeReserves(address _token) external view returns (uint256)
