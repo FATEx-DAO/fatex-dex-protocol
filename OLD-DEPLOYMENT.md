@@ -51,6 +51,7 @@
 | RewardScheduleV34              | 0x7C9d2aD53c44243b0B1289CbD6c474057b4C90e9     | https://explorer.harmony.one/address/0x7C9d2aD53c44243b0B1289CbD6c474057b4C90e9   |
 | RewardScheduleV35              | 0xd06f703e3a2333494701414b9154659bbd4ec924     | https://explorer.harmony.one/address/0xd06f703e3a2333494701414b9154659bbd4ec924   |
 | RewardScheduleV36              | 0xb0902999e151160cd1d150587e72962d51edc4cc     | https://explorer.harmony.one/address/0xb0902999e151160cd1d150587e72962d51edc4cc   |
+| RewardScheduleV37              | 0x87516975da7f7c2055B0D4d7141b88A550d7363a     | https://explorer.harmony.one/address/0x87516975da7f7c2055B0D4d7141b88A550d7363a   |
 | AmmPoolFactory                 | 0xa4EF1da515096DB768Bc47DBC080888795643442     | https://explorer.harmony.one/address/0xa4EF1da515096DB768Bc47DBC080888795643442   |
 | AmmPoolRouter                  | 0x82145037096870BA3a5f7beE4C3602BD36e27Bff     | https://explorer.harmony.one/address/0x82145037096870BA3a5f7beE4C3602BD36e27Bff   |
 | FGCD Vault                     | 0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44     | https://explorer.harmony.one/address/0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44   |
