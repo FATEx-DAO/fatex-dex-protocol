@@ -25,43 +25,43 @@ contract RewardSchedule {
     18.18181818e18,     // week 11
     18.18181818e18,     // week 12
     18.18181818e18,     // week 13
-    18.18181818e18,           // week 14
+    18.18181818e18,     // week 14
     0.00e18,            // week 15
     0.00e18,            // week 16
     0.00e18,            // week 17
-    8.8888888e18,            // week 18
-    8.8888888e18,            // week 19
-    8.8888888e18,            // week 20
-    8.8888888e18,            // week 21
-    8.8888888e18,            // week 22
-    8.8888888e18,            // week 23
-    8.8888888e18,            // week 24
-    8.8888888e18,            // week 25
-    8.8888888e18,            // week 26
-    0.00e18,            // week 27
-    0.00e18,            // week 28
-    0.00e18,            // week 29
-    0.00e18,            // week 30
-    0.00e18,            // week 31
-    0.00e18,            // week 32
-    0.00e18,            // week 33
-    0.00e18,            // week 34
-    0.00e18,            // week 35
-    0.00e18,            // week 36
-    0.00e18,            // week 37
-    0.00e18,            // week 38
-    0.00e18,            // week 39
-    0.00e18,            // week 40
-    0.00e18,            // week 41
-    0.00e18,            // week 42
-    0.00e18,            // week 43
-    0.00e18,            // week 44
-    0.00e18,            // week 45
-    0.00e18,            // week 46
-    0.00e18,            // week 47
-    0.00e18,            // week 48
-    0.00e18,            // week 49
-    0.00e18,            // week 50
+    18.181818e18,       // week 18
+    18.181818e18,       // week 19
+    18.181818e18,       // week 20
+    18.181818e18,       // week 21
+    18.181818e18,       // week 22
+    18.181818e18,       // week 23
+    18.181818e18,       // week 24
+    18.181818e18,       // week 25
+    18.181818e18,       // week 26
+    18.181818e18,       // week 27
+    18.181818e18,       // week 28
+    18.181818e18,       // week 29
+    18.181818e18,       // week 30
+    18.181818e18,       // week 31
+    18.181818e18,       // week 32
+    18.181818e18,       // week 33
+    18.181818e18,       // week 34
+    18.181818e18,       // week 35
+    18.181818e18,       // week 36
+    18.181818e18,       // week 37
+    18.181818e18,       // week 38
+    18.181818e18,       // week 39
+    18.181818e18,       // week 40
+    18.181818e18,       // week 41
+    18.181818e18,       // week 42
+    18.181818e18,       // week 43
+    18.181818e18,       // week 44
+    18.181818e18,       // week 45
+    18.181818e18,       // week 46
+    18.181818e18,       // week 47
+    18.181818e18,       // week 48
+    18.181818e18,       // week 49
+    18.181818e18,       // week 50
     0.00e18,            // week 51
     0.00e18,            // week 52
     0.00e18,            // week 53
@@ -104,11 +104,9 @@ contract RewardSchedule {
         if (index < 13) {
             // vesting occurs at an 80 / 20 rate for the first 13 weeks
             return FATE_PER_BLOCK[index] * 2 / 10;
-        } else if (index < 29) {
-            // vesting occurs at an 92 / 8 rate for the next 16 weeks
-            return FATE_PER_BLOCK[index] * 8 / 100;
         } else {
-            return FATE_PER_BLOCK[index];
+            // vesting occurs at an 92 / 8 rate for the rest of this contract
+            return FATE_PER_BLOCK[index] * 8 / 100;
         }
     }
 
