@@ -1,4 +1,4 @@
-# FATExFI
+# FATExFi
 
 https://fatexfi.io
 
