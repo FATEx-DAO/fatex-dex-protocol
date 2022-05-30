@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 const csv = require('csv-parser');
 
-const blockNumber = 25198540
+const blockNumber = 27172278
 const epoch = 1
 
 const csvWriter = require('csv-writer').createObjectCsvWriter({
@@ -76,7 +76,7 @@ async function main() {
   }
 
   // Now batch the FateRewardController::pendingFate calls
-  let chunkSize = 250;
+  let chunkSize = 125;
   let numberOfChunks = Math.floor(pendingFateCalls.length / chunkSize) + 1
   let pendingFates = []
   for (let i = 0; i < numberOfChunks; i++) {
