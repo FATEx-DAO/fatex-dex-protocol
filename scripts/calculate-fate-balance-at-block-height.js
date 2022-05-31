@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 const csv = require('csv-parser');
 
-const blockNumber = 27172278
+const blockNumber = 27191277
 const epoch = 1
 
 const csvWriter = require('csv-writer').createObjectCsvWriter({
@@ -46,7 +46,7 @@ async function main() {
     throw new Error('Invalid chainId, found ' + hardhat.network.config.chainId);
   }
 
-  const epoch0Map = await readCsv('./scripts/epoch-0-rewards.csv');
+  const epoch0Map = await readCsv('./scripts/epoch-0-rewards-FINALIZED.csv');
   const epoch1Map = await readCsv('./scripts/epoch-1-rewards_(AS_OF_2022-03-02_05:49:49_UTC).csv');
 
   const multicall = await ethers.getContractAt('Multicall', '0x41Fec4E5De930d8a618900973f0A678114C27361');
