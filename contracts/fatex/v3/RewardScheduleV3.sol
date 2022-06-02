@@ -99,7 +99,7 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     }
 
     function lockedPercent(uint index) public pure override returns (uint) {
-        if (index >= 0 && index < 8) {
+        if (index >= 0 && index < 52) {
             return 92;
         } else {
             return 92;

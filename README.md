@@ -8,7 +8,7 @@ https://fatexfi.io
 | AmmPoolFactory                         | 0x937e0c67d21Df99eaEa0e6a1055A5b783291DC8f | https://polygonscan.com/address/0x937e0c67d21Df99eaEa0e6a1055A5b783291DC8f |
 | AmmPoolRouter                          | 0x8863f716706e9e4f13A52601A129DD1E1c3fA08B | https://polygonscan.com/address/0x8863f716706e9e4f13A52601A129DD1E1c3fA08B |
 | FateToken                              | 0x4853365bC81f8270D902076892e13F27c27e7266 | https://polygonscan.com/address/0x4853365bC81f8270D902076892e13F27c27e7266 |
-| FeeTokenConverterToFate                | 0x469396F9A5c69924ff6BC3d9df20144AD6193310 | https://polygonscan.com/address/0x469396F9A5c69924ff6BC3d9df20144AD6193310 |
+| FeeTokenConverterToFate                | 0xC960C1D920786a77C3bBBF9eA0Ab0C5de40b1036 | https://polygonscan.com/address/0xC960C1D920786a77C3bBBF9eA0Ab0C5de40b1036 |
 | MockLpTokenFactory                     | 0x4e714A400BC379323f89bfd0174d3CFD4e813180 | https://polygonscan.com/address/0x4e714A400BC379323f89bfd0174d3CFD4e813180 |
 | MultiCall                              | 0xfE2Adcf4039A481a6f92cbD2e60F476eb20B4cc1 | https://polygonscan.com/address/0xfE2Adcf4039A481a6f92cbD2e60F476eb20B4cc1 |
 | MultiSig Wallet                        | 0xa6c43222D3fCdf85D31838D3ca62ae5a6E1B16Df | https://polygonscan.com/address/0xa6c43222D3fCdf85D31838D3ca62ae5a6E1B16Df |

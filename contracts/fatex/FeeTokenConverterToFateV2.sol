@@ -20,10 +20,10 @@ contract FeeTokenConverterToFateV2 is FeeTokenConverterToFate {
         address _factory,
         address _xFate,
         address _fate,
-        address _weth
+        address _mainBridgeToken
     )
     public
-    FeeTokenConverterToFate(_factory, _xFate, _factory, _weth) {
+    FeeTokenConverterToFate(_factory, _xFate, _factory, _mainBridgeToken) {
     }
 
     // F1 - F10: OK

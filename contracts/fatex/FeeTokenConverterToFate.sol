@@ -29,7 +29,7 @@ contract FeeTokenConverterToFate is Ownable {
     address private immutable fate;
 
     // V1 - V5: OK
-    address private immutable weth;
+    address private immutable mainBridgeToken;
 
     // V1 - V5: OK
     mapping(address => address) internal _bridges;
@@ -51,12 +51,18 @@ contract FeeTokenConverterToFate is Ownable {
         address _factory,
         address _xFate,
         address _fate,
-        address _weth
+        address _mainBridgeToken
     ) public {
         factory = IUniswapV2Factory(_factory);
         xFATE = _xFate;
         fate = _fate;
-        weth = _weth;
+        mainBridgeToken = _mainBridgeToken;
+    }
+
+    function rescueTokens(address[] calldata tokens) external onlyOwner {
+        for (uint i = 0; i < tokens.length; i++) {
+            IERC20(tokens[i]).safeTransfer(owner(), IERC20(tokens[i]).balanceOf(address(this)));
+        }
     }
 
     // F1 - F10: OK
@@ -64,7 +70,7 @@ contract FeeTokenConverterToFate is Ownable {
     function bridgeFor(address token) public view returns (address bridge) {
         bridge = _bridges[token];
         if (bridge == address(0)) {
-            bridge = weth;
+            bridge = mainBridgeToken;
         }
     }
 
@@ -73,7 +79,7 @@ contract FeeTokenConverterToFate is Ownable {
     function setBridge(address token, address bridge) external onlyOwner {
         // Checks
         require(
-            token != fate && token != weth && token != bridge,
+            token != fate && token != mainBridgeToken && token != bridge,
             "FeeTokenConverterToFate: Invalid bridge"
         );
 
@@ -173,8 +179,8 @@ contract FeeTokenConverterToFate is Ownable {
             if (token0 == fate) {
                 IERC20(fate).safeTransfer(xFATE, amount);
                 fateOut = amount;
-            } else if (token0 == weth) {
-                fateOut = _toFATE(weth, amount);
+            } else if (token0 == mainBridgeToken) {
+                fateOut = _toFATE(mainBridgeToken, amount);
             } else {
                 address bridge = bridgeFor(token0);
                 amount = _swap(token0, bridge, amount, address(this));
@@ -188,17 +194,17 @@ contract FeeTokenConverterToFate is Ownable {
             // eg. USDT - FATE
             IERC20(fate).safeTransfer(xFATE, amount1);
             fateOut = _toFATE(token0, amount0).add(amount1);
-        } else if (token0 == weth) {
+        } else if (token0 == mainBridgeToken) {
             // eg. ETH - USDC
             fateOut = _toFATE(
-                weth,
-                _swap(token1, weth, amount1, address(this)).add(amount0)
+                mainBridgeToken,
+                _swap(token1, mainBridgeToken, amount1, address(this)).add(amount0)
             );
-        } else if (token1 == weth) {
+        } else if (token1 == mainBridgeToken) {
             // eg. USDT - ETH
             fateOut = _toFATE(
-                weth,
-                _swap(token0, weth, amount0, address(this)).add(amount1)
+                mainBridgeToken,
+                _swap(token0, mainBridgeToken, amount0, address(this)).add(amount1)
             );
         } else {
             // eg. MIC - USDT
