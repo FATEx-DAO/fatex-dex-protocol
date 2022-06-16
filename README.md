@@ -25,7 +25,7 @@ https://fatexfi.io
 | Vault - Pre-Harmony Members            | 0x42f13D8880C971ce59a9f02fDb695208e5Ea2a06 | https://polygonscan.com/address/0x42f13D8880C971ce59a9f02fDb695208e5Ea2a06 |
 | Vault - Team/Advisors/Investor         | 0x279A93B959cb4a76c882a2685377A2fACcf14d49 | https://polygonscan.com/address/0x279A93B959cb4a76c882a2685377A2fACcf14d49 |
 | Vault - Team/Advisors/Investor         | 0xE07DEACbB15C45a09E7026888cA1e703Aa8217F6 | https://polygonscan.com/address/0xE07DEACbB15C45a09E7026888cA1e703Aa8217F6 |
-| VotingPowerTokenV1                     | 0x02c12937d4833087e5c3DBF002e2337218E5aB9C | https://polygonscan.com/address/0x02c12937d4833087e5c3DBF002e2337218E5aB9C |
+| VotingPowerTokenV1                     | 0x874250204B72354Ba789a57d39E291C515bc820a | https://polygonscan.com/address/0x874250204B72354Ba789a57d39E291C515bc820a |
 | WrappedMatic                           | 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270 | https://polygonscan.com/address/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270 |
 | xFateToken                             | 0x56BE76031A4614370fA1f188e01e18a1CF16E642 | https://polygonscan.com/address/0x56BE76031A4614370fA1f188e01e18a1CF16E642 |
 
