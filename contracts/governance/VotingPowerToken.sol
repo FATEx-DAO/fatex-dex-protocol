@@ -123,6 +123,10 @@ contract VotingPowerToken {
         address user
     ) private view returns (uint) {
         (uint112 reserve0, uint112 reserve1,) = IUniswapV2Pair(pair.lpToken).getReserves();
+        if (reserve0 == 0 || reserve1 == 0) {
+            return 0;
+        }
+
         IERC20 token = IERC20(pair.lpToken);
 
         uint reserves;
@@ -137,6 +141,7 @@ contract VotingPowerToken {
 
         (uint lpBalance,) = controller.userInfo(lpTokenIndex, user);
         lpBalance = lpBalance.add(token.balanceOf(user));
+
         return lpBalance.mul(reserves).div(token.totalSupply());
     }
 
