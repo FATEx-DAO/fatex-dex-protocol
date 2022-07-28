@@ -114,15 +114,11 @@ contract RewardScheduleV3 is IRewardScheduleV3 {
     public
     view
     returns (uint, uint) {
-        if (index >= 0 && index < 8) {
-            // vesting occurs at an 92/8 for the first 8 weeks
-            return (
-                FATE_PER_SECOND[index] * lockedPercent(index) / 100,
-                FATE_PER_SECOND[index] * (100 - lockedPercent(index)) / 100
-            );
-        } else {
-            return (0, 0);
-        }
+        // vesting occurs at an 92/8 for now
+        return (
+            FATE_PER_SECOND[index] * lockedPercent(index) / 100,
+            FATE_PER_SECOND[index] * (100 - lockedPercent(index)) / 100
+        );
     }
 
     function calculateCurrentIndex(
