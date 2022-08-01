@@ -21,6 +21,7 @@ https://fatexfi.io
 | RewardScheduleV3                       | 0x04181c3DFeC445f2d9E1fEA9e54B8847CC8b133f | https://polygonscan.com/address/0x04181c3DFeC445f2d9E1fEA9e54B8847CC8b133f |
 | RewardScheduleV4                       | 0x17d8d505dD0D3F0c4184a4F8378354C8442Af364 | https://polygonscan.com/address/0x17d8d505dD0D3F0c4184a4F8378354C8442Af364 |
 | RewardScheduleV5                       | 0x4ffbcD45d043251B116364131cF128fAEf76f26A | https://polygonscan.com/address/0x4ffbcD45d043251B116364131cF128fAEf76f26A |
+| RewardScheduleV6                       | 0x33236b7262EaA5A89DA32bBBA36E67eA6f487310 | https://polygonscan.com/address/0x33236b7262EaA5A89DA32bBBA36E67eA6f487310 |
 | Vault - Founder                        | 0x8430d8BCDc025960b491aE8D043648e9A9968949 | https://polygonscan.com/address/0x8430d8BCDc025960b491aE8D043648e9A9968949 |
 | Vault - Future Vesting via Merkle Tree | 0x                                         | https://polygonscan.com/address/0x                                         |
 | Vault - Growth                         | 0xe3cac535fcb777a42dc2c234e0a8884049a4264e | https://polygonscan.com/address/0xe3cac535fcb777a42dc2c234e0a8884049a4264e |
